@@ -1,5 +1,6 @@
 package com.nttdata.services;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	private BookRepositoryI bookRepo;
 
 	@Autowired
-	private UserRepositoryI userRepo;
+	private UserRepositoryI userRepository;
 
 	@Override
 	public Book addBook(Book b) {
@@ -33,7 +34,22 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	@Override
 	public void deleteBook(Long id) {
 
-		bookRepo.deleteById(id);
+		Optional<Book> bookOptional = bookRepo.findById(id);
+
+		if (bookOptional.isPresent()) {
+
+			Book book = bookOptional.get();
+
+			for (User user : book.getUsers()) {
+				user.getBooks().remove(book);
+				userRepository.save(user);
+			}
+			bookRepo.deleteById(id);
+		} else {
+
+			// Manejar el caso en el que el libro no existe
+			// Puedes lanzar una excepción, devolver un código de error, etc.
+		}
 
 	}
 
@@ -50,8 +66,14 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	}
 
 	@Override
-	public List<String> getAllBookTitles() {
-		List<Book> books = bookRepo.findAll();
+	public List<Book> searchByTitleAndUser(String title, Long userId) {
+
+		return bookRepo.findByTitleAndUserId(title, userId);
+	}
+
+	@Override
+	public List<String> getBookTitlesOfUser(Long userId) {
+		List<Book> books = bookRepo.findBooksByUserId(userId);
 		return books.stream().map(Book::getTitle).toList();
 	}
 
@@ -62,18 +84,40 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	}
 
 	@Override
-	public void addBookToUser(Long userId, Book book) {
-		Optional<User> userOptional = userRepo.findById(userId);
+	public void addBookToUser(Long userId, Long bookId) {
+		Optional<User> userOptional = userRepository.findById(userId);
 
-		if (userOptional.isPresent()) {
+		Optional<Book> bookOptional = bookRepo.findById(bookId);
+
+		if (userOptional.isPresent() && bookOptional.isPresent()) {
 			User user = userOptional.get();
+			Book book = bookOptional.get();
+
 			Set<Book> books = user.getBooks();
 			books.add(book);
 			user.setBooks(books);
-			userRepo.save(user);
+
+			Set<User> users = book.getUsers();
+			users.add(user);
+			book.setUsers(users);
+
+			userRepository.save(user);
+			bookRepo.save(book);
 		} else {
 			// Manejar el caso en el que el usuario no existe
 			// Puedes lanzar una excepción, devolver un código de error, etc.
+		}
+
+	}
+
+	@Override
+	public Set<Book> getBooksByUserId(Long userId) {
+		Optional<User> userOptional = userRepository.findById(userId);
+
+		if (userOptional.isPresent()) {
+			return userOptional.get().getBooks();
+		} else {
+			return Collections.emptySet();
 		}
 	}
 

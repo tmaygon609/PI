@@ -70,6 +70,10 @@ class User {
             "<td><button value='e" +
             fila.id +
             "' type='button' class='btn btn-danger fa-regular fa-trash-can'></button></td>";
+          tabla +=
+            "<td><button value='a" +
+            fila.id +
+            "' type='button' class='btn btn-success fa-solid fa-pencil'></button></td>";
           tabla += "</tr>";
         });
       }

@@ -139,6 +139,14 @@ function manejadorEvento(event) {
       } else {
         alert("Se ha cancelado la operación.");
       }
+    } else if (String(btn).substring(0, 1) == "a") {
+      let id = String(btn).substring(1, btn.length);
+      let nuevoEstado = prompt("Ingrese el nuevo estado del libro");
+      if (nuevoEstado) {
+        let oBook = new Book();
+
+        oBook.actualizarEstado(id, nuevoEstado);
+      }
     }
   }
 }

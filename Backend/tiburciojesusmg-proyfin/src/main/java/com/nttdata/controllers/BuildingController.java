@@ -1,6 +1,7 @@
 package com.nttdata.controllers;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,12 @@ public class BuildingController {
 		return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
 	}
 
+	@PostMapping(path = "/addBookToUser")
+	public ResponseEntity<String> addBookToUser(@RequestParam Long userId, @RequestParam Long bookId) {
+		buildingService.addBookToUser(userId, bookId);
+		return new ResponseEntity<>("Book added successfully", HttpStatus.CREATED);
+	}
+
 	@DeleteMapping("/{id}")
 	public void deleteBook(final @PathVariable Long id) {
 
@@ -55,9 +62,14 @@ public class BuildingController {
 		return buildingService.searchByTitle(title);
 	}
 
-	@GetMapping(path = "/getBooksByUserId/{userId}")
-	public List<Book> getBooksByUserId(@RequestParam Long userId) {
-		return buildingService.findBooksByUserId(userId);
+	@GetMapping(path = "/searchByTitleAndUser")
+	public List<Book> searchByTitle(@RequestParam String title, @RequestParam Long userId) {
+		return buildingService.searchByTitleAndUser(title, userId);
+	}
+
+	@GetMapping("/getBooksByUserId")
+	public Set<Book> getBooksByUserId(@RequestParam Long userId) {
+		return buildingService.getBooksByUserId(userId);
 	}
 
 	@PostMapping(path = "/getOpenAIResponse")
@@ -66,9 +78,9 @@ public class BuildingController {
 	}
 
 	@PostMapping(path = "/getBookRecommendation")
-	public ResponseEntity<OpenAIResponse> getBookRecommendation() {
+	public ResponseEntity<OpenAIResponse> getBookRecommendation(@RequestParam Long userId) {
 		try {
-			OpenAIResponse response = openAIService.getBookRecommendation();
+			OpenAIResponse response = openAIService.getBookRecommendation(userId);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 

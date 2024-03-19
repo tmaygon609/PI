@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
@@ -50,6 +52,7 @@ public class Book implements Serializable {
 	private String status;
 
 	@ManyToMany(mappedBy = "books")
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private Set<User> users;
 
 	/**

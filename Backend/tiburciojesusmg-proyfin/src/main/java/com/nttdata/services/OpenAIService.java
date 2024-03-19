@@ -23,7 +23,7 @@ public class OpenAIService {
 	private BuildingManagementI buildingManagement;
 
 	private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-	private static final String AUTHORIZATION_HEADER = "Bearer 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";
+	private static final String AUTHORIZATION_HEADER = "Bearer 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";
 
 	public OpenAIResponse getOpenAIResponse(OpenAIRequest request) {
 		RestTemplate restTemplate = new RestTemplate();
@@ -40,7 +40,29 @@ public class OpenAIService {
 		return response.getBody();
 	}
 
-	public OpenAIResponse getBookRecommendation() {
+//	public OpenAIResponse getBookRecommendation() {
+//		OpenAIRequest request = new OpenAIRequest();
+//		request.setModel("gpt-3.5-turbo");
+//		request.setTemperature(0.8);
+//
+//		List<Message> messages = new ArrayList<>();
+//		Message message = new Message();
+//		message.setRole("user");
+//
+//		List<String> bookTitles = buildingManagement.getAllBookTitles();
+//		System.out.println("Book Titles: " + bookTitles);
+//
+//		String content = "Recomiéndame solo un libro similar a '" + String.join("', '", bookTitles)
+//				+ "' en términos de temática y estilo literario. Por favor, proporciona una recomendación basada en estas obras, sin necesidad de explicaciones adicionales, el formato de la respuesta quiero que siempre sea: 'titulo', autor.";
+//		message.setContent(content);
+//		messages.add(message);
+//
+//		request.setMessages(messages);
+//
+//		return getOpenAIResponse(request);
+//	}
+
+	public OpenAIResponse getBookRecommendation(Long userId) {
 		OpenAIRequest request = new OpenAIRequest();
 		request.setModel("gpt-3.5-turbo");
 		request.setTemperature(0.8);
@@ -49,7 +71,7 @@ public class OpenAIService {
 		Message message = new Message();
 		message.setRole("user");
 
-		List<String> bookTitles = buildingManagement.getAllBookTitles();
+		List<String> bookTitles = buildingManagement.getBookTitlesOfUser(userId);
 		System.out.println("Book Titles: " + bookTitles);
 
 		String content = "Recomiéndame solo un libro similar a '" + String.join("', '", bookTitles)

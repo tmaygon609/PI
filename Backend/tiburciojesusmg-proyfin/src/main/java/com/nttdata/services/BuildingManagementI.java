@@ -1,6 +1,7 @@
 package com.nttdata.services;
 
 import java.util.List;
+import java.util.Set;
 
 import com.nttdata.persistence.model.Book;
 
@@ -12,12 +13,16 @@ public interface BuildingManagementI {
 
 	public List<Book> searchByTitle(String title);
 
+	public List<Book> searchByTitleAndUser(String title, Long userId);
+
 	public List<Book> searchAllBooks();
 
-	public List<String> getAllBookTitles();
+	public List<String> getBookTitlesOfUser(Long userId);
 
 	public List<Book> findBooksByUserId(final Long userId);
 
-	void addBookToUser(Long userId, Book book);
+	void addBookToUser(Long userId, Long bookId);
+
+	Set<Book> getBooksByUserId(Long userId);
 
 }

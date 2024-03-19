@@ -28,7 +28,6 @@ function consultar(user, password) {
     "GET",
     "http://localhost:8080/user/login?user=" + user + "&password=" + password
   );
-  oHttp.setRequestHeader("Content-type", "application/json");
   oHttp.send();
 
   oHttp.onload = () => {
