@@ -1,0 +1,28 @@
+.principal{
+    width: 50%;
+    margin: 20px auto;
+    border: solid lightgray 1px;
+}
+
+.cuerpo{
+    padding: 10px;
+}
+
+.cabecera{
+    background-color: darkgray;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+#mostrarListado{
+    padding-left: 20px;
+}
+
+#listado{
+    margin: auto;
+    width: 50%;
+    border: solid lightgray 1px;
+    padding: 10px;
+    display: none;
+}

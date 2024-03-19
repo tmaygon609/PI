@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
+    <title>Usuarios</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/a05c1998d9.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="../css/estilosUsuarios.css" />
+  </head>
+  <body>
+    <div class="principal" style="height: 50%">
+      <div class="cabecera"><h3>Registro Usuarios</h3></div>
+      <div class="cuerpo">
+        <form>
+          <div class="form-group row">
+            <label for="nombre" class="col-4 col-form-label">Nombre:</label>
+            <div class="col-8">
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="apellidos" class="col-4 col-form-label"
+              >Apellidos:</label
+            >
+            <div class="col-8">
+              <div class="row">
+                <div class="col-8">
+                  <input
+                    id="apellidos"
+                    name="apellidos"
+                    type="text"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-4">
+                  <button
+                    name="submit"
+                    id="generarUsuario"
+                    type="button"
+                    class="btn btn-primary"
+                  >
+                    <i class="fa-solid fa-user-plus" style="color: #fcfcfd"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="usuario" class="col-4 col-form-label">Usuario:</label>
+            <div class="col-8">
+              <input
+                id="usuario"
+                name="usuario"
+                type="text"
+                class="form-control"
+                value=""
+                disabled
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="contrasena" class="col-4 col-form-label"
+              >Contraseña:</label
+            >
+            <div class="col-8">
+              <input
+                id="contrasena"
+                name="contrasena"
+                type="text"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="otraContrasena" class="col-4 col-form-label"
+              >Repita Contraseña:</label
+            >
+            <div class="col-8">
+              <input
+                id="otraContrasena"
+                name="otraContrasena"
+                type="text"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="offset-4 col-8">
+              <button
+                name="registrar"
+                id="registrar"
+                type="button"
+                class="btn btn-primary"
+              >
+                Registrar
+              </button>
+              <button
+                name="volverLogin"
+                id="volverLogin"
+                type="button"
+                class="btn btn-danger"
+              >
+                Volver
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="../js/codigoUser.js"></script>
+    <script src="../js/clasesUser.js"></script>
+  </body>
+</html>
