@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/estilosEstrella.css" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../bootstrap/js/jquery.min.js"></script>
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <script
+      src="https://kit.fontawesome.com/a05c1998d9.js"
+      crossorigin="anonymous"
+    ></script>
+    <style type="text/css">
+      body {
+        margin-left: 10px;
+      }
+
+      form {
+        display: none;
+      }
+
+      #formularios {
+        margin-top: 60px;
+      }
+    </style>
+    <title>Biblioteca Almudeyne</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../img/favicon.png" />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Biblioteca NTT</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="#" onclick="gestionFormularios('frmListadoLibros');"
+              >Listado libros</a
+            >
+          </li>
+          <li>
+            <a href="#" onclick="gestionFormularios('frmAltaLibro');"
+              >Registrar libro</a
+            >
+          </li>
+          <li>
+            <a href="#" onclick="gestionFormularios('frmBuscarLibro');"
+              >Buscar Libro</a
+            >
+          </li>
+
+          <li>
+            <a href="#" onclick="gestionFormularios('frmRecomendador');"
+              >Recomendación IA</a
+            >
+          </li>
+          <li>
+            <a id="botonCerrarSesion" href="#" onclick="cerrarSesion();"
+              >Cerrar Sesión</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid" id="formularios">
+      <!-- Listado libros -->
+      <form
+        class="form-horizontal"
+        name="frmListadoLibros"
+        id="frmListadoLibros"
+      >
+        <fieldset>
+          <!-- Form Name -->
+          <legend>Listado Libros</legend>
+        </fieldset>
+      </form>
+      <!-- Formulario alta libros -->
+      <form class="form-horizontal" name="frmAltaLibro" id="frmAltaLibro">
+        <fieldset>
+          <!-- Form Name -->
+          <legend>Registrar libro</legend>
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-xs-4 control-label" for="txtTitulo">Título</label>
+            <div class="col-xs-4">
+              <input
+                id="txtTitulo"
+                name="txtTitulo"
+                placeholder="Titulo"
+                class="form-control input-md"
+                type="text"
+              />
+            </div>
+          </div>
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-xs-4 control-label" for="txtAutor">Autor/a</label>
+            <div class="col-xs-4">
+              <input
+                id="txtAutor"
+                name="txtAutor"
+                placeholder="Autor@"
+                class="form-control input-md"
+                type="text"
+              />
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-xs-4 control-label" for="txtGenero"
+              >Género
+            </label>
+            <div class="col-xs-4">
+              <select id="txtGenero" name="txtGenero" class="custom-select">
+                <option selected></option>
+                <option value="1">Fantástico</option>
+                <option value="2">Novela</option>
+                <option value="3">Ciencia ficción</option>
+                <option value="4">Novela histórica</option>
+                <option value="5">Thriller</option>
+                <option value="6">Romance</option>
+                <option value="7">Aventura</option>
+                <option value="8">Biografía/Autobiografía</option>
+                <option value="9">Ensayo</option>
+                <option value="10">Poesía</option>
+                <option value="11">Humor</option>
+                <option value="12">Basado en hechos reales</option>
+                <option value="13">Manga</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Multiple Radios -->
+          <div class="form-group">
+            <label class="col-xs-4 control-label" for="rbtEstado">Estado</label>
+            <div class="col-xs-4">
+              <div class="radio">
+                <input
+                  name="rbtEstado"
+                  id="rbtSinEmpezar"
+                  value="sinEmpezar"
+                  checked="checked"
+                  type="radio"
+                />
+                <label for="rbtEstado-S">Sin empezar</label>
+              </div>
+              <div class="radio">
+                <input
+                  name="rbtEstado"
+                  id="rbtEnCurso"
+                  value="enCurso"
+                  type="radio"
+                />
+                <label for="rbtEstado-C">En curso</label>
+              </div>
+              <div class="radio">
+                <input
+                  name="rbtEstado"
+                  id="rbtLeido"
+                  value="leido"
+                  type="radio"
+                />
+                <label for="rbtEstado-L">Leído</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-xs-4 control-label" for="txtRate"
+              >Calificación</label
+            >
+            <div class="col-xs-4">
+              <div class="rating" id="star-rating">
+                <input id="radio1" type="radio" name="estrellas" value="5" />
+                <label for="radio1">★</label>
+                <input id="radio2" type="radio" name="estrellas" value="4" />
+                <label for="radio2">★</label>
+                <input id="radio3" type="radio" name="estrellas" value="3" />
+                <label for="radio3">★</label>
+                <input id="radio4" type="radio" name="estrellas" value="2" />
+                <label for="radio4">★</label>
+                <input id="radio5" type="radio" name="estrellas" value="1" />
+                <label for="radio5">★</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Textarea for comments -->
+          <div class="form-group">
+            <label class="col-xs-4 control-label" for="txtComments"
+              >Comentarios</label
+            >
+            <div class="col-xs-4">
+              <textarea
+                id="txtComments"
+                name="txtComments"
+                class="form-control"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Input Button -->
+          <div class="form-group">
+            <label
+              class="col-xs-4 control-label"
+              for="btnAceptarAltaLibro"
+            ></label>
+            <div class="col-xs-4">
+              <input
+                type="button"
+                id="btnAceptarAltaLibro"
+                name="btnAceptarAltaLibro"
+                class="btn btn-primary"
+                value="Registrar"
+                onclick="aceptarAltaLibro();"
+              />
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+      <!-- Formulario buscar libro -->
+      <form class="form-horizontal" name="frmBuscarLibro" id="frmBuscarLibro">
+        <fieldset>
+          <!-- Form Name -->
+          <legend>Buscar libro</legend>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-xs-4 control-label" for="txtTituloLibro"
+              >Título</label
+            >
+            <div class="col-xs-4">
+              <input
+                id="txtTituloLibro"
+                name="txtTituloLibro"
+                placeholder="Titulo"
+                class="form-control input-md"
+                type="text"
+                onkeypress="if (event.keyCode == 13) { document.getElementById('btnAceptarBuscarLibro').click(); return false; }"
+              />
+            </div>
+          </div>
+
+          <!-- Input Button -->
+          <div class="form-group">
+            <label
+              class="col-xs-4 control-label"
+              for="btnAceptarBuscarLibro"
+            ></label>
+            <div class="col-xs-4">
+              <input
+                type="button"
+                id="btnAceptarBuscarLibro"
+                name="btnAceptarBuscarLibro"
+                class="btn btn-primary"
+                value="Buscar"
+                onclick="aceptarBuscarLibro();"
+              />
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+      <!-- Formulario recomendacion libro -->
+      <form class="form-horizontal" name="frmRecomendador" id="frmRecomendador">
+        <fieldset>
+          <!-- Form Name -->
+          <legend>Libro recomendado por IA</legend>
+
+          <!-- Input Button -->
+          <div class="form-group">
+            <label class="col-xs-4 control-label" for="btnRecomendar"></label>
+            <div class="col-xs-4">
+              <input
+                type="button"
+                id="btnRecomendar"
+                name="btnRecomendar"
+                class="btn btn-primary"
+                value="Recomendar"
+                onclick="recomendarLibro();"
+              />
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <div id="listado" style="display: none"></div>
+    <script type="text/javascript" src="../js/codigo.js"></script>
+    <script type="text/javascript" src="../js/classBook.js"></script>
+    <script type="text/javascript" src="../js/clasesUser.js"></script>
+  </body>
+</html>

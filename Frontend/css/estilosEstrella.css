@@ -1,0 +1,25 @@
+#star-rating label {
+  color: grey;
+}
+
+#star-rating input[type="radio"] {
+  display: none;
+}
+
+#star-rating {
+  direction: rtl;
+  unicode-bidi: bidi-override;
+  text-align: left;
+}
+
+#star-rating label:hover {
+  color: orange;
+}
+
+#star-rating label:hover ~ label {
+  color: orange;
+}
+
+#star-rating input[type="radio"]:checked ~ label {
+  color: orange;
+}

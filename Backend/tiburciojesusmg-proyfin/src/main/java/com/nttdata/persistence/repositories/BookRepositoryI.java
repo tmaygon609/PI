@@ -11,8 +11,14 @@ import com.nttdata.persistence.model.Book;
  * Repositorio de T_BOOK
  */
 @Repository
-public interface BookRepositoryI extends JpaRepository<Book, Long>{
-	
+public interface BookRepositoryI extends JpaRepository<Book, Long> {
+
 	public List<Book> searchByTitle(final String title);
+
+//	@Query("SELECT b FROM Book b JOIN b.users u WHERE b.title = :title AND u.id = :userId")
+//	List<Book> findByTitleAndUserId(String title, Long userId);
+//
+//	@Query("SELECT b FROM Book b JOIN b.users u WHERE u.id = :userId")
+//	List<Book> findBooksByUserId(@Param("userId") Long userId);
 
 }

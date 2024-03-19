@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/a05c1998d9.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="bootstrap/js/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="css/estilosUsuarios.css" />
+    <link rel="stylesheet" href="css/estilos.css" />
+    <title>Login</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+  </head>
+  <body>
+    <div class="container" id="loginForm">
+      <div class="row justify-content-center pt-5 mt-5 m-1">
+        <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 formulario">
+          <form>
+            <div class="form-group text-center pt-3">
+              <h1 class="text-light">Iniciar Sesión</h1>
+            </div>
+            <!-- Usuario input -->
+            <div class="form-group mx-sm-5 pt-3">
+              <input
+                type="text"
+                id="user"
+                class="form-control"
+                placeholder="Usuario"
+              />
+            </div>
+            <div class="form-group mx-sm-5 pb-3">
+              <input
+                type="password"
+                id="pwd"
+                class="form-control"
+                placeholder="Contraseña"
+              />
+            </div>
+            <div class="form-group mx-sm-5 pb-2">
+              <button
+                type="button"
+                class="btn btn-secondary btn-block mb-4"
+                id="btn-entrar"
+              >
+                Entrar
+              </button>
+            </div>
+            <div class="form-group mx-sm-5 text-right">
+              <span><a href="#" class="olvide">Olvide mi contraseña</a></span>
+            </div>
+            <div class="form-group mx-sm-5 text-center">
+              <span
+                ><a id="enlaceRegistrar" href="#" class="registrarse"
+                  >Registrarse</a
+                ></span
+              >
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="container" id="registerForm" style="display: none">
+      <div class="row justify-content-center pt-5 mt-5 m-1">
+        <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 formulario">
+          <form class="needs-validation" novalidate>
+            <div class="form-group text-center pt-3">
+              <h1 class="text-light">Registro Usuarios</h1>
+            </div>
+            <!-- Nombre input -->
+            <div class="form-group mx-sm-5 pt-3">
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                class="form-control"
+                placeholder="Nombre"
+                required
+              />
+              <div class="invalid-feedback">Por favor, ingrese su nombre.</div>
+            </div>
+            <!-- Apellidos input -->
+            <div class="form-group mx-sm-5 pt-3">
+              <input
+                id="apellidos"
+                name="apellidos"
+                type="text"
+                class="form-control"
+                placeholder="Apellidos"
+                required
+              />
+              <div class="invalid-feedback">
+                Por favor, ingrese sus apellidos.
+              </div>
+            </div>
+            <!-- Usuario input y boton generar usuario -->
+            <div class="form-group mx-sm-5 pt-3">
+              <div class="input-group">
+                <input
+                  id="usuario"
+                  name="usuario"
+                  type="text"
+                  class="form-control"
+                  placeholder="Usuario"
+                  disabled
+                />
+                <div class="input-group-append">
+                  <button
+                    name="submit"
+                    id="generarUsuario"
+                    type="button"
+                    class="btn btn-secondary"
+                  >
+                    <i class="fa-solid fa-user-plus" style="color: #fcfcfd"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Contraseña input -->
+            <div class="form-group mx-sm-5 pt-3">
+              <input
+                id="contrasena"
+                name="contrasena"
+                type="password"
+                class="form-control"
+                placeholder="Contraseña"
+                required
+              />
+              <div class="invalid-feedback">
+                Por favor, ingrese su contraseña.
+              </div>
+            </div>
+            <!-- Repita Contraseña input -->
+            <div class="form-group mx-sm-5 pt-3">
+              <input
+                id="otraContrasena"
+                name="otraContrasena"
+                type="password"
+                class="form-control"
+                placeholder="Repita Contraseña"
+                required
+              />
+              <div class="invalid-feedback">
+                Por favor, repita su contraseña.
+              </div>
+            </div>
+            <div class="form-group mx-sm-5 pb-2">
+              <button
+                name="registrar"
+                id="registrar"
+                type="button"
+                class="btn btn-secondary btn-block mb-4"
+              >
+                Registrar
+              </button>
+              <button
+                name="volverLogin"
+                id="volverLogin"
+                type="button"
+                class="btn btn-danger btn-block mb-4"
+              >
+                Volver
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="js/login.js"></script>
+    <script type="text/javascript" src="js/clasesUser.js"></script>
+    <script src="js/codigoUser.js"></script>
+  </body>
+</html>
