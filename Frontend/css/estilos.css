@@ -1,0 +1,94 @@
+body {
+  background-image: url(../img/biblioteca4.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center; /* Asegura que la parte central de la imagen siempre esté visible */
+  background-attachment: fixed;
+}
+
+.formulario {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  color: white;
+}
+
+.form-control {
+  color: white;
+  background: rgba(0, 0, 0, 0.3);
+  border-style: none;
+  transition: 0.3s ease-in;
+  outline: none;
+  box-shadow: none;
+}
+
+.form-control:focus {
+  color: black;
+}
+
+.form-control::placeholder {
+  color: white;
+  transition: color 0.3s ease-in;
+}
+
+.form-control:focus::placeholder {
+  color: black;
+  transition: color 0.3s ease-in;
+}
+
+#btn-entrar,
+#registrar {
+  color: #222a3f;
+  background-color: white;
+  padding: 8px;
+  font-size: 16px;
+  font-weight: 700 !important;
+}
+
+#btn-entrar:hover,
+#registrar:hover {
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+  transition: 0.5s ease-in;
+}
+
+.olvide {
+  color: white;
+  text-decoration-style: none;
+  text-decoration-line: none;
+}
+
+.olvide:hover {
+  color: white;
+  text-decoration-style: none;
+  text-decoration-line: none;
+  cursor: pointer;
+}
+
+.registrarse {
+  color: white;
+  text-decoration-style: none;
+  text-decoration-line: none;
+  font-size: 20px;
+  font-weight: 700 !important;
+  border: 2px solid white;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  transition: background 0.3s ease-in, color 0.3s ease-in;
+}
+
+.registrarse:hover {
+  color: black;
+  background: white;
+  text-decoration-line: none;
+  cursor: pointer;
+}
+
+#usuario::placeholder {
+  color: black; /* Cambia esto al color que prefieras */
+}
+
+#usuario:disabled {
+  color: black; /* Cambia esto al color que prefieras */
+}

@@ -62,7 +62,22 @@ function aceptarAltaLibro() {
       status = "Leido";
     }
 
-    let oBook = new Book(title, author, selectedGenre, status);
+    let rate;
+    if (document.getElementById("radio1").checked) {
+      rate = document.getElementById("radio1").value;
+    } else if (document.getElementById("radio2").checked) {
+      rate = document.getElementById("radio2").value;
+    } else if (document.getElementById("radio3").checked) {
+      rate = document.getElementById("radio3").value;
+    } else if (document.getElementById("radio4").checked) {
+      rate = document.getElementById("radio4").value;
+    } else if (document.getElementById("radio5").checked) {
+      rate = document.getElementById("radio5").value;
+    }
+
+    let comments = document.getElementById("txtComments").value;
+
+    let oBook = new Book(title, author, selectedGenre, status, rate, comments);
 
     oBook.altaLibro();
 

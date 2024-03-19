@@ -1,12 +1,22 @@
 document.getElementById("btn-entrar").addEventListener("click", abrirPrincipal);
 document
   .getElementById("enlaceRegistrar")
-  .addEventListener("click", abrirRegistro);
+  .addEventListener("click", function () {
+    // Aquí puedes agregar cualquier lógica adicional que necesites para manejar el registro
+    document.getElementById("registerForm").style.display = "block";
+    document.getElementById("loginForm").style.display = "none";
+  });
+
+document.getElementById("volverLogin").addEventListener("click", function () {
+  // Aquí puedes agregar cualquier lógica adicional que necesites para manejar el retorno al inicio de sesión
+  document.getElementById("loginForm").style.display = "block";
+  document.getElementById("registerForm").style.display = "none";
+});
 
 // Abre la página principal
 function abrirPrincipal() {
-  let user = document.getElementById("user").value;
-  let password = document.getElementById("pwd").value;
+  const user = document.getElementById("user").value;
+  const password = document.getElementById("pwd").value;
 
   if (user && password) {
     consultar(user, password);
@@ -21,18 +31,20 @@ function abrirRegistro() {
 }
 
 // Consulta en base de datos si el usuario existe
-function consultar(user, password) {
-  const oHttp = new XMLHttpRequest();
+async function consultar(user, password) {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/user/login?user=${user}&password=${password}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-  oHttp.open(
-    "GET",
-    "http://localhost:8080/user/login?user=" + user + "&password=" + password
-  );
-  oHttp.send();
-
-  oHttp.onload = () => {
-    if (oHttp.status == "200" && oHttp.responseText != "") {
-      const userInfo = JSON.parse(oHttp.responseText);
+    if (response.ok) {
+      const userInfo = await response.json();
 
       console.log("Usuario obtenido:", userInfo);
 
@@ -54,5 +66,7 @@ function consultar(user, password) {
       document.getElementById("user").value = "";
       document.getElementById("pwd").value = "";
     }
-  };
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
 }

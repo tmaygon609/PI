@@ -1,6 +1,5 @@
 const formulario = document.getElementsByClassName("principal")[0];
 const botonRegistrar = document.getElementById("registrar");
-const botonVolverLogin = document.getElementById("volverLogin");
 
 let id;
 
@@ -8,11 +7,6 @@ document.getElementById("registrar").addEventListener("click", registraUsuario);
 document
   .getElementById("generarUsuario")
   .addEventListener("click", generarUsuario);
-botonVolverLogin.addEventListener("click", volverAlLogin);
-
-function volverAlLogin() {
-  window.open("../index.html", "_self");
-}
 
 function registraUsuario() {
   let name = document.getElementById("nombre").value;

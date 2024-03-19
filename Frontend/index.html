@@ -3,73 +3,168 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/a05c1998d9.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="bootstrap/js/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/estilosUsuarios.css" />
+    <link rel="stylesheet" href="css/estilos.css" />
     <title>login</title>
   </head>
   <body>
-    <div
-      style="
-        width: 400px;
-        padding: 20px;
-        border: 1px solid lightgray;
-        margin: 50px auto;
-      "
-    >
-      <form>
-        <!-- Email input -->
-        <div class="form-outline mb-4">
-          <input type="email" id="user" class="form-control" />
-          <label class="form-label" for="user">Usuario</label>
+    <div class="container" id="loginForm">
+      <div class="row justify-content-center pt-5 mt-5 m-1">
+        <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 formulario">
+          <form>
+            <div class="form-group text-center pt-3">
+              <h1 class="text-light">Iniciar Sesión</h1>
+            </div>
+            <!-- Usuario input -->
+            <div class="form-group mx-sm-5 pt-3">
+              <input
+                type="text"
+                id="user"
+                class="form-control"
+                placeholder="Usuario"
+              />
+            </div>
+            <div class="form-group mx-sm-5 pb-3">
+              <input
+                type="password"
+                id="pwd"
+                class="form-control"
+                placeholder="Contraseña"
+              />
+            </div>
+            <div class="form-group mx-sm-5 pb-2">
+              <button
+                type="button"
+                class="btn btn-secondary btn-block mb-4"
+                id="btn-entrar"
+              >
+                Entrar
+              </button>
+            </div>
+            <div class="form-group mx-sm-5 text-right">
+              <span><a href="#" class="olvide">Olvide mi contraseña</a></span>
+            </div>
+            <div class="form-group mx-sm-5 text-center">
+              <span
+                ><a id="enlaceRegistrar" href="#" class="registrarse"
+                  >Registrarse</a
+                ></span
+              >
+            </div>
+          </form>
         </div>
-
-        <!-- Password input -->
-        <div class="form-outline mb-4">
-          <input type="password" id="pwd" class="form-control" />
-          <label class="form-label" for="pwd">Contraseña</label>
+      </div>
+    </div>
+    <div class="container" id="registerForm" style="display: none">
+      <div class="row justify-content-center pt-5 mt-5 m-1">
+        <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 formulario">
+          <form>
+            <div class="form-group text-center pt-3">
+              <h1 class="text-light">Registro Usuarios</h1>
+            </div>
+            <!-- Nombre input -->
+            <div class="form-group mx-sm-5 pt-3">
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                class="form-control"
+                placeholder="Nombre"
+              />
+            </div>
+            <!-- Apellidos input -->
+            <div class="form-group mx-sm-5 pt-3">
+              <input
+                id="apellidos"
+                name="apellidos"
+                type="text"
+                class="form-control"
+                placeholder="Apellidos"
+              />
+            </div>
+            <!-- Usuario input y boton generar usuario -->
+            <div class="form-group mx-sm-5 pt-3">
+              <div class="input-group">
+                <input
+                  id="usuario"
+                  name="usuario"
+                  type="text"
+                  class="form-control"
+                  placeholder="Usuario"
+                  disabled
+                />
+                <div class="input-group-append">
+                  <button
+                    name="submit"
+                    id="generarUsuario"
+                    type="button"
+                    class="btn btn-secondary"
+                  >
+                    <i class="fa-solid fa-user-plus" style="color: #fcfcfd"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Contraseña input -->
+            <div class="form-group mx-sm-5 pt-3">
+              <input
+                id="contrasena"
+                name="contrasena"
+                type="password"
+                class="form-control"
+                placeholder="Contraseña"
+              />
+            </div>
+            <!-- Repita Contraseña input -->
+            <div class="form-group mx-sm-5 pt-3">
+              <input
+                id="otraContrasena"
+                name="otraContrasena"
+                type="password"
+                class="form-control"
+                placeholder="Repita Contraseña"
+              />
+            </div>
+            <div class="form-group mx-sm-5 pb-2">
+              <button
+                name="registrar"
+                id="registrar"
+                type="button"
+                class="btn btn-secondary btn-block mb-4"
+              >
+                Registrar
+              </button>
+              <button
+                name="volverLogin"
+                id="volverLogin"
+                type="button"
+                class="btn btn-danger btn-block mb-4"
+              >
+                Volver
+              </button>
+            </div>
+          </form>
         </div>
-
-        <!-- 2 column grid layout for inline styling -->
-        <div class="row mb-4">
-          <div class="col d-flex justify-content-center">
-            <!-- Checkbox -->
-          </div>
-        </div>
-
-        <!-- Submit button -->
-        <button
-          type="button"
-          class="btn btn-primary btn-block mb-4"
-          id="btn-entrar"
-        >
-          Entrar
-        </button>
-        <br />
-        <!-- Register buttons -->
-        <div class="text-center">
-          <p>
-            ¿No eres usuario? <a id="enlaceRegistrar" href="#!">Registrar</a>
-          </p>
-          <button type="button" class="btn btn-link btn-floating mx-1">
-            <i class="fab fa-facebook-f"></i>
-          </button>
-
-          <button type="button" class="btn btn-link btn-floating mx-1">
-            <i class="fab fa-google"></i>
-          </button>
-
-          <button type="button" class="btn btn-link btn-floating mx-1">
-            <i class="fab fa-twitter"></i>
-          </button>
-
-          <button type="button" class="btn btn-link btn-floating mx-1">
-            <i class="fab fa-github"></i>
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
     <script type="text/javascript" src="js/login.js"></script>
     <script type="text/javascript" src="js/clasesUser.js"></script>
+    <script src="js/codigoUser.js"></script>
   </body>
 </html>
