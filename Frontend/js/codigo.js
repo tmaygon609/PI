@@ -45,7 +45,11 @@ function aceptarAltaLibro() {
     document.getElementById("txtAutor").value == "" ||
     document.getElementById("txtGenero").value == ""
   ) {
-    alert("Campos vacíos, por favor rellene correctamente los campos");
+    swal({
+      title: "Campos vacíos",
+      text: "por favor rellene correctamente los campos",
+      icon: "warning",
+    });
   } else {
     let title = document.getElementById("txtTitulo").value;
     let author = document.getElementById("txtAutor").value;
@@ -88,7 +92,11 @@ function aceptarAltaLibro() {
 // aceptarBuscarLibro. Clic en boton del formulario de buscar libro por titulo.
 function aceptarBuscarLibro() {
   if (document.getElementById("txtTituloLibro").value == "") {
-    alert("Campo vacío, por favor rellene el campo correctamente.");
+    swal({
+      title: "Campos vacío",
+      text: "por favor rellene el campo correctamente.",
+      icon: "warning",
+    });
   } else {
     let title = document.getElementById("txtTituloLibro").value;
 
@@ -153,6 +161,10 @@ function manejadorEvento(event) {
         oBook.eliminar(id);
       } else {
         alert("Se ha cancelado la operación.");
+        swal({
+          title: "Se ha cancelado la operación",
+          icon: "error",
+        });
       }
     } else if (String(btn).substring(0, 1) == "a") {
       let id = String(btn).substring(1, btn.length);

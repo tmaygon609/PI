@@ -1,3 +1,4 @@
+document.addEventListener("DOMContentLoaded", validarFormulario());
 const formulario = document.getElementsByClassName("principal")[0];
 const botonRegistrar = document.getElementById("registrar");
 
@@ -16,14 +17,21 @@ function registraUsuario() {
   let otraPwd = document.getElementById("otraContrasena").value;
 
   if (name == "" || lastName == "" || u == "" || pwd == "" || otraPwd == "") {
-    alert("Rellene todos los datos por favor.");
+    swal({
+      title: "Rellene todos los datos por favor.",
+      icon: "warning",
+    });
   } else {
-    if (validarContrasena(pwd, otraPwd) == true) {
-      let oUsuario = new User(name, lastName, u, pwd);
-      oUsuario.registrar();
-      limpiarFormulario();
-    }
+    let oUsuario = new User(name, lastName, u, pwd);
+    oUsuario.registrar();
+    limpiarFormulario();
+    ocultarFormulario();
   }
+}
+
+function ocultarFormulario() {
+  document.getElementById("loginForm").style.display = "block";
+  document.getElementById("registerForm").style.display = "none";
 }
 
 function mostrarFormulario() {
@@ -54,47 +62,139 @@ function generarUsuario() {
   document.getElementById("usuario").value = u;
 }
 
-// Comprueba que las dos contraseñas cumplen los requisitos establecidos.
-function validarContrasena(pwd, otraPwd) {
-  let valida;
+// Validación de formulario en tiempo real
+function validarFormulario() {
+  window.addEventListener("load", function () {
+    var form = document.querySelector(".needs-validation");
+    var contrasena = document.getElementById("contrasena");
+    var contrasenaFeedback =
+      contrasena.parentNode.querySelector(".invalid-feedback");
+    var otraContrasena = document.getElementById("otraContrasena");
+    var otraContrasenaFeedback =
+      otraContrasena.parentNode.querySelector(".invalid-feedback");
 
-  if (otraPwd === pwd) {
-    if (pwd.length >= 6 && pwd.length <= 12) {
-      let encontradoAbc = buscarAbc(pwd);
-      if (encontradoAbc == true) {
-        let encontradoSimbolo = buscarSimbolo(pwd);
-        if (encontradoSimbolo == true) {
-          let encontradoNumero = buscarNumero(pwd);
-          if (encontradoNumero == true) {
-            valida = true;
-          } else {
-            valida = false;
-            alert("Contraseña no válida, debe tener al menos un número");
-          }
-        } else {
-          valida = false;
-          alert(
-            "Contraseña no válida, debe tener al menos uno de estos símbolos: !#$%&().:;"
-          );
+    form.addEventListener(
+      "submit",
+      function (event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
         }
-      } else {
-        valida = false;
-        alert(
-          "Contraseña no válida debe tener al menos una letra mayúscula o minúscula"
-        );
-      }
-    } else {
-      valida = false;
-      alert(
-        "Longitud contraseñas no cumple requisitos, debe estar entre 6 y 12 caracteres"
+        form.classList.add("was-validated");
+
+        // Ocultar íconos de validación después de enviar el formulario
+        var inputs = document.querySelectorAll(".form-control");
+        inputs.forEach(function (input) {
+          input.classList.remove("is-valid", "is-invalid");
+        });
+      },
+      false
+    );
+
+    var inputs = document.querySelectorAll(".form-control");
+    inputs.forEach(function (input) {
+      input.addEventListener(
+        "input",
+        function (event) {
+          input.classList.remove("is-invalid", "is-valid");
+          if (input.checkValidity()) {
+            input.classList.add("is-valid");
+            input.setCustomValidity(""); // Limpiar mensaje de error personalizado
+          } else {
+            input.classList.add("is-invalid");
+          }
+          // Específicamente para las contraseñas, llamar a la función de validación personalizada
+          if (
+            (input.id === "contrasena" || input.id === "otraContrasena") &&
+            input.value !== ""
+          ) {
+            var resultado = validarRequisitosContrasena(input.value);
+            if (resultado.esValida) {
+              input.classList.remove("is-invalid");
+              input.classList.add("is-valid");
+              input.setCustomValidity(""); // Limpiar mensaje de error personalizado
+              if (input.id === "contrasena") {
+                contrasenaFeedback.textContent = "";
+              } else {
+                otraContrasenaFeedback.textContent = "";
+              }
+            } else {
+              input.classList.remove("is-valid");
+              input.classList.add("is-invalid");
+              input.setCustomValidity(resultado.mensaje); // Establecer mensaje de error personalizado
+              if (input.id === "contrasena") {
+                contrasenaFeedback.textContent = resultado.mensaje;
+              } else {
+                otraContrasenaFeedback.textContent = resultado.mensaje;
+              }
+            }
+            // Comprobación adicional para verificar si las contraseñas coinciden
+            if (contrasena.value !== otraContrasena.value) {
+              otraContrasena.classList.add("is-invalid");
+              otraContrasenaFeedback.textContent =
+                "Las contraseñas no coinciden";
+            } else {
+              otraContrasena.classList.remove("is-invalid");
+              otraContrasenaFeedback.textContent = "";
+            }
+          }
+          // Para los campos de nombre y apellidos, verificar que no estén vacíos
+          if (
+            (input.id === "nombre" || input.id === "apellidos") &&
+            input.value !== ""
+          ) {
+            input.classList.remove("is-invalid");
+            input.classList.add("is-valid");
+            input.setCustomValidity(""); // Limpiar mensaje de error personalizado
+          }
+        },
+        false
       );
-    }
-  } else {
-    valida = false;
-    alert("Contraseñas distintas");
-  }
-  return valida;
+    });
+  });
 }
+
+// Comprueba que las dos contraseñas cumplen los requisitos establecidos.
+function validarRequisitosContrasena(pwd) {
+  let resultado = {
+    esValida: false,
+    mensaje: "",
+  };
+
+  if (pwd.length <= 6 || pwd.length > 12) {
+    resultado.mensaje =
+      "La longitud de la contraseña debe estar entre 6 y 12 caracteres";
+  } else if (!buscarAbc(pwd)) {
+    resultado.mensaje =
+      "La contraseña debe tener al menos una letra mayúscula o minúscula";
+  } else if (!buscarSimbolo(pwd)) {
+    resultado.mensaje =
+      "La contraseña debe tener al menos uno de estos símbolos: !#$%&().:;";
+  } else if (!buscarNumero(pwd)) {
+    resultado.mensaje = "La contraseña debe tener al menos un número";
+  } else {
+    resultado.esValida = true;
+  }
+
+  return resultado;
+}
+
+// function validarContrasena(pwd, otraPwd) {
+//   let valida;
+
+//   if (otraPwd === pwd) {
+//     valida = true;
+//   } else {
+//     valida = false;
+
+//     swal({
+//       title: "Las contraseñas no coinciden.",
+//       icon: "warning",
+//     });
+//   }
+
+//   return valida;
+// }
 
 //FUNCIONES VALIDACION CONTRASEÑA
 function buscarAbc(pwd) {

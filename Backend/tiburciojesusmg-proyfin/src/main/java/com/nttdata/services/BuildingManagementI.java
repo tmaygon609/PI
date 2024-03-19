@@ -21,7 +21,7 @@ public interface BuildingManagementI {
 
 	public List<Book> findBooksByUserId(final Long userId);
 
-	void addBookToUser(Long userId, Long bookId);
+	void addBookToUser(Long userId, Long bookId, String status, String rate, String comment);
 
 	Set<Book> getBooksByUserId(Long userId);
 

@@ -78,7 +78,11 @@ class Book {
           this.rate,
           this.comment
         );
-        alert("Libro añadido correctamente");
+
+        swal({
+          title: "Libro añadido correctamente",
+          icon: "success",
+        });
       }
     } catch (error) {
       console.error("Error al comprobar el libro", error);
@@ -151,7 +155,10 @@ class Book {
       });
 
       if (response.ok) {
-        alert("Libro eliminado correctamente");
+        swal({
+          title: "Libro eliminado correctamente",
+          icon: "success",
+        });
 
         // Eliminar la fila de la tabla
         let valorBoton = "e" + id;
@@ -201,14 +208,13 @@ class Book {
           let tabla =
             "<h1 style='Text-align:center'>Libro encontrado:</h1><br><br>";
           tabla +=
-            "<table id= 'tabla' class='table table-striped'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th><th scope='col'>Estado</th></tr></thead><tbody>";
+            "<table id= 'tabla' class='table table-striped'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th></tr></thead><tbody>";
 
           libroEncontrado.forEach((fila) => {
             tabla += "<tr>";
             tabla += "<td>" + fila.title + "</td>";
             tabla += "<td>" + fila.author + "</td>";
             tabla += "<td>" + fila.genre + "</td>";
-            tabla += "<td>" + fila.status + "</td>";
             tabla += "</tr>";
           });
 
@@ -217,15 +223,27 @@ class Book {
           document.getElementById("listado").innerHTML += tabla;
           document.getElementById("listado").style.display = "block";
         } else {
-          alert("Libro no encontrado.");
+          // No se encontró el libro
+          swal({
+            title: "Libro no encontrado.",
+            icon: "error",
+          });
         }
       } else {
-        throw new Error(
-          "Error al buscar el libro, contacte con el administrador de la app"
-        );
+        // Manejar otros casos de respuesta HTTP no exitosa
+        console.error("Error al buscar el libro:", response.statusText);
+        // Opcionalmente, mostrar un mensaje de error al usuario
+        swal({
+          title: "Error al buscar el libro.",
+          text: "Por favor, inténtelo de nuevo más tarde.",
+          icon: "error",
+        });
       }
     } catch (error) {
-      alert(error.message);
+      console.error("Error inesperado:", error);
+      alert(
+        "Ocurrio un error inesperado. Por favor, inténtelo de nuevo más tarde."
+      );
     }
   }
 
@@ -299,6 +317,11 @@ class Book {
         }
       } else {
         alert("Has llegado al límite de recomendaciones, prueba más tarde.");
+        swal({
+          title: "Has llegado al límite de recomendaciones",
+          text: "Prueba más tarde",
+          icon: "warning",
+        });
       }
     } catch (error) {
       console.error("Error al obtener la recomendación:", error);

@@ -21,7 +21,10 @@ function abrirPrincipal() {
   if (user && password) {
     consultar(user, password);
   } else {
-    alert("Todos los campos deben estar rellenos.");
+    swal({
+      title: "Todos los campos deben estar rellenos.",
+      icon: "warning",
+    });
   }
 }
 
@@ -32,19 +35,17 @@ function abrirRegistro() {
 
 // Consulta en base de datos si el usuario existe
 async function consultar(user, password) {
-  try {
-    const response = await fetch(
-      `http://localhost:8080/user/login?user=${user}&password=${password}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+  const oHttp = new XMLHttpRequest();
 
-    if (response.ok) {
-      const userInfo = await response.json();
+  oHttp.open(
+    "GET",
+    "http://localhost:8080/user/login?user=" + user + "&password=" + password
+  );
+  oHttp.send();
+
+  oHttp.onload = () => {
+    if (oHttp.status == "200" && oHttp.responseText != "") {
+      const userInfo = JSON.parse(oHttp.responseText);
 
       console.log("Usuario obtenido:", userInfo);
 
@@ -62,11 +63,12 @@ async function consultar(user, password) {
 
       window.open("html/principal.html", "_self");
     } else {
-      alert("Usuario no registrado.");
+      swal({
+        title: "Usuario no registrado.",
+        icon: "error",
+      });
       document.getElementById("user").value = "";
       document.getElementById("pwd").value = "";
     }
-  } catch (error) {
-    console.error("Error:", error.message);
-  }
+  };
 }

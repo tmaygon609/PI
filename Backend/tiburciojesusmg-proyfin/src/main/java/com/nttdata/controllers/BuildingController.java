@@ -46,8 +46,9 @@ public class BuildingController {
 	}
 
 	@PostMapping(path = "/addBookToUser")
-	public ResponseEntity<String> addBookToUser(@RequestParam Long userId, @RequestParam Long bookId) {
-		buildingService.addBookToUser(userId, bookId);
+	public ResponseEntity<String> addBookToUser(@RequestParam Long userId, @RequestParam Long bookId,
+			@RequestParam String status, @RequestParam String rate, @RequestParam String comment) {
+		buildingService.addBookToUser(userId, bookId, status, rate, comment);
 		return new ResponseEntity<>("Book added successfully", HttpStatus.CREATED);
 	}
 

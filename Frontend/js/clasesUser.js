@@ -54,7 +54,7 @@ class User {
     let tabla =
       "<h1 style='Text-align:center'>Listado libros leidos:</h1><br><br>";
     tabla +=
-      "<table id= 'tabla' class='table table-striped'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th><th scope='col'>Estado</th></tr></thead><tbody>";
+      "<table id= 'tabla' class='table table-striped'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th></tr></thead><tbody>";
 
     if (posts.length === 0) {
       tabla +=
@@ -66,7 +66,6 @@ class User {
         tabla += "<td>" + fila.title + "</td>";
         tabla += "<td>" + fila.author + "</td>";
         tabla += "<td>" + fila.genre + "</td>";
-        tabla += "<td>" + fila.status + "</td>";
         tabla +=
           "<td><button value='e" +
           fila.id +
@@ -103,11 +102,16 @@ class User {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      alert("Usuario registrado correctamente");
+      swal({
+        title: "Usuario registrado correctamente",
+        icon: "success",
+      });
     } catch (error) {
-      alert(
-        "Error al registrar el usuario, contacte con el administrador de la app"
-      );
+      swal({
+        title: "Error al registrar el usuario",
+        text: "Contacte con el administrador de la app",
+        icon: "success",
+      });
       console.error("Error:", error);
     }
   }

@@ -4,13 +4,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nttdata.persistence.model.Book;
 import com.nttdata.persistence.model.User;
+import com.nttdata.persistence.model.UserBook;
 import com.nttdata.persistence.repositories.BookRepositoryI;
+import com.nttdata.persistence.repositories.UserBookRepositoryI;
 import com.nttdata.persistence.repositories.UserRepositoryI;
 
 @Service
@@ -23,6 +26,9 @@ public class BuildingManagementImpl implements BuildingManagementI {
 
 	@Autowired
 	private UserRepositoryI userRepository;
+
+	@Autowired
+	private UserBookRepositoryI userBookRepository;
 
 	@Override
 	public Book addBook(Book b) {
@@ -40,9 +46,12 @@ public class BuildingManagementImpl implements BuildingManagementI {
 
 			Book book = bookOptional.get();
 
-			for (User user : book.getUsers()) {
-				user.getBooks().remove(book);
-				userRepository.save(user);
+			for (UserBook userBook : book.getUserBooks()) {
+				User user = userBook.getUser();
+
+				userBookRepository.findByUserAndBook(user, book);
+
+				userBookRepository.delete(userBook);
 			}
 			bookRepo.deleteById(id);
 		} else {
@@ -68,41 +77,55 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	@Override
 	public List<Book> searchByTitleAndUser(String title, Long userId) {
 
-		return bookRepo.findByTitleAndUserId(title, userId);
+		return userBookRepository.findByTitleAndUserId(title, userId);
 	}
 
 	@Override
 	public List<String> getBookTitlesOfUser(Long userId) {
-		List<Book> books = bookRepo.findBooksByUserId(userId);
+		List<Book> books = userBookRepository.findBooksByUserId(userId);
 		return books.stream().map(Book::getTitle).toList();
 	}
 
 	@Override
 	public List<Book> findBooksByUserId(Long userId) {
 
-		return bookRepo.findBooksByUserId(userId);
+		return userBookRepository.findBooksByUserId(userId);
 	}
 
 	@Override
-	public void addBookToUser(Long userId, Long bookId) {
-		Optional<User> userOptional = userRepository.findById(userId);
+	public void addBookToUser(Long userId, Long bookId, String status, String rate, String comment) {
 
+		Optional<User> userOptional = userRepository.findById(userId);
 		Optional<Book> bookOptional = bookRepo.findById(bookId);
 
 		if (userOptional.isPresent() && bookOptional.isPresent()) {
+
 			User user = userOptional.get();
 			Book book = bookOptional.get();
 
-			Set<Book> books = user.getBooks();
-			books.add(book);
-			user.setBooks(books);
+			// Crear una nueva entrada en la tabla de unión
+			UserBook userBook = new UserBook();
+			userBook.setUser(user);
+			userBook.setBook(book);
+			userBook.setStatus(status);
+			userBook.setRate(rate);
+			userBook.setComment(comment);
 
-			Set<User> users = book.getUsers();
-			users.add(user);
-			book.setUsers(users);
+			userBookRepository.save(userBook);
 
-			userRepository.save(user);
-			bookRepo.save(book);
+//			User user = userOptional.get();
+//			Book book = bookOptional.get();
+//
+//			Set<Book> books = user.getBooks();
+//			books.add(book);
+//			user.setBooks(books);
+//
+//			Set<User> users = book.getUsers();
+//			users.add(user);
+//			book.setUsers(users);
+//
+//			userRepository.save(user);
+//			bookRepo.save(book);
 		} else {
 			// Manejar el caso en el que el usuario no existe
 			// Puedes lanzar una excepción, devolver un código de error, etc.
@@ -115,7 +138,8 @@ public class BuildingManagementImpl implements BuildingManagementI {
 		Optional<User> userOptional = userRepository.findById(userId);
 
 		if (userOptional.isPresent()) {
-			return userOptional.get().getBooks();
+			User user = userOptional.get();
+			return user.getUserBooks().stream().map(UserBook::getBook).collect(Collectors.toSet());
 		} else {
 			return Collections.emptySet();
 		}

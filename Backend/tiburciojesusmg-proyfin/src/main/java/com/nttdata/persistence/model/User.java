@@ -3,14 +3,15 @@ package com.nttdata.persistence.model;
 import java.io.Serializable;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -47,9 +48,13 @@ public class User implements Serializable {
 	@Column(name = "C_PASSWORD")
 	private String password;
 
-	@ManyToMany
-	@JoinTable(name = "T_USER_BOOK", joinColumns = @JoinColumn(name = "C_USER_ID"), inverseJoinColumns = @JoinColumn(name = "C_BOOK_ID"))
-	private Set<Book> books;
+//	@ManyToMany
+//	@JoinTable(name = "T_USER_BOOK", joinColumns = @JoinColumn(name = "C_USER_ID"), inverseJoinColumns = @JoinColumn(name = "C_BOOK_ID"))
+//	private Set<Book> books;
+
+	@OneToMany(mappedBy = "user")
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private Set<UserBook> userBooks;
 
 	/**
 	 * @return the id
@@ -122,17 +127,31 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * @return the books
+	 * @return the userBooks
 	 */
-	public Set<Book> getBooks() {
-		return books;
+	public Set<UserBook> getUserBooks() {
+		return userBooks;
 	}
 
 	/**
-	 * @param books the books to set
+	 * @param userBooks the userBooks to set
 	 */
-	public void setBooks(Set<Book> books) {
-		this.books = books;
+	public void setUserBooks(Set<UserBook> userBooks) {
+		this.userBooks = userBooks;
 	}
+
+//	/**
+//	 * @return the books
+//	 */
+//	public Set<Book> getBooks() {
+//		return books;
+//	}
+//
+//	/**
+//	 * @param books the books to set
+//	 */
+//	public void setBooks(Set<Book> books) {
+//		this.books = books;
+//	}
 
 }

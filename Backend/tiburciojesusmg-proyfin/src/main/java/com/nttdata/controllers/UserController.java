@@ -18,8 +18,9 @@ public class UserController {
 	@Autowired
 	private UserManagementI userService;
 
-	@GetMapping(path = "/login", params = { "user", "password" })
+	@GetMapping(path = "/login")
 	public User login(@RequestParam("user") String user, @RequestParam("password") String password) {
+
 		return userService.login(user, password);
 	}
 

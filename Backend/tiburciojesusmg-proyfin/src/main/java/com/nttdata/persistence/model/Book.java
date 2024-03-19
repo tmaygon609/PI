@@ -13,7 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -47,13 +47,13 @@ public class Book implements Serializable {
 	@Column(name = "C_GENRE")
 	private String genre;
 
-	/** Estado */
-	@Column(name = "C_STATUS")
-	private String status;
-
-	@ManyToMany(mappedBy = "books")
+	@OneToMany(mappedBy = "book")
 	@JsonProperty(access = Access.WRITE_ONLY)
-	private Set<User> users;
+	private Set<UserBook> userBooks;
+
+//	@ManyToMany(mappedBy = "books")
+//	@JsonProperty(access = Access.WRITE_ONLY)
+//	private Set<User> users;
 
 	/**
 	 * @return the id
@@ -112,31 +112,31 @@ public class Book implements Serializable {
 	}
 
 	/**
-	 * @return the status
+	 * @return the userBooks
 	 */
-	public String getStatus() {
-		return status;
+	public Set<UserBook> getUserBooks() {
+		return userBooks;
 	}
 
 	/**
-	 * @param status the status to set
+	 * @param userBooks the userBooks to set
 	 */
-	public void setStatus(String status) {
-		this.status = status;
+	public void setUserBooks(Set<UserBook> userBooks) {
+		this.userBooks = userBooks;
 	}
 
-	/**
-	 * @return the users
-	 */
-	public Set<User> getUsers() {
-		return users;
-	}
-
-	/**
-	 * @param users the users to set
-	 */
-	public void setUsers(Set<User> users) {
-		this.users = users;
-	}
+//	/**
+//	 * @return the users
+//	 */
+//	public Set<User> getUsers() {
+//		return users;
+//	}
+//
+//	/**
+//	 * @param users the users to set
+//	 */
+//	public void setUsers(Set<User> users) {
+//		this.users = users;
+//	}
 
 }
