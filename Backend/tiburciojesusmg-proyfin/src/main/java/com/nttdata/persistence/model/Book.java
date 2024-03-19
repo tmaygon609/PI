@@ -16,30 +16,29 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "T_BOOK")
-public class Book implements Serializable{
-	
+public class Book implements Serializable {
+
 	/** Serial Version */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** ID (PK) */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "C_PERSON_ID")
+	@Column(name = "C_BOOK_ID")
 	private Long id;
-	
+
 	/** Nombre */
 	@Column(name = "C_TITLE")
 	private String title;
-	
+
 	/** Autor */
 	@Column(name = "C_AUTHOR")
 	private String author;
-	
+
 //	/** Documento de identidad */
 //	@Column(name = "C_IDENTITY_DOC", unique = true, nullable = false)
 //	private String identityDoc;
 //	
-	
 
 	/**
 	 * @return the id
@@ -82,8 +81,5 @@ public class Book implements Serializable{
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-
-	
-	
 
 }
