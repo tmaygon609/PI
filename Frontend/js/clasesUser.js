@@ -39,7 +39,7 @@ class User {
 
     oHttp.open(
       "GET",
-      "http://localhost:8080/userBook/getBooksByUserId?userId=" + userId
+      "http://localhost:8080/building/getBooksByUserId?userId=" + userId
     );
     oHttp.setRequestHeader("Content-type", "application/json");
     oHttp.send();
@@ -48,7 +48,10 @@ class User {
       "<h1 style='Text-align:center'>Listado libros leidos:</h1><br><br>";
 
     oHttp.onload = function () {
+      console.log(oHttp.responseText);
       const posts = JSON.parse(oHttp.responseText);
+
+      console.log(posts);
       tabla +=
         "<table id= 'tabla' class='table table-striped'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th><th scope='col'>Estado</th></tr></thead><tbody>";
 
@@ -57,6 +60,7 @@ class User {
           "<tr><td colspan='5'>No hay libros leídos por este usuario.</td></tr>";
       } else {
         posts.forEach((fila) => {
+          console.log("Objeto fila: ", fila);
           tabla += "<tr>";
           tabla += "<td>" + fila.title + "</td>";
           tabla += "<td>" + fila.author + "</td>";
@@ -78,9 +82,23 @@ class User {
 
   registrar() {
     const oHttp = new XMLHttpRequest();
-    oHttp.open("PUT", "http://localhost:8080/user/saveUser");
+    oHttp.open("POST", "http://localhost:8080/user/saveUser");
     oHttp.setRequestHeader("Content-type", "application/json");
-    oHttp.send(JSON.stringify(this));
+
+    console.log("Estoy en registrar.");
+
+    const userToRegister = {
+      name: this.name,
+      lastName: this.lastName,
+      user: this.user,
+      password: this.password,
+    };
+
+    console.log(userToRegister);
+
+    oHttp.send(JSON.stringify(userToRegister));
+
+    console.log("el json: " + JSON.stringify(userToRegister));
     oHttp.onload = function () {
       if (oHttp.status == "200") {
         alert("Usuario registrado correctamente");

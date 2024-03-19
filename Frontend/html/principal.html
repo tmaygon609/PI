@@ -147,12 +147,7 @@
               >Género
             </label>
             <div class="col-xs-4">
-              <select
-                id="txtGenero"
-                name="txtGenero"
-                class="form-select"
-                aria-label="Default select example"
-              >
+              <select id="txtGenero" name="txtGenero" class="custom-select">
                 <option selected></option>
                 <option value="1">Fantástico</option>
                 <option value="2">Novela</option>
@@ -183,7 +178,7 @@
                 id="btnAceptarAltaLibro"
                 name="btnAceptarAltaLibro"
                 class="btn btn-primary"
-                value="Aceptar"
+                value="Registrar"
                 onclick="aceptarAltaLibro();"
               />
             </div>
@@ -209,6 +204,7 @@
                 placeholder="Titulo"
                 class="form-control input-md"
                 type="text"
+                onkeypress="if (event.keyCode == 13) { document.getElementById('btnAceptarBuscarLibro').click(); return false; }"
               />
             </div>
           </div>
@@ -225,7 +221,7 @@
                 id="btnAceptarBuscarLibro"
                 name="btnAceptarBuscarLibro"
                 class="btn btn-primary"
-                value="Aceptar"
+                value="Buscar"
                 onclick="aceptarBuscarLibro();"
               />
             </div>

@@ -1,15 +1,16 @@
 package com.nttdata.services;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nttdata.persistence.model.Book;
 import com.nttdata.persistence.model.User;
-import com.nttdata.persistence.model.UserBook;
 import com.nttdata.persistence.repositories.BookRepositoryI;
-import com.nttdata.persistence.repositories.UserBookRepositoryI;
+import com.nttdata.persistence.repositories.UserRepositoryI;
 
 @Service
 public class BuildingManagementImpl implements BuildingManagementI {
@@ -20,12 +21,12 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	private BookRepositoryI bookRepo;
 
 	@Autowired
-	private UserBookRepositoryI userBookRepo;
+	private UserRepositoryI userRepo;
 
 	@Override
-	public void addBook(Book b) {
+	public Book addBook(Book b) {
 
-		bookRepo.save(b);
+		return bookRepo.save(b);
 
 	}
 
@@ -55,14 +56,25 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	}
 
 	@Override
-	public void addBookForUser(Book b, User u, Long rating) {
-		UserBook userBook = new UserBook();
-		userBook.setBook(b);
-		userBook.setUser(u);
-		userBook.setRating(rating);
+	public List<Book> findBooksByUserId(Long userId) {
 
-		userBookRepo.save(userBook);
+		return bookRepo.findBooksByUserId(userId);
+	}
 
+	@Override
+	public void addBookToUser(Long userId, Book book) {
+		Optional<User> userOptional = userRepo.findById(userId);
+
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+			Set<Book> books = user.getBooks();
+			books.add(book);
+			user.setBooks(books);
+			userRepo.save(user);
+		} else {
+			// Manejar el caso en el que el usuario no existe
+			// Puedes lanzar una excepción, devolver un código de error, etc.
+		}
 	}
 
 }

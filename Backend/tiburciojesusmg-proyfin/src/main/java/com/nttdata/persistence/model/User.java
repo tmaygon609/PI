@@ -3,6 +3,9 @@ package com.nttdata.persistence.model;
 import java.io.Serializable;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +23,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "T_USER")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User implements Serializable {
 
 	/** Serial Version */
@@ -47,7 +51,6 @@ public class User implements Serializable {
 	@Column(name = "C_PASSWORD")
 	private String password;
 
-	/** Relación con la entidad Book */
 	@ManyToMany
 	@JoinTable(name = "T_USER_BOOK", joinColumns = @JoinColumn(name = "C_USER_ID"), inverseJoinColumns = @JoinColumn(name = "C_BOOK_ID"))
 	private Set<Book> books;

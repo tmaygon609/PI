@@ -37,40 +37,87 @@ class Book {
       status: this.status,
     };
 
-    const oHttpCrearLibro = new XMLHttpRequest();
-    oHttpCrearLibro.open("POST", "http://localhost:8080/building/saveBook");
-    oHttpCrearLibro.setRequestHeader("Content-type", "application/json");
-
-    oHttpCrearLibro.send(JSON.stringify(nuevoLibro));
-
-    oHttpCrearLibro.onload = function () {
-      console.log(oHttpCrearLibro.status);
-      console.log(oHttpCrearLibro.responseText);
-
-      if (oHttpCrearLibro.status == 201) {
-        console.log("entro en crear libro.");
-        if (
-          oHttpCrearLibro.responseText &&
-          oHttpCrearLibro.responseText !== ""
-        ) {
-          const libroId = JSON.parse(oHttpCrearLibro.responseText).id;
-          alert("Libro registrado correctamente");
-
-          console.log("Nuevo libro creado con ID:", libroId);
-
-          // Llama a la función getBookById una vez que el libro ha sido creado
-
-          let myBook = new Book();
-          myBook.crearRelacionUserBook(userId, libroId);
+    this.comprobarLibro(this.title)
+      .then((resultado) => {
+        if (resultado.existe) {
+          console.log("El libro ya existe. Solo se crea la relación.");
+          // Crea la relación entre el usuario y el libro
+          let miLibro = new Book();
+          miLibro.crearRelacionUserBook(userId, resultado.libroId);
         } else {
-          alert("La respuesta del servicdor esta vacia");
+          console.log("El libro no existe. Creando nuevo libro y relación.");
+          const oHttpCrearLibro = new XMLHttpRequest();
+          oHttpCrearLibro.open(
+            "POST",
+            "http://localhost:8080/building/saveBook"
+          );
+          oHttpCrearLibro.setRequestHeader("Content-type", "application/json");
+
+          oHttpCrearLibro.send(JSON.stringify(nuevoLibro));
+
+          oHttpCrearLibro.onload = function () {
+            console.log(oHttpCrearLibro.status);
+            console.log(oHttpCrearLibro.responseText);
+
+            if (oHttpCrearLibro.status == 201) {
+              console.log("entro en crear libro.");
+              if (
+                oHttpCrearLibro.responseText &&
+                oHttpCrearLibro.responseText !== ""
+              ) {
+                const libroId = JSON.parse(oHttpCrearLibro.responseText).id;
+                alert("Libro registrado correctamente");
+
+                console.log("Nuevo libro creado con ID:", libroId);
+
+                // Llama a la función getBookById una vez que el libro ha sido creado
+
+                let myBook = new Book();
+                myBook.crearRelacionUserBook(userId, libroId);
+              } else {
+                alert("La respuesta del servicdor esta vacia");
+              }
+            } else {
+              alert(
+                "Error al registrar el libro, contacte con el administrador de la app"
+              );
+            }
+          };
         }
-      } else {
-        alert(
-          "Error al registrar el libro, contacte con el administrador de la app"
-        );
-      }
-    };
+      })
+      .catch((error) => {
+        console.error("Error al comprobar el libro", error);
+      });
+  }
+
+  //Método que busca un libro por su titulo.
+  comprobarLibro(title) {
+    return new Promise((resolve, reject) => {
+      const oHttp = new XMLHttpRequest();
+
+      oHttp.open(
+        "GET",
+        "http://localhost:8080/building/searchByTitle?title=" +
+          encodeURIComponent(title)
+      );
+      oHttp.setRequestHeader("Content-type", "application/json");
+      oHttp.send();
+
+      oHttp.onload = function () {
+        if (oHttp.status == "200") {
+          const libroEncontrado = JSON.parse(oHttp.responseText);
+
+          if (libroEncontrado.length > 0) {
+            const libroId = libroEncontrado[0].id;
+            resolve({ existe: true, libroId: libroId });
+          } else {
+            resolve({ existe: false, libroId: null });
+          }
+        } else {
+          reject(new Error("Error al buscar el libro"));
+        }
+      };
+    });
   }
 
   crearRelacionUserBook(userId, libroId) {
@@ -78,7 +125,7 @@ class Book {
     const oHttpCrearRelacion = new XMLHttpRequest();
     oHttpCrearRelacion.open(
       "POST",
-      "http://localhost:8080/userBook/addMapping?userId=" +
+      "http://localhost:8080/building/addBookToUser?userId=" +
         userId +
         "&bookId=" +
         libroId
@@ -88,7 +135,7 @@ class Book {
     oHttpCrearRelacion.send();
 
     oHttpCrearRelacion.onload = function () {
-      if (oHttpCrearRelacion.status == 200) {
+      if (oHttpCrearRelacion.status == 201) {
         alert("Relación USER_BOOK creada correctamente");
       } else {
         alert(
@@ -128,21 +175,110 @@ class Book {
     };
   }
 
+  // // Metodo para eliminar un libro.
+  // eliminar(id) {
+  //   const oHttp = new XMLHttpRequest();
+
+  //   oHttp.open(
+  //     "GET",
+  //     "http://localhost:8080/building/countUserBook?bookId=" + id
+  //   );
+  //   oHttp.setRequestHeader("Content-type", "application/json");
+  //   oHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
+  //   oHttp.send();
+
+  //   oHttp.onload = function () {
+  //     if (oHttp.status == "200") {
+  //       const count = JSON.parse(oHttp.responseText);
+
+  //       if (count > 1) {
+  //         // Si el libro está asociado a más de un usuario, solo eliminamos la relación
+  //         const oHttpDeleteRelation = new XMLHttpRequest();
+  //         oHttpDeleteRelation.open(
+  //           "DELETE",
+  //           "http://localhost:8080/building/deleteUserBook?bookId=" + id
+  //         );
+  //         oHttpDeleteRelation.setRequestHeader(
+  //           "Content-type",
+  //           "application/json"
+  //         );
+  //         oHttpDeleteRelation.send();
+
+  //         oHttpDeleteRelation.onload = function () {
+  //           if (oHttpDeleteRelation.status == "200") {
+  //             alert("Relación USER_BOOK eliminada correctamente");
+  //           } else {
+  //             alert(
+  //               "Error al eliminar la relación USER_BOOK. Detalles: " +
+  //                 oHttpDeleteRelation.status +
+  //                 " - " +
+  //                 oHttpDeleteRelation.statusText
+  //             );
+  //           }
+  //         };
+  //       } else {
+  //         // Si el libro solo está asociado a un usuario, eliminamos el libro
+  //         oHttp.open("DELETE", "http://localhost:8080/building/" + id);
+  //         oHttp.setRequestHeader("Content-type", "application/json");
+  //         oHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
+  //         oHttp.send();
+
+  //         oHttpDeleteBook.onload = function () {
+  //           if (oHttpDeleteBook.status == "200") {
+  //             alert("Libro eliminado correctamente");
+
+  //             // Eliminar la fila de la tabla
+  //             let valorBoton = "e" + id;
+  //             let filaEliminar = document
+  //               .querySelector("button[value='" + valorBoton + "']")
+  //               .closest("tr");
+  //             filaEliminar.parentNode.removeChild(filaEliminar);
+  //           } else {
+  //             alert(
+  //               "Error al eliminar el libro. Detalles: " +
+  //                 oHttp.status +
+  //                 " - " +
+  //                 oHttp.statusText
+  //             );
+  //           }
+  //         };
+  //       }
+  //     } else {
+  //       alert(
+  //         "Error al contar las relaciones USER_BOOK. Detalles: " +
+  //           oHttp.status +
+  //           " - " +
+  //           oHttp.statusText
+  //       );
+  //     }
+  //   };
+  // }
+
   // Método que busca un libro por su titulo.
   buscarLibro(title) {
     document.getElementById("listado").innerHTML = "";
+
+    const storedUser = localStorage.getItem("usuarioActual");
+    if (!storedUser) {
+      console.error("No se ha encontrado la información del usuario.");
+      return;
+    }
+    const usuarioActual = new User();
+    Object.assign(usuarioActual, JSON.parse(storedUser));
+    let userId = usuarioActual.userInfo.id;
 
     const oHttp = new XMLHttpRequest();
 
     oHttp.open(
       "GET",
-      "http://localhost:8080/building/searchByTitle?title=" +
-        encodeURIComponent(title)
+      "http://localhost:8080/building/searchByTitleAndUser?title=" +
+        encodeURIComponent(title) +
+        "&userId=" +
+        userId
     );
     oHttp.setRequestHeader("Content-type", "application/json");
     oHttp.send();
 
-    let tabla = "<h1 style='Text-align:center'>Libro encontrado: </h1><br><br>";
     oHttp.onload = function () {
       if (oHttp.status == "200") {
         const libroEncontrado = JSON.parse(oHttp.responseText);
@@ -182,6 +318,15 @@ class Book {
   listadoRecomendado() {
     document.getElementById("listado").innerHTML = "";
 
+    const storedUser = localStorage.getItem("usuarioActual");
+    if (!storedUser) {
+      console.error("No se ha encontrado la información del usuario.");
+      return;
+    }
+    const usuarioActual = new User();
+    Object.assign(usuarioActual, JSON.parse(storedUser));
+    let userId = usuarioActual.userInfo.id;
+
     // Crear objeto para enviar al servidor
     let requestData = {
       model: "gpt-3.5-turbo",
@@ -190,7 +335,10 @@ class Book {
     };
 
     const oHttp = new XMLHttpRequest();
-    oHttp.open("POST", "http://localhost:8080/building/getBookRecommendation");
+    oHttp.open(
+      "POST",
+      "http://localhost:8080/building/getBookRecommendation?userId=" + userId
+    );
     oHttp.setRequestHeader("Content-type", "application/json");
     oHttp.send(JSON.stringify(requestData));
 
@@ -230,12 +378,7 @@ class Book {
           // Manejar este caso según sea necesario
         }
       } else {
-        alert(
-          "Error al obtener las recomendaciones. Detalles: " +
-            oHttp.status +
-            " - " +
-            oHttp.statusText
-        );
+        alert("Has llegado al límite de recomendaciones, prueba más tarde.");
       }
     };
   }
