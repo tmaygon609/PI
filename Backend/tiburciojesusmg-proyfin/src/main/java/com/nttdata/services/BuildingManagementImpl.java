@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nttdata.persistence.model.Book;
+import com.nttdata.persistence.model.User;
+import com.nttdata.persistence.model.UserBook;
 import com.nttdata.persistence.repositories.BookRepositoryI;
+import com.nttdata.persistence.repositories.UserBookRepositoryI;
 
 @Service
 public class BuildingManagementImpl implements BuildingManagementI {
@@ -16,6 +19,9 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	@Autowired
 	private BookRepositoryI bookRepo;
 
+	@Autowired
+	private UserBookRepositoryI userBookRepo;
+
 	@Override
 	public void addBook(Book b) {
 
@@ -24,9 +30,9 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	}
 
 	@Override
-	public void deleteBook(Book b) {
+	public void deleteBook(Long id) {
 
-		bookRepo.delete(b);
+		bookRepo.deleteById(id);
 
 	}
 
@@ -40,6 +46,23 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	public List<Book> searchByTitle(String title) {
 
 		return bookRepo.searchByTitle(title);
+	}
+
+	@Override
+	public List<String> getAllBookTitles() {
+		List<Book> books = bookRepo.findAll();
+		return books.stream().map(Book::getTitle).toList();
+	}
+
+	@Override
+	public void addBookForUser(Book b, User u, Long rating) {
+		UserBook userBook = new UserBook();
+		userBook.setBook(b);
+		userBook.setUser(u);
+		userBook.setRating(rating);
+
+		userBookRepo.save(userBook);
+
 	}
 
 }

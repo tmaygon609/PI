@@ -8,7 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -41,9 +41,13 @@ public class Book implements Serializable {
 	@Column(name = "C_GENRE")
 	private String genre;
 
-	/** Relación con la entidad Registro de Lectura */
-	@OneToMany(mappedBy = "book")
-	private Set<ReadRegister> readRegisters;
+	/** Estado */
+	@Column(name = "C_STATUS")
+	private String status;
+
+	/** Relación con la entidad User */
+	@ManyToMany(mappedBy = "books")
+	private Set<User> users;
 
 	/**
 	 * @return the id
@@ -102,17 +106,31 @@ public class Book implements Serializable {
 	}
 
 	/**
-	 * @return the readRegisters
+	 * @return the status
 	 */
-	public Set<ReadRegister> getReadRegisters() {
-		return readRegisters;
+	public String getStatus() {
+		return status;
 	}
 
 	/**
-	 * @param readRegisters the readRegisters to set
+	 * @param status the status to set
 	 */
-	public void setReadRegisters(Set<ReadRegister> readRegisters) {
-		this.readRegisters = readRegisters;
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the users
+	 */
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	/**
+	 * @param users the users to set
+	 */
+	public void setUsers(Set<User> users) {
+		this.users = users;
 	}
 
 }

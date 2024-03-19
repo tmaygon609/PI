@@ -65,6 +65,7 @@ function aceptarAltaLibro() {
     let oBook = new Book(title, author, selectedGenre, status);
 
     oBook.altaLibro();
+
     frmAltaLibro.reset();
   }
 }
@@ -88,9 +89,21 @@ function aceptarListadoLibros() {
   document.getElementById("listado").innerHTML = "";
   document.getElementById("listado").style.display = "none";
 
-  let oBook = new Book();
+  // Recupera la información del usuario almacenada en el localStorage
+  const storedUser = localStorage.getItem("usuarioActual");
 
-  oBook.listadoLibros();
+  if (storedUser) {
+    const usuarioActual = new User();
+    Object.assign(usuarioActual, JSON.parse(storedUser));
+
+    usuarioActual.listadoLibros();
+  } else {
+    console.error("no se contro la informacion del usuario.");
+  }
+
+  // let oUser = new User();
+
+  // oUser.listadoLibros();
 }
 
 // Clic en la opción de recomendar un libro a través de la IA.

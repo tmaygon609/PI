@@ -1,59 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
     <script src="bootstrap/js/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <title>login</title>
-</head>
-<body>
-<div style="width: 400px; padding: 20px; border: 1px solid lightgray; margin: 50px auto;">
-  <form>
-    <!-- Email input -->
-    <div class="form-outline mb-4">
-      <input type="email" id="user" class="form-control" />
-      <label class="form-label" for="user">Usuario</label>
+  </head>
+  <body>
+    <div
+      style="
+        width: 400px;
+        padding: 20px;
+        border: 1px solid lightgray;
+        margin: 50px auto;
+      "
+    >
+      <form>
+        <!-- Email input -->
+        <div class="form-outline mb-4">
+          <input type="email" id="user" class="form-control" />
+          <label class="form-label" for="user">Usuario</label>
+        </div>
+
+        <!-- Password input -->
+        <div class="form-outline mb-4">
+          <input type="password" id="pwd" class="form-control" />
+          <label class="form-label" for="pwd">Contraseña</label>
+        </div>
+
+        <!-- 2 column grid layout for inline styling -->
+        <div class="row mb-4">
+          <div class="col d-flex justify-content-center">
+            <!-- Checkbox -->
+          </div>
+        </div>
+
+        <!-- Submit button -->
+        <button
+          type="button"
+          class="btn btn-primary btn-block mb-4"
+          id="btn-entrar"
+        >
+          Entrar
+        </button>
+        <br />
+        <!-- Register buttons -->
+        <div class="text-center">
+          <p>
+            ¿No eres usuario? <a id="enlaceRegistrar" href="#!">Registrar</a>
+          </p>
+          <button type="button" class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-facebook-f"></i>
+          </button>
+
+          <button type="button" class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-google"></i>
+          </button>
+
+          <button type="button" class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-twitter"></i>
+          </button>
+
+          <button type="button" class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-github"></i>
+          </button>
+        </div>
+      </form>
     </div>
-  
-    <!-- Password input -->
-    <div class="form-outline mb-4">
-      <input type="password" id="pwd" class="form-control" />
-      <label class="form-label" for="pwd">Contraseña</label>
-    </div>
-  
-    <!-- 2 column grid layout for inline styling -->
-    <div class="row mb-4">
-      <div class="col d-flex justify-content-center">
-        <!-- Checkbox -->
-      </div>
-    </div>
-  
-    <!-- Submit button -->
-    <button type="button" class="btn btn-primary btn-block mb-4" id="btn-entrar">Entrar</button>
-    <br>
-    <!-- Register buttons -->
-    <div class="text-center">
-      <p>¿No eres usuario? <a id="enlaceRegistrar" href="#!">Registrar</a></p>
-      <button type="button" class="btn btn-link btn-floating mx-1">
-        <i class="fab fa-facebook-f"></i>
-      </button>
-  
-      <button type="button" class="btn btn-link btn-floating mx-1">
-        <i class="fab fa-google"></i>
-      </button>
-  
-      <button type="button" class="btn btn-link btn-floating mx-1">
-        <i class="fab fa-twitter"></i>
-      </button>
-  
-      <button type="button" class="btn btn-link btn-floating mx-1">
-        <i class="fab fa-github"></i>
-      </button>
-    </div>
-  </form>
-</div>
-<script type="text/javascript" src="js/login.js"></script>
-</body>
+    <script type="text/javascript" src="js/login.js"></script>
+    <script type="text/javascript" src="js/clasesUser.js"></script>
+  </body>
 </html>

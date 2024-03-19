@@ -31,8 +31,24 @@ function consultar(user, password) {
   oHttp.setRequestHeader("Content-type", "application/json");
   oHttp.send();
 
-  oHttp.onload = function () {
+  oHttp.onload = () => {
     if (oHttp.status == "200" && oHttp.responseText != "") {
+      const userInfo = JSON.parse(oHttp.responseText);
+
+      console.log("Usuario obtenido:", userInfo);
+
+      // Crear una instancia de User solo con el nombre de usuario
+      const usuarioActual = new User(
+        userInfo.name,
+        userInfo.lastName,
+        userInfo.user,
+        userInfo.password
+      );
+      usuarioActual.setUserInfo(userInfo);
+
+      // Almacena la información del usuario en el localStorage
+      localStorage.setItem("usuarioActual", JSON.stringify(usuarioActual));
+
       window.open("html/principal.html", "_self");
     } else {
       alert("Usuario no registrado.");

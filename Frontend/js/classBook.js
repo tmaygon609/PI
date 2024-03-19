@@ -11,54 +11,88 @@ class Book {
     this.status = s;
   }
 
-  //Metodo que muestra el listado de todos los libros.
-  listadoLibros() {
-    const oHttp = new XMLHttpRequest();
-    oHttp.open("GET", "http://localhost:8080/building");
-    oHttp.setRequestHeader("Content-type", "application/json");
-    oHttp.send();
-
-    let tabla =
-      "<h1 style='Text-align:center'>Listado libros leidos:</h1><br><br>";
-
-    oHttp.onload = function () {
-      const posts = JSON.parse(this.responseText);
-      tabla +=
-        "<table id= 'tabla' class='table table-striped'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th><th scope='col'>Estado</th></tr></thead><tbody>";
-
-      posts.forEach((fila) => {
-        tabla += "<tr>";
-        tabla += "<td>" + fila.title + "</td>";
-        tabla += "<td>" + fila.author + "</td>";
-        tabla += "<td>" + fila.genre + "</td>";
-        tabla += "<td>" + fila.status + "</td>";
-        tabla +=
-          "<td><button value='e" +
-          fila.id +
-          "' type='button' class='btn btn-danger fa-regular fa-trash-can'></button></td>";
-        tabla += "</tr>";
-      });
-
-      tabla += "</tbody></table>";
-
-      document.getElementById("listado").innerHTML += tabla;
-      document.getElementById("listado").style.display = "block";
-    };
-  }
-
   // Metodo que da de alta a un libro.
   altaLibro() {
-    const oHttp = new XMLHttpRequest();
-    oHttp.open("PUT", "http://localhost:8080/building");
-    oHttp.setRequestHeader("Content-type", "application/json");
-    oHttp.send(JSON.stringify(this));
+    const storedUser = localStorage.getItem("usuarioActual");
 
-    oHttp.onload = function () {
-      if (oHttp.status == "200") {
-        alert("Libro registrado correctamente");
+    console.log("storedUser", storedUser);
+
+    if (!storedUser) {
+      console.error("No se ha encontrado la información del usuario.");
+      return;
+    }
+
+    const usuarioActual = new User();
+    Object.assign(usuarioActual, JSON.parse(storedUser));
+
+    console.log("usuarioActual después de asignar:", usuarioActual);
+
+    console.log("userid ", usuarioActual.userInfo.id);
+    let userId = usuarioActual.userInfo.id;
+
+    const nuevoLibro = {
+      title: this.title,
+      author: this.author,
+      genre: this.genre,
+      status: this.status,
+    };
+
+    const oHttpCrearLibro = new XMLHttpRequest();
+    oHttpCrearLibro.open("POST", "http://localhost:8080/building/saveBook");
+    oHttpCrearLibro.setRequestHeader("Content-type", "application/json");
+
+    oHttpCrearLibro.send(JSON.stringify(nuevoLibro));
+
+    oHttpCrearLibro.onload = function () {
+      console.log(oHttpCrearLibro.status);
+      console.log(oHttpCrearLibro.responseText);
+
+      if (oHttpCrearLibro.status == 201) {
+        console.log("entro en crear libro.");
+        if (
+          oHttpCrearLibro.responseText &&
+          oHttpCrearLibro.responseText !== ""
+        ) {
+          const libroId = JSON.parse(oHttpCrearLibro.responseText).id;
+          alert("Libro registrado correctamente");
+
+          console.log("Nuevo libro creado con ID:", libroId);
+
+          // Llama a la función getBookById una vez que el libro ha sido creado
+
+          let myBook = new Book();
+          myBook.crearRelacionUserBook(userId, libroId);
+        } else {
+          alert("La respuesta del servicdor esta vacia");
+        }
       } else {
         alert(
           "Error al registrar el libro, contacte con el administrador de la app"
+        );
+      }
+    };
+  }
+
+  crearRelacionUserBook(userId, libroId) {
+    console.log("entro en realcuion.");
+    const oHttpCrearRelacion = new XMLHttpRequest();
+    oHttpCrearRelacion.open(
+      "POST",
+      "http://localhost:8080/userBook/addMapping?userId=" +
+        userId +
+        "&bookId=" +
+        libroId
+    );
+    oHttpCrearRelacion.setRequestHeader("Content-type", "application/json");
+
+    oHttpCrearRelacion.send();
+
+    oHttpCrearRelacion.onload = function () {
+      if (oHttpCrearRelacion.status == 200) {
+        alert("Relación USER_BOOK creada correctamente");
+      } else {
+        alert(
+          "Error al crear la relación USER_BOOK, contacte con el administrador de la app"
         );
       }
     };

@@ -27,4 +27,10 @@ public class UserManagementImpl implements UserManagementI {
 
 	}
 
+	@Override
+	public User findUserById(Long idUser) {
+
+		return userRepo.findById(idUser).get();
+	}
+
 }

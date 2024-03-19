@@ -8,7 +8,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -45,9 +47,10 @@ public class User implements Serializable {
 	@Column(name = "C_PASSWORD")
 	private String password;
 
-	/** Relación con la entidad Registro de Lectura */
-	@OneToMany(mappedBy = "user")
-	private Set<ReadRegister> readRegisters;
+	/** Relación con la entidad Book */
+	@ManyToMany
+	@JoinTable(name = "T_USER_BOOK", joinColumns = @JoinColumn(name = "C_USER_ID"), inverseJoinColumns = @JoinColumn(name = "C_BOOK_ID"))
+	private Set<Book> books;
 
 	/**
 	 * @return the id
@@ -120,17 +123,17 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * @return the readRegisters
+	 * @return the books
 	 */
-	public Set<ReadRegister> getReadRegisters() {
-		return readRegisters;
+	public Set<Book> getBooks() {
+		return books;
 	}
 
 	/**
-	 * @param readRegisters the readRegisters to set
+	 * @param books the books to set
 	 */
-	public void setReadRegisters(Set<ReadRegister> readRegisters) {
-		this.readRegisters = readRegisters;
+	public void setBooks(Set<Book> books) {
+		this.books = books;
 	}
 
 }

@@ -8,4 +8,6 @@ public interface UserManagementI {
 
 	public void addUser(final User u);
 
+	public User findUserById(Long idUser);
+
 }

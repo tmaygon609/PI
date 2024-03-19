@@ -3,6 +3,7 @@ package com.nttdata.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,9 @@ import com.nttdata.persistence.model.OpenAIResponse;
 
 @Service
 public class OpenAIService {
+
+	@Autowired
+	private BuildingManagementI buildingManagement;
 
 	private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 	private static final String AUTHORIZATION_HEADER = "Bearer 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";
@@ -39,13 +43,18 @@ public class OpenAIService {
 	public OpenAIResponse getBookRecommendation() {
 		OpenAIRequest request = new OpenAIRequest();
 		request.setModel("gpt-3.5-turbo");
-		request.setTemperature(0.7);
+		request.setTemperature(0.8);
 
 		List<Message> messages = new ArrayList<>();
 		Message message = new Message();
 		message.setRole("user");
-		message.setContent(
-				"Recomiéndame un solo libro similar a 'El señor de los anillos', 'Harry Potter' y 'Juego de tronos' en términos de temática y estilo literario. Por favor, proporciona una recomendación basada en estas obras, sin necesidad de explicaciones adicionales, formato: titulo, autor.");
+
+		List<String> bookTitles = buildingManagement.getAllBookTitles();
+		System.out.println("Book Titles: " + bookTitles);
+
+		String content = "Recomiéndame solo un libro similar a '" + String.join("', '", bookTitles)
+				+ "' en términos de temática y estilo literario. Por favor, proporciona una recomendación basada en estas obras, sin necesidad de explicaciones adicionales, el formato de la respuesta quiero que siempre sea: 'titulo', autor.";
+		message.setContent(content);
 		messages.add(message);
 
 		request.setMessages(messages);

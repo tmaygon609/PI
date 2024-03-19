@@ -1,7 +1,6 @@
 package com.nttdata.persistence.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,13 +13,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 /**
- * Clase regsitro lectura.
+ * Clase entidad UserBook.
  * 
- * Representa tabla T_READ_REGISTER.
+ * Representa tabla T_USER_BOOK.
  */
 @Entity
-@Table(name = "T_READ_REGISTER")
-public class ReadRegister implements Serializable {
+@Table(name = "T_USER_BOOK")
+public class UserBook implements Serializable {
 
 	/** Serial Version */
 	private static final long serialVersionUID = 1L;
@@ -28,16 +27,8 @@ public class ReadRegister implements Serializable {
 	/** ID (PK) */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "C_READ_REGISTER_ID")
+	@Column(name = "C_USER_BOOK_ID")
 	private Long id;
-
-	/** Fecha Inicio Lectura */
-	@Column(name = "C_START_DATE")
-	private Date startDate;
-
-	/** Fecha Fin Lectura */
-	@Column(name = "C_END_DATE")
-	private Date endDate;
 
 	/** Calificacion */
 	@Column(name = "C_RATING")
@@ -45,12 +36,12 @@ public class ReadRegister implements Serializable {
 
 	/** Relación con la entidad Usuario */
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "T_USER", referencedColumnName = "C_USER_ID", nullable = true)
+	@JoinColumn(name = "C_USER_ID", nullable = true)
 	private User user;
 
 	/** Relación con la entidad Libro */
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "T_BOOK", referencedColumnName = "C_BOOK_ID", nullable = true)
+	@JoinColumn(name = "C_BOOK_ID", nullable = true)
 	private Book book;
 
 	/**
@@ -65,34 +56,6 @@ public class ReadRegister implements Serializable {
 	 */
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return the startDate
-	 */
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	/**
-	 * @param startDate the startDate to set
-	 */
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	/**
-	 * @return the endDate
-	 */
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	/**
-	 * @param endDate the endDate to set
-	 */
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
 	}
 
 	/**
