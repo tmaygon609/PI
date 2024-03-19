@@ -12,13 +12,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
- * Clase libro.
+ * Clase usuario.
  * 
- * Representa tabla T_BOOK.
+ * Representa tabla T_USER.
  */
 @Entity
-@Table(name = "T_BOOK")
-public class Book implements Serializable {
+@Table(name = "T_USER")
+public class User implements Serializable {
 
 	/** Serial Version */
 	private static final long serialVersionUID = 1L;
@@ -26,23 +26,27 @@ public class Book implements Serializable {
 	/** ID (PK) */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "C_BOOK_ID")
+	@Column(name = "C_USER_ID")
 	private Long id;
 
 	/** Nombre */
-	@Column(name = "C_TITLE")
-	private String title;
+	@Column(name = "C_NAME")
+	private String name;
 
-	/** Autor */
-	@Column(name = "C_AUTHOR")
-	private String author;
+	/** Apellidos */
+	@Column(name = "C_LAST_NAME")
+	private String lastName;
 
-	/** Genero */
-	@Column(name = "C_GENRE")
-	private String genre;
+	/** Usuario */
+	@Column(name = "C_USER")
+	private String user;
+
+	/** Password */
+	@Column(name = "C_PASSWORD")
+	private String password;
 
 	/** Relación con la entidad Registro de Lectura */
-	@OneToMany(mappedBy = "book")
+	@OneToMany(mappedBy = "user")
 	private Set<ReadRegister> readRegisters;
 
 	/**
@@ -60,45 +64,59 @@ public class Book implements Serializable {
 	}
 
 	/**
-	 * @return the title
+	 * @return the name
 	 */
-	public String getTitle() {
-		return title;
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * @param title the title to set
+	 * @param name the name to set
 	 */
-	public void setTitle(String title) {
-		this.title = title;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
-	 * @return the author
+	 * @return the lastName
 	 */
-	public String getAuthor() {
-		return author;
+	public String getLastName() {
+		return lastName;
 	}
 
 	/**
-	 * @param author the author to set
+	 * @param lastName the lastName to set
 	 */
-	public void setAuthor(String author) {
-		this.author = author;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	/**
-	 * @return the genre
+	 * @return the user
 	 */
-	public String getGenre() {
-		return genre;
+	public String getUser() {
+		return user;
 	}
 
 	/**
-	 * @param genre the genre to set
+	 * @param user the user to set
 	 */
-	public void setGenre(String genre) {
-		this.genre = genre;
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	/**
