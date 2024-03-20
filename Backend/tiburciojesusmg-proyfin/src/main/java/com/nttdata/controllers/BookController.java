@@ -18,15 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nttdata.persistence.model.Book;
 import com.nttdata.persistence.model.OpenAIRequest;
 import com.nttdata.persistence.model.OpenAIResponse;
-import com.nttdata.services.BuildingManagementI;
+import com.nttdata.services.BookManagementI;
 import com.nttdata.services.OpenAIService;
 
 @RestController
 @RequestMapping("/building")
-public class BuildingController {
+public class BookController {
 
 	@Autowired
-	private BuildingManagementI buildingService;
+	private BookManagementI bookService;
 
 	@Autowired
 	private OpenAIService openAIService;
@@ -34,13 +34,13 @@ public class BuildingController {
 	@GetMapping
 	public List<Book> showBooks() {
 
-		return buildingService.searchAllBooks();
+		return bookService.searchAllBooks();
 	}
 
 	@PostMapping(path = "/saveBook")
 	public ResponseEntity<Book> saveBook(@RequestBody Book b) {
 
-		Book savedBook = buildingService.addBook(b);
+		Book savedBook = bookService.addBook(b);
 
 		return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
 	}
@@ -48,29 +48,29 @@ public class BuildingController {
 	@PostMapping(path = "/addBookToUser")
 	public ResponseEntity<String> addBookToUser(@RequestParam Long userId, @RequestParam Long bookId,
 			@RequestParam String status, @RequestParam String rate, @RequestParam String comment) {
-		buildingService.addBookToUser(userId, bookId, status, rate, comment);
+		bookService.addBookToUser(userId, bookId, status, rate, comment);
 		return new ResponseEntity<>("Book added successfully", HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/{id}")
 	public void deleteBook(final @PathVariable Long id) {
 
-		buildingService.deleteBook(id);
+		bookService.deleteBook(id);
 	}
 
 	@GetMapping(path = "/searchByTitle")
 	public List<Book> searchByTitle(@RequestParam String title) {
-		return buildingService.searchByTitle(title);
+		return bookService.searchByTitle(title);
 	}
 
 	@GetMapping(path = "/searchByTitleAndUser")
 	public List<Book> searchByTitle(@RequestParam String title, @RequestParam Long userId) {
-		return buildingService.searchByTitleAndUser(title, userId);
+		return bookService.searchByTitleAndUser(title, userId);
 	}
 
 	@GetMapping("/getBooksByUserId")
 	public Set<Book> getBooksByUserId(@RequestParam Long userId) {
-		return buildingService.getBooksByUserId(userId);
+		return bookService.getBooksByUserId(userId);
 	}
 
 	@PostMapping(path = "/getOpenAIResponse")

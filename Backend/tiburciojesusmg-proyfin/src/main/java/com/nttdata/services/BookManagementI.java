@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.nttdata.persistence.model.Book;
 
-public interface BuildingManagementI {
+public interface BookManagementI {
 
 	public Book addBook(final Book b);
 

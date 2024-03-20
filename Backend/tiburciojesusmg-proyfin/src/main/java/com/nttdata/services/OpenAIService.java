@@ -20,10 +20,10 @@ import com.nttdata.persistence.model.OpenAIResponse;
 public class OpenAIService {
 
 	@Autowired
-	private BuildingManagementI buildingManagement;
+	private BookManagementI buildingManagement;
 
 	private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-	private static final String AUTHORIZATION_HEADER = "Bearer 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";
+	private static final String AUTHORIZATION_HEADER = "Bearer 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";
 
 	public OpenAIResponse getOpenAIResponse(OpenAIRequest request) {
 		RestTemplate restTemplate = new RestTemplate();
