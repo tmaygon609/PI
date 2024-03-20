@@ -23,7 +23,7 @@ public class OpenAIService {
 	private BuildingManagementI buildingManagement;
 
 	private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-	private static final String AUTHORIZATION_HEADER = "Bearer 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";
+	private static final String AUTHORIZATION_HEADER = "Bearer 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";
 
 	public OpenAIResponse getOpenAIResponse(OpenAIRequest request) {
 		RestTemplate restTemplate = new RestTemplate();

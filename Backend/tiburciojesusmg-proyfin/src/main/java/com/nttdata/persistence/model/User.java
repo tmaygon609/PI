@@ -13,6 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Clase usuario.
@@ -21,6 +23,8 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "T_USER")
+@Getter
+@Setter
 public class User implements Serializable {
 
 	/** Serial Version */
@@ -56,89 +60,89 @@ public class User implements Serializable {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private Set<UserBook> userBooks;
 
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @return the lastName
-	 */
-	public String getLastName() {
-		return lastName;
-	}
-
-	/**
-	 * @param lastName the lastName to set
-	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	/**
-	 * @return the user
-	 */
-	public String getUser() {
-		return user;
-	}
-
-	/**
-	 * @param user the user to set
-	 */
-	public void setUser(String user) {
-		this.user = user;
-	}
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	/**
-	 * @return the userBooks
-	 */
-	public Set<UserBook> getUserBooks() {
-		return userBooks;
-	}
-
-	/**
-	 * @param userBooks the userBooks to set
-	 */
-	public void setUserBooks(Set<UserBook> userBooks) {
-		this.userBooks = userBooks;
-	}
+//	/**
+//	 * @return the id
+//	 */
+//	public Long getId() {
+//		return id;
+//	}
+//
+//	/**
+//	 * @param id the id to set
+//	 */
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
+//
+//	/**
+//	 * @return the name
+//	 */
+//	public String getName() {
+//		return name;
+//	}
+//
+//	/**
+//	 * @param name the name to set
+//	 */
+//	public void setName(String name) {
+//		this.name = name;
+//	}
+//
+//	/**
+//	 * @return the lastName
+//	 */
+//	public String getLastName() {
+//		return lastName;
+//	}
+//
+//	/**
+//	 * @param lastName the lastName to set
+//	 */
+//	public void setLastName(String lastName) {
+//		this.lastName = lastName;
+//	}
+//
+//	/**
+//	 * @return the user
+//	 */
+//	public String getUser() {
+//		return user;
+//	}
+//
+//	/**
+//	 * @param user the user to set
+//	 */
+//	public void setUser(String user) {
+//		this.user = user;
+//	}
+//
+//	/**
+//	 * @return the password
+//	 */
+//	public String getPassword() {
+//		return password;
+//	}
+//
+//	/**
+//	 * @param password the password to set
+//	 */
+//	public void setPassword(String password) {
+//		this.password = password;
+//	}
+//
+//	/**
+//	 * @return the userBooks
+//	 */
+//	public Set<UserBook> getUserBooks() {
+//		return userBooks;
+//	}
+//
+//	/**
+//	 * @param userBooks the userBooks to set
+//	 */
+//	public void setUserBooks(Set<UserBook> userBooks) {
+//		this.userBooks = userBooks;
+//	}
 
 //	/**
 //	 * @return the books
