@@ -180,24 +180,19 @@ class Book {
   async buscarLibro(title) {
     document.getElementById("listado").innerHTML = "";
 
-    const usuarioActual = this.obtenerUsuarioActual();
-    if (!usuarioActual) {
-      console.error("No se ha encontrado la información del usuario.");
-      return;
-    }
-    let userId = usuarioActual.userInfo.id;
+    // const usuarioActual = this.obtenerUsuarioActual();
+    // if (!usuarioActual) {
+    //   console.error("No se ha encontrado la información del usuario.");
+    //   return;
+    // }
+    // let userId = usuarioActual.userInfo.id;
 
     try {
       const response = await fetch(
-        `http://localhost:8080/building/searchByTitleAndUser?title=${encodeURIComponent(
+        `http://localhost:8080/building/searchByTitle?title=${encodeURIComponent(
           title
-        )}&userId=${userId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-type": "application/json",
-          },
-        }
+        )}`,
+        { method: "GET" }
       );
 
       if (response.ok) {
