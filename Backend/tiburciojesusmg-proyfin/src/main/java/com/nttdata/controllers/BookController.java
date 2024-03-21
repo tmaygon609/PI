@@ -22,7 +22,7 @@ import com.nttdata.services.BookManagementI;
 import com.nttdata.services.OpenAIService;
 
 @RestController
-@RequestMapping("/building")
+@RequestMapping("/v1/books")
 public class BookController {
 
 	@Autowired
