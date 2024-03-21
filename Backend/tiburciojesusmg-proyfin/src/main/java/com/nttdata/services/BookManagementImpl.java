@@ -17,12 +17,12 @@ import com.nttdata.persistence.repositories.UserBookRepositoryI;
 import com.nttdata.persistence.repositories.UserRepositoryI;
 
 @Service
-public class BuildingManagementImpl implements BuildingManagementI {
+public class BookManagementImpl implements BookManagementI {
 
 	// Todas la validaciones van en la capa de servicio.
 
 	@Autowired
-	private BookRepositoryI bookRepo;
+	private BookRepositoryI bookRepository;
 
 	@Autowired
 	private UserRepositoryI userRepository;
@@ -33,14 +33,14 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	@Override
 	public Book addBook(Book b) {
 
-		return bookRepo.save(b);
+		return bookRepository.save(b);
 
 	}
 
 	@Override
 	public void deleteBook(Long id) {
 
-		Optional<Book> bookOptional = bookRepo.findById(id);
+		Optional<Book> bookOptional = bookRepository.findById(id);
 
 		if (bookOptional.isPresent()) {
 
@@ -53,7 +53,7 @@ public class BuildingManagementImpl implements BuildingManagementI {
 
 				userBookRepository.delete(userBook);
 			}
-			bookRepo.deleteById(id);
+			bookRepository.deleteById(id);
 		} else {
 
 			// Manejar el caso en el que el libro no existe
@@ -65,13 +65,13 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	@Override
 	public List<Book> searchAllBooks() {
 
-		return bookRepo.findAll();
+		return bookRepository.findAll();
 	}
 
 	@Override
 	public List<Book> searchByTitle(String title) {
 
-		return bookRepo.searchByTitle(title);
+		return bookRepository.searchByTitle(title);
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class BuildingManagementImpl implements BuildingManagementI {
 	public void addBookToUser(Long userId, Long bookId, String status, String rate, String comment) {
 
 		Optional<User> userOptional = userRepository.findById(userId);
-		Optional<Book> bookOptional = bookRepo.findById(bookId);
+		Optional<Book> bookOptional = bookRepository.findById(bookId);
 
 		if (userOptional.isPresent() && bookOptional.isPresent()) {
 

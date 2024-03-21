@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,17 +21,19 @@ import com.nttdata.persistence.model.OpenAIResponse;
 public class OpenAIService {
 
 	@Autowired
-	private BuildingManagementI buildingManagement;
+	private BookManagementI buildingManagement;
+
+	@Value("${openai.api.key}")
+	private String openaiApiKey;
 
 	private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-	private static final String AUTHORIZATION_HEADER = "Bearer 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";
 
 	public OpenAIResponse getOpenAIResponse(OpenAIRequest request) {
 		RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set("Authorization", AUTHORIZATION_HEADER);
+		headers.set("Authorization", "Bearer " + openaiApiKey);
 
 		HttpEntity<OpenAIRequest> entity = new HttpEntity<>(request, headers);
 

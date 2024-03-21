@@ -12,7 +12,7 @@ import com.nttdata.persistence.model.User;
 import com.nttdata.services.UserManagementI;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/v1/users")
 public class UserController {
 
 	@Autowired
