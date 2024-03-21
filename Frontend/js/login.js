@@ -39,7 +39,10 @@ async function consultar(user, password) {
 
   oHttp.open(
     "GET",
-    "http://localhost:8080/user/login?user=" + user + "&password=" + password
+    "http://localhost:8080/v1/users/login?user=" +
+      user +
+      "&password=" +
+      password
   );
   oHttp.send();
 

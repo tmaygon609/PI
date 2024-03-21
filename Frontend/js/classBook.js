@@ -91,7 +91,7 @@ class Book {
 
   async comprobarLibro(title) {
     const response = await fetch(
-      `http://localhost:8080/building/searchByTitle?title=${encodeURIComponent(
+      `http://localhost:8080/v1/books/searchByTitle?title=${encodeURIComponent(
         title
       )}`,
       { method: "GET" }
@@ -111,7 +111,7 @@ class Book {
   }
 
   async crearLibro(libro) {
-    const response = await fetch("http://localhost:8080/building/saveBook", {
+    const response = await fetch("http://localhost:8080/v1/books/saveBook", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -129,7 +129,7 @@ class Book {
 
   async crearRelacionUserBook(userId, libroId, status, rate, comment) {
     const response = await fetch(
-      `http://localhost:8080/building/addBookToUser?userId=${userId}&bookId=${libroId}&status=${status}&rate=${rate}&comment=${comment}`,
+      `http://localhost:8080/v1/books/addBookToUser?userId=${userId}&bookId=${libroId}&status=${status}&rate=${rate}&comment=${comment}`,
       {
         method: "POST",
         headers: {
@@ -146,7 +146,7 @@ class Book {
   // Metodo para eliminar un libro.
   async eliminar(id) {
     try {
-      const response = await fetch(`http://localhost:8080/building/${id}`, {
+      const response = await fetch(`http://localhost:8080/v1/books/${id}`, {
         method: "DELETE",
         headers: {
           "Content-type": "application/json",
@@ -180,24 +180,19 @@ class Book {
   async buscarLibro(title) {
     document.getElementById("listado").innerHTML = "";
 
-    const usuarioActual = this.obtenerUsuarioActual();
-    if (!usuarioActual) {
-      console.error("No se ha encontrado la información del usuario.");
-      return;
-    }
-    let userId = usuarioActual.userInfo.id;
+    // const usuarioActual = this.obtenerUsuarioActual();
+    // if (!usuarioActual) {
+    //   console.error("No se ha encontrado la información del usuario.");
+    //   return;
+    // }
+    // let userId = usuarioActual.userInfo.id;
 
     try {
       const response = await fetch(
-        `http://localhost:8080/building/searchByTitleAndUser?title=${encodeURIComponent(
+        `http://localhost:8080/v1/books/searchByTitle?title=${encodeURIComponent(
           title
-        )}&userId=${userId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-type": "application/json",
-          },
-        }
+        )}`,
+        { method: "GET" }
       );
 
       if (response.ok) {
@@ -268,7 +263,7 @@ class Book {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/building/getBookRecommendation?userId=${userId}`,
+        `http://localhost:8080/v1/books/getBookRecommendation?userId=${userId}`,
         {
           method: "POST",
           headers: {

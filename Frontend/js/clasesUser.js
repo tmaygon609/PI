@@ -34,7 +34,7 @@ class User {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/building/getBooksByUserId?userId=${userId}`,
+        `http://localhost:8080/v1/books/getBooksByUserId?userId=${userId}`,
         {
           method: "GET",
         }
@@ -92,7 +92,7 @@ class User {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/user/saveUser", {
+      const response = await fetch("http://localhost:8080/v1/users/saveUser", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
