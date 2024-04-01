@@ -48,6 +48,17 @@ function limpiarFormulario() {
   document.getElementById("nombre").value = "";
 }
 
+function convertirCalificacionEnEstrellas(calificacion) {
+  let estrellas = "";
+  for (let i = 0; i < calificacion; i++) {
+    estrellas += "★";
+  }
+  for (let i = calificacion; i < 5; i++) {
+    estrellas += "☆";
+  }
+  return estrellas;
+}
+
 //GENERADOR DE USUARIO.
 function generarUsuario() {
   let name = document.getElementById("nombre").value;
@@ -178,23 +189,6 @@ function validarRequisitosContrasena(pwd) {
 
   return resultado;
 }
-
-// function validarContrasena(pwd, otraPwd) {
-//   let valida;
-
-//   if (otraPwd === pwd) {
-//     valida = true;
-//   } else {
-//     valida = false;
-
-//     swal({
-//       title: "Las contraseñas no coinciden.",
-//       icon: "warning",
-//     });
-//   }
-
-//   return valida;
-// }
 
 //FUNCIONES VALIDACION CONTRASEÑA
 function buscarAbc(pwd) {

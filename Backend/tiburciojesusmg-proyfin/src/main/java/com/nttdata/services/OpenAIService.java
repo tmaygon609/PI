@@ -24,7 +24,7 @@ public class OpenAIService {
 	private BookManagementI buildingManagement;
 
 	@Value("${openai.api.key}")
-	private String openaiApiKey;
+	private String apiKey;
 
 	private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
@@ -33,7 +33,7 @@ public class OpenAIService {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set("Authorization", "Bearer " + openaiApiKey);
+		headers.set("Authorization", "Bearer " + apiKey);
 
 		HttpEntity<OpenAIRequest> entity = new HttpEntity<>(request, headers);
 

@@ -23,3 +23,7 @@
 #star-rating input[type="radio"]:checked ~ label {
   color: orange;
 }
+
+a .fab {
+  color: white !important;
+}
