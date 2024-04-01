@@ -74,7 +74,7 @@ class User {
 
   tablaLibros(posts, userBookDetails) {
     let tabla =
-      "<table id= 'tabla' class='table table-striped'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th><th scope='col'>Estado</th><th scope='col'>Calificación</th><th scope='col'>Comentario</th></tr></thead><tbody>";
+      "<table id= 'tabla' class='table table-striped table-hover'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th><th scope='col'>Estado</th><th scope='col'>Calificación</th><th scope='col'>Comentario</th></tr></thead><tbody>";
 
     if (posts.length === 0) {
       tabla +=

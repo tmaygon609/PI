@@ -11,6 +11,8 @@ document.getElementById("volverLogin").addEventListener("click", function () {
   // Aquí puedes agregar cualquier lógica adicional que necesites para manejar el retorno al inicio de sesión
   document.getElementById("loginForm").style.display = "block";
   document.getElementById("registerForm").style.display = "none";
+  limpiarFormulario();
+  limpiarValidaciones();
 });
 
 // Abre la página principal
@@ -73,6 +75,7 @@ async function consultar(user, password) {
       });
       document.getElementById("user").value = "";
       document.getElementById("pwd").value = "";
+      limpiarValidaciones();
     }
   };
 

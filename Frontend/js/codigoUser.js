@@ -26,6 +26,7 @@ function registraUsuario() {
     oUsuario.registrar();
     limpiarFormulario();
     ocultarFormulario();
+    limpiarValidaciones();
   }
 }
 
@@ -46,6 +47,17 @@ function limpiarFormulario() {
   document.getElementById("otraContrasena").value = "";
   document.getElementById("apellidos").value = "";
   document.getElementById("nombre").value = "";
+}
+
+function limpiarValidaciones() {
+  var inputs = document.querySelectorAll(".form-control");
+  inputs.forEach(function (input) {
+    input.classList.remove("is-valid", "is-invalid");
+    var feedback = input.parentNode.querySelector(".invalid-feedback");
+    if (feedback) {
+      feedback.textContent = "";
+    }
+  });
 }
 
 function convertirCalificacionEnEstrellas(calificacion) {
