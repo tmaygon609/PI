@@ -1,14 +1,21 @@
 package com.nttdata.config;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.nttdata.persistence.model.Book;
+import com.nttdata.persistence.model.Genre;
+import com.nttdata.persistence.model.Status;
 import com.nttdata.persistence.model.User;
 import com.nttdata.persistence.model.UserBook;
 import com.nttdata.persistence.repositories.BookRepositoryI;
+import com.nttdata.persistence.repositories.GenreRepositoryI;
+import com.nttdata.persistence.repositories.StatusRepositoryI;
 import com.nttdata.persistence.repositories.UserBookRepositoryI;
 import com.nttdata.persistence.repositories.UserRepositoryI;
 
@@ -29,6 +36,12 @@ public class InitializationData implements CommandLineRunner {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private GenreRepositoryI genreRepository;
+
+	@Autowired
+	private StatusRepositoryI statusRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -110,6 +123,28 @@ public class InitializationData implements CommandLineRunner {
 		userBook4.setComment("Me lo leí en 2 horas.");
 		userBookRepository.save(userBook4);
 
+		// Crear generos literarios.
+		List<String> namesGenres = Arrays.asList("Novela", "Thriller", "Ciencia ficción", "Romance", "Misterio",
+				"Fantasía", "Terror", "Policíaca", "Aventura", "Histórica", "Biografía", "Autobiografía", "Ensayo",
+				"Poesía", "Drama", "Cuento", "Fábula", "Mitología", "Manga", "Cómic / Novela gráfica",
+				"Literatura infantil", "Literatura juvenil", "Humor", "Viajes", "Filosofía", "Teatro", "Crónica",
+				"Epistolar", "Didáctico", "Enciclopedia");
+
+		for (String nameGenre : namesGenres) {
+			Genre genre = new Genre();
+			genre.setGenreName(nameGenre);
+			genreRepository.save(genre);
+		}
+
+		// Crear estados libros.
+
+		List<String> namesStatus = Arrays.asList("Sin empezar", "En curso", "Leido");
+
+		for (String nameStatus : namesStatus) {
+			Status status = new Status();
+			status.setStatusName(nameStatus);
+			statusRepository.save(status);
+		}
 	}
 
 }

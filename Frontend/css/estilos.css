@@ -52,7 +52,7 @@ body {
   transition: 0.5s ease-in;
 }
 
-.olvide {
+/* .olvide {
   color: white;
   text-decoration-style: none;
   text-decoration-line: none;
@@ -63,7 +63,7 @@ body {
   text-decoration-style: none;
   text-decoration-line: none;
   cursor: pointer;
-}
+} */
 
 .registrarse {
   color: white;
@@ -83,6 +83,16 @@ body {
   background: white;
   text-decoration-line: none;
   cursor: pointer;
+}
+
+#volverLogin {
+  transition: background-color 0.3s ease-in, color 0.3s ease-in !important;
+}
+
+#volverLogin:hover {
+  color: #0e0d0d !important;
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
 }
 
 #usuario::placeholder {
