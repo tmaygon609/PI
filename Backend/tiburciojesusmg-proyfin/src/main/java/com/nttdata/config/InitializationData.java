@@ -2,6 +2,7 @@ package com.nttdata.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.nttdata.persistence.model.Book;
@@ -26,6 +27,9 @@ public class InitializationData implements CommandLineRunner {
 	@Autowired
 	private UserBookRepositoryI userBookRepository;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@Override
 	public void run(String... args) throws Exception {
 
@@ -34,7 +38,7 @@ public class InitializationData implements CommandLineRunner {
 		user1.setName("Tibu");
 		user1.setLastName("Mayo Gonzalez");
 		user1.setUser("tmaygon");
-		user1.setPassword("hola22;");
+		user1.setPassword(passwordEncoder.encode("hola22;"));
 		userRepository.save(user1);
 
 		// Usuario 1
@@ -42,7 +46,7 @@ public class InitializationData implements CommandLineRunner {
 		user2.setName("Macarena");
 		user2.setLastName("Campanario Manzano");
 		user2.setUser("mcamman");
-		user2.setPassword("adios22;");
+		user2.setPassword(passwordEncoder.encode("adios22;"));
 		userRepository.save(user2);
 
 		// Libro 1
@@ -94,6 +98,8 @@ public class InitializationData implements CommandLineRunner {
 		userBook3.setUser(user2);
 		userBook3.setBook(book3);
 		userBook3.setStatus("Sin empezar");
+		userBook3.setRate("1");
+		userBook3.setComment("Cuando lo empieze lo calificaré.");
 		userBookRepository.save(userBook3);
 
 		UserBook userBook4 = new UserBook();

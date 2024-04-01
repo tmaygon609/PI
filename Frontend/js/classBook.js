@@ -180,11 +180,11 @@ class Book {
   async buscarLibro(title) {
     document.getElementById("listado").innerHTML = "";
 
-    // const usuarioActual = this.obtenerUsuarioActual();
-    // if (!usuarioActual) {
-    //   console.error("No se ha encontrado la información del usuario.");
-    //   return;
-    // }
+    const usuarioActual = this.obtenerUsuarioActual();
+    if (!usuarioActual) {
+      console.error("No se ha encontrado la información del usuario.");
+      return;
+    }
     // let userId = usuarioActual.userInfo.id;
 
     try {
@@ -201,8 +201,6 @@ class Book {
         if (libroEncontrado.length > 0) {
           // Libro encontrado, mostrar listado
           let tabla =
-            "<h1 style='Text-align:center'>Libro encontrado:</h1><br><br>";
-          tabla +=
             "<table id= 'tabla' class='table table-striped'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th></tr></thead><tbody>";
 
           libroEncontrado.forEach((fila) => {
@@ -215,14 +213,16 @@ class Book {
 
           tabla += "</tbody></table>";
 
-          document.getElementById("listado").innerHTML += tabla;
-          document.getElementById("listado").style.display = "block";
+          return tabla;
         } else {
           // No se encontró el libro
           swal({
             title: "Libro no encontrado.",
             icon: "error",
+          }).then(() => {
+            usuarioActual.listadoLibros();
           });
+          document.getElementById("txtTituloLibro").value = "";
         }
       } else {
         // Manejar otros casos de respuesta HTTP no exitosa
@@ -280,7 +280,7 @@ class Book {
           const choices = data.choices;
 
           let tabla = `
-              <h1 style='Text-align:center'>Libro recomendado: </h1><br><br>
+              
               <table class='table'>
                 <thead>
                   <tr>
@@ -304,8 +304,7 @@ class Book {
 
           tabla += "</tbody></table>";
 
-          document.getElementById("listado").innerHTML += tabla;
-          document.getElementById("listado").style.display = "block";
+          return tabla;
         } else {
           console.error("La respuesta no contiene un array 'choices':", data);
           // Manejar este caso según sea necesario
@@ -320,6 +319,59 @@ class Book {
       }
     } catch (error) {
       console.error("Error al obtener la recomendación:", error);
+    }
+  }
+
+  // Método que carga los generos de los libros.
+  async cargarGeneros() {
+    try {
+      const response = await fetch("http://localhost:8080/v1/genres");
+      const generos = await response.json();
+
+      const selectGenero = document.getElementById("txtGenero");
+
+      generos.forEach((genero) => {
+        const option = document.createElement("option");
+        option.value = genero.genreName;
+        option.text = genero.genreName;
+        selectGenero.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error al cargar los géneros:", error);
+    }
+  }
+
+  // Método que carga los tipos de estados de los libros.
+  async cargarEstados() {
+    try {
+      const response = await fetch("http://localhost:8080/v1/status");
+      const estados = await response.json();
+
+      const divEstados = document.getElementById("divEstados");
+
+      estados.forEach((estado) => {
+        const divFormCheck = document.createElement("div");
+        divFormCheck.classList.add("form-check");
+
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.classList.add("form-check-input");
+        radio.name = "rbtEstado";
+        radio.id = "rbt" + estado.statusName.replace(/\s+/g, "");
+        radio.value = estado.statusName.toLowerCase();
+
+        const label = document.createElement("label");
+        label.classList.add("form-check-label");
+        label.htmlFor = "rbt" + estado.statusName.replace(/\s+/g, "");
+        label.textContent = estado.statusName;
+
+        divFormCheck.appendChild(radio);
+        divFormCheck.appendChild(label);
+
+        divEstados.appendChild(divFormCheck);
+      });
+    } catch (error) {
+      console.error("Error al cargar los estados:", error);
     }
   }
 }

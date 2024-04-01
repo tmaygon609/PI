@@ -1,7 +1,43 @@
 "use strict";
 const listado = document.getElementById("listado");
 
+// Se agrega un evento de escucha al listado de libros
 listado.addEventListener("click", manejadorEvento);
+
+// Se cargan al iniciar los generos y estados en los select y radio buttons
+document.addEventListener("DOMContentLoaded", () => {
+  let oBook = new Book();
+  oBook.cargarGeneros();
+  oBook.cargarEstados();
+
+  mostrarContenidoPrincipal();
+});
+
+// Selecciona el modal por su id
+let modalBook = document.getElementById("bookModal");
+let modalIA = document.getElementById("iaModal");
+
+// Agrega un evento de escucha para cuando el modal se oculta
+$(modalBook).on("hidden.bs.modal", function () {
+  recuperarListadoUsuario();
+});
+
+$(modalIA).on("hidden.bs.modal", function () {
+  recuperarListadoUsuario();
+});
+
+function recuperarListadoUsuario() {
+  let storedUser = localStorage.getItem("usuarioActual");
+
+  if (storedUser) {
+    let usuarioActual = new User();
+    Object.assign(usuarioActual, JSON.parse(storedUser));
+
+    usuarioActual.listadoLibros();
+  } else {
+    console.error("no se contro la informacion del usuario.");
+  }
+}
 
 // Gestión de formularios
 function gestionFormularios(sFormularioVisible) {
@@ -12,9 +48,9 @@ function gestionFormularios(sFormularioVisible) {
     case "frmAltaLibro":
       frmAltaLibro.style.display = "block";
       break;
-    case "frmBuscarLibro":
-      frmBuscarLibro.style.display = "block";
-      break;
+    // case "frmBusqueda":
+    //   frmBuscarLibro.style.display = "block";
+    //   break;
     case "frmListadoLibros":
       frmListadoLibros.style.display = "block";
       aceptarListadoLibros();
@@ -26,6 +62,8 @@ function gestionFormularios(sFormularioVisible) {
       cerrarSesion();
       break;
   }
+
+  document.getElementById("contenidoPrincipal").style.display = "none";
   document.getElementById("listado").style.display = "none";
 }
 
@@ -35,6 +73,21 @@ function ocultarTodosLosFormularios() {
 
   for (let i = 0; i < oFormularios.length; i++) {
     oFormularios[i].style.display = "none";
+  }
+}
+
+function mostrarContenidoPrincipal() {
+  let storedUser = localStorage.getItem("usuarioActual");
+
+  if (storedUser) {
+    let usuarioActual = new User();
+    Object.assign(usuarioActual, JSON.parse(storedUser));
+
+    let nombreUsuario = usuarioActual.name;
+    let divUsuario = document.getElementById("nombreUsuario");
+    divUsuario.innerHTML = `${nombreUsuario}`;
+  } else {
+    console.error("No se encontró la información del usuario.");
   }
 }
 
@@ -58,12 +111,16 @@ function aceptarAltaLibro() {
 
     let status;
 
-    if (document.getElementById("rbtSinEmpezar").checked == true) {
-      status = "Sin empezar";
-    } else if (document.getElementById("rbtEnCurso").checked == true) {
-      status = "En curso";
+    if (document.getElementById("rbtSinempezar").checked) {
+      status = capitalizeFirstLetter(
+        document.getElementById("rbtSinempezar").value
+      );
+    } else if (document.getElementById("rbtEncurso").checked) {
+      status = capitalizeFirstLetter(
+        document.getElementById("rbtEncurso").value
+      );
     } else {
-      status = "Leido";
+      status = capitalizeFirstLetter(document.getElementById("rbtLeido").value);
     }
 
     let rate;
@@ -89,8 +146,13 @@ function aceptarAltaLibro() {
   }
 }
 
+// Primeras letras en mayúscula para el campo género y estado del libro
+function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 // aceptarBuscarLibro. Clic en boton del formulario de buscar libro por titulo.
-function aceptarBuscarLibro() {
+async function aceptarBuscarLibro() {
   if (document.getElementById("txtTituloLibro").value == "") {
     swal({
       title: "Campos vacío",
@@ -103,7 +165,16 @@ function aceptarBuscarLibro() {
     let oBook = new Book();
 
     oBook.buscarLibro(title);
-    frmBuscarLibro.reset();
+    const tabla = await oBook.buscarLibro(title);
+    if (tabla) {
+      // Agregar la tabla al cuerpo del modal
+      document.getElementById("bookModalBody").innerHTML = tabla;
+
+      // Abrir el modal
+      $("#bookModal").modal("show");
+
+      document.getElementById("txtTituloLibro").value = "";
+    }
   }
 }
 
@@ -123,19 +194,24 @@ function aceptarListadoLibros() {
   } else {
     console.error("no se contro la informacion del usuario.");
   }
-
-  // let oUser = new User();
-
-  // oUser.listadoLibros();
 }
 
 // Clic en la opción de recomendar un libro a través de la IA.
-function recomendarLibro() {
+async function recomendarLibro() {
   document.getElementById("listado").innerHTML = "";
   document.getElementById("listado").style.display = "none";
 
   let oBook = new Book();
   oBook.listadoRecomendado();
+
+  const tabla = await oBook.listadoRecomendado();
+  if (tabla) {
+    // Add the table to the body of the modal
+    document.getElementById("iaModalBody").innerHTML = tabla;
+
+    // Open the modal
+    $("#iaModal").modal("show");
+  }
 }
 
 // Volvemos a la página de login

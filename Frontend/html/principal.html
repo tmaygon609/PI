@@ -12,72 +12,198 @@
       src="https://kit.fontawesome.com/a05c1998d9.js"
       crossorigin="anonymous"
     ></script>
-    <style type="text/css">
-      body {
-        margin-left: 10px;
-      }
 
-      form {
-        display: none;
-      }
-
-      #formularios {
-        margin-top: 60px;
-      }
-    </style>
     <title>Biblioteca Almudeyne</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../img/favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/estilosPrincipal.css" />
   </head>
 
-  <body>
+  <body class="container-fluid">
     <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#">Biblioteca NTT</a>
+      <div class="container-fluid d-flex justify-content-between">
+        <div>
+          <div class="navbar-header">
+            <!-- FILEPATH: /d:/Dev/bbdd/Xampp/htdocs/proyectoFinal9/html/principal.html -->
+            <!-- BEGIN: ed8c6549bwf9 -->
+            <a class="navbar-brand" href="./principal.html">
+              <img src="../img/logo.jpg" alt="Biblioteca Almudeyne Logo" />
+            </a>
+            <!-- END: ed8c6549bwf9 -->
+          </div>
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="#" onclick="gestionFormularios('frmListadoLibros');"
+                >Mis libros</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="gestionFormularios('frmAltaLibro');"
+                >Registrar libro</a
+              >
+            </li>
+            <li>
+              <a id="botonCerrarSesion" href="#" onclick="cerrarSesion();"
+                >Cerrar Sesión</a
+              >
+            </li>
+          </ul>
         </div>
-        <ul class="nav navbar-nav">
-          <li>
-            <a href="#" onclick="gestionFormularios('frmListadoLibros');"
-              >Listado libros</a
-            >
-          </li>
-          <li>
-            <a href="#" onclick="gestionFormularios('frmAltaLibro');"
-              >Registrar libro</a
-            >
-          </li>
-          <li>
-            <a href="#" onclick="gestionFormularios('frmBuscarLibro');"
-              >Buscar Libro</a
-            >
-          </li>
-
-          <li>
-            <a href="#" onclick="gestionFormularios('frmRecomendador');"
-              >Recomendación IA</a
-            >
-          </li>
-          <li>
-            <a id="botonCerrarSesion" href="#" onclick="cerrarSesion();"
-              >Cerrar Sesión</a
-            >
-          </li>
-        </ul>
+        <!-- Formulario buscar libro -->
+        <!-- Text input and Button -->
+        <div class="navbar-form navbar-right" id="frmBusqueda">
+          <div class="form-group">
+            <div class="col-md-8">
+              <input
+                id="txtTituloLibro"
+                name="txtTituloLibro"
+                placeholder="Buscar libro toda biblioteca"
+                class="form-control"
+                type="text"
+                onkeypress="if (event.keyCode == 13) { document.getElementById('btnAceptarBuscarLibro').click(); return false; }"
+              />
+            </div>
+            <div class="col-md-4">
+              <button
+                type="button"
+                id="btnAceptarBuscarLibro"
+                name="btnAceptarBuscarLibro"
+                class="btn btn-primary"
+                onclick="aceptarBuscarLibro();"
+              >
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
-    <div class="container-fluid" id="formularios">
+        <!-- Modal Book-->
+        <div
+          class="modal fade"
+          id="bookModal"
+          tabindex="-1"
+          aria-labelledby="bookModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header float-right">
+                <h3 class="modal-title" id="bookModalLabel">
+                  Libro encontrado
+                </h3>
+                <button
+                  type="button"
+                  class="close"
+                  id="closeModalButton"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" id="bookModalBody">
+                <!-- Aquí se insertará la tabla generada por JavaScript -->
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  id="closeModalFooterButton"
+                  data-dismiss="modal"
+                >
+                  Cerrar
+                </button>
+                <!-- Puedes añadir un botón de "Guardar cambios" si es necesario -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <div class="main-content" id="formularios">
+
+      <!-- Contenido principal -->
+      <div id="contenidoPrincipal" class="container py-5">
+        <h1 class="display-4">Bienvenido/a, <span id="nombreUsuario"></span>!</h1>
+        <p class="lead">En la Biblioteca Almudeyne, podrás registrar tus libros favoritos, ver los libros que has registrado y recibir recomendaciones de libros personalizadas.</p>
+        <hr class="my-4">
+        <p>Comienza a explorar nuestra biblioteca ahora.</p>
+        <a class="btn btn-primary btn-lg" href="#" role="button">Explorar libros</a>
+      </div>
       <!-- Listado libros -->
       <form
         class="form-horizontal"
         name="frmListadoLibros"
         id="frmListadoLibros"
       >
+      <fieldset>
+        <!-- Form Name -->
+        <legend>Mis libros</legend>
+        <!-- MAS IMPORTANTE -->
+        <div id="listado" style="display: none"></div>
+      </fieldset>
+       
         <fieldset>
-          <!-- Form Name -->
-          <legend>Listado Libros</legend>
+          <legend>Recomendación IA</legend>
+          <div class="form-group">
+            <div class="col-xs-4">
+              <input
+                type="button"
+                id="btnRecomendar"
+                name="btnRecomendar"
+                class="btn btn-primary"
+                value="Recomendar IA"
+                onclick="recomendarLibro();"
+              />
+            </div>
+          </div>
         </fieldset>
+        <!-- Modal IA-->
+        <div
+          class="modal fade"
+          id="iaModal"
+          tabindex="-1"
+          aria-labelledby="iaModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header float-right">
+                <h3 class="modal-title" id="iaModalLabel">
+                  Libro recomendado por IA
+                </h3>
+                <button
+                  type="button"
+                  class="close"
+                  id="closeModalButton"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" id="iaModalBody">
+                <!-- Aquí se insertará la tabla generada por JavaScript -->
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  id="closeModalFooterButton"
+                  data-dismiss="modal"
+                >
+                  Cerrar
+                </button>
+                <!-- Puedes añadir un botón de "Guardar cambios" si es necesario -->
+              </div>
+            </div>
+          </div>
+        </div>
+        
       </form>
+
       <!-- Formulario alta libros -->
       <form class="form-horizontal" name="frmAltaLibro" id="frmAltaLibro">
         <fieldset>
@@ -110,63 +236,23 @@
             </div>
           </div>
 
-          <!-- Text input-->
+          <!-- Seklect para cargar los géneros -->
           <div class="form-group">
             <label class="col-xs-4 control-label" for="txtGenero"
               >Género
             </label>
             <div class="col-xs-4">
-              <select id="txtGenero" name="txtGenero" class="custom-select">
-                <option selected></option>
-                <option value="1">Fantástico</option>
-                <option value="2">Novela</option>
-                <option value="3">Ciencia ficción</option>
-                <option value="4">Novela histórica</option>
-                <option value="5">Thriller</option>
-                <option value="6">Romance</option>
-                <option value="7">Aventura</option>
-                <option value="8">Biografía/Autobiografía</option>
-                <option value="9">Ensayo</option>
-                <option value="10">Poesía</option>
-                <option value="11">Humor</option>
-                <option value="12">Basado en hechos reales</option>
-                <option value="13">Manga</option>
+              <select id="txtGenero" name="txtGenero" class="form-control">
+                <option selected value="">Selecciona un género</option>
               </select>
             </div>
           </div>
 
-          <!-- Multiple Radios -->
+          <!-- Radios para cargar los estados -->
           <div class="form-group">
             <label class="col-xs-4 control-label" for="rbtEstado">Estado</label>
-            <div class="col-xs-4">
-              <div class="radio">
-                <input
-                  name="rbtEstado"
-                  id="rbtSinEmpezar"
-                  value="sinEmpezar"
-                  checked="checked"
-                  type="radio"
-                />
-                <label for="rbtEstado-S">Sin empezar</label>
-              </div>
-              <div class="radio">
-                <input
-                  name="rbtEstado"
-                  id="rbtEnCurso"
-                  value="enCurso"
-                  type="radio"
-                />
-                <label for="rbtEstado-C">En curso</label>
-              </div>
-              <div class="radio">
-                <input
-                  name="rbtEstado"
-                  id="rbtLeido"
-                  value="leido"
-                  type="radio"
-                />
-                <label for="rbtEstado-L">Leído</label>
-              </div>
+            <div class="col-xs-4" id="divEstados">
+              <!-- Los radios se cargarán dinámicamente aquí -->
             </div>
           </div>
 
@@ -225,49 +311,6 @@
         </fieldset>
       </form>
 
-      <!-- Formulario buscar libro -->
-      <form class="form-horizontal" name="frmBuscarLibro" id="frmBuscarLibro">
-        <fieldset>
-          <!-- Form Name -->
-          <legend>Buscar libro</legend>
-
-          <!-- Text input-->
-          <div class="form-group">
-            <label class="col-xs-4 control-label" for="txtTituloLibro"
-              >Título</label
-            >
-            <div class="col-xs-4">
-              <input
-                id="txtTituloLibro"
-                name="txtTituloLibro"
-                placeholder="Titulo"
-                class="form-control input-md"
-                type="text"
-                onkeypress="if (event.keyCode == 13) { document.getElementById('btnAceptarBuscarLibro').click(); return false; }"
-              />
-            </div>
-          </div>
-
-          <!-- Input Button -->
-          <div class="form-group">
-            <label
-              class="col-xs-4 control-label"
-              for="btnAceptarBuscarLibro"
-            ></label>
-            <div class="col-xs-4">
-              <input
-                type="button"
-                id="btnAceptarBuscarLibro"
-                name="btnAceptarBuscarLibro"
-                class="btn btn-primary"
-                value="Buscar"
-                onclick="aceptarBuscarLibro();"
-              />
-            </div>
-          </div>
-        </fieldset>
-      </form>
-
       <!-- Formulario recomendacion libro -->
       <form class="form-horizontal" name="frmRecomendador" id="frmRecomendador">
         <fieldset>
@@ -290,10 +333,58 @@
           </div>
         </fieldset>
       </form>
-    </div>
-    <div id="listado" style="display: none"></div>
+    </div>    
+    
     <script type="text/javascript" src="../js/codigo.js"></script>
     <script type="text/javascript" src="../js/classBook.js"></script>
     <script type="text/javascript" src="../js/clasesUser.js"></script>
   </body>
+  <footer class="bg-body-tertiary text-center fixed-bottom">
+    <!-- Grid container -->
+    <div class="container p-4 pb-0">
+      <!-- Section: Social media -->
+      <section class="mb-4">
+         
+        <!-- Google -->
+        <a
+          data-mdb-ripple-init
+          class="btn text-white btn-floating m-1"
+          style="background-color: #dd4b39;"
+          href="mailto:tmaygon609@iesalmudeyne.es"
+          target="_blank"
+          role="button"
+          ><i class="fab fa-google"></i
+        ></a>
+  
+        <!-- Linkedin -->
+        <a
+          data-mdb-ripple-init
+          class="btn text-white btn-floating m-1"
+          style="background-color: #0082ca;"
+          href="https://www.linkedin.com/in/tibu-mayo/"
+          target="_blank"
+          role="button"
+          ><i class="fab fa-linkedin-in"></i
+        ></a>
+        <!-- Github -->
+        <a
+          data-mdb-ripple-init
+          class="btn text-white btn-floating m-1"
+          style="background-color: #333333;"
+          href="https://github.com/tmaygon609"
+          target="_blank"
+          role="button"
+          ><i class="fab fa-github"></i
+        ></a>
+      </section>
+      <!-- Section: Social media -->
+    </div>
+    <!-- Grid container -->
+  
+    <!-- Copyright -->
+    <div id="copyright" class="text-center p-3" >
+      <h4 style="margin: 0;">© 2024 Copyright: Tibu Mayo - IES Almudeyne</h4>
+    </div>
+    <!-- Copyright -->
+  </footer>
 </html>

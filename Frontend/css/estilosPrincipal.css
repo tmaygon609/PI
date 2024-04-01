@@ -1,0 +1,43 @@
+body {
+  margin-left: 1.0787486515641855vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden; /* Añade esta línea */
+}
+
+form {
+  display: none;
+}
+
+#formularios {
+  margin-top: 6.472491909385114vh;
+  flex: 1 0 auto;
+}
+
+#main-content {
+  flex: 1 0 auto;
+}
+
+footer {
+  flex-shrink: 0;
+}
+
+#copyright {
+  background-color: #f8f8f8;
+  height: 5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar {
+  height: 5vh;
+}
+
+.navbar .navbar-brand,
+.navbar .navbar-brand img {
+  height: 100%;
+  padding: 0;
+  margin: 1% 0 0 2%;
+}

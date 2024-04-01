@@ -44,28 +44,54 @@ class User {
       }
       const posts = await response.json();
 
-      this.tablaLibros(posts);
+      let bookId = null;
+      for (let post of posts) {
+        bookId = post.id;
+      }
+
+      // Crea un array de promesas, para cada detalle de libro del usuario.
+      const userBookDetailsPromises = posts.map(async (post) => {
+        const userResponse = await fetch(
+          `http://localhost:8080/v1/usersBooks/getUserDetails?userId=${userId}&bookId=${post.id}`,
+          {
+            method: "GET",
+          }
+        );
+        if (!userResponse.ok) {
+          throw new Error(`HTTP error! status: ${userResponse.status}`);
+        }
+        return userResponse.json();
+      });
+
+      // Espera a que todas las promesas se resuelvan.
+      const userBookDetails = await Promise.all(userBookDetailsPromises);
+
+      this.tablaLibros(posts, userBookDetails);
     } catch (error) {
       console.error("Error:", error);
     }
   }
 
-  tablaLibros(posts) {
+  tablaLibros(posts, userBookDetails) {
     let tabla =
-      "<h1 style='Text-align:center'>Listado libros leidos:</h1><br><br>";
-    tabla +=
-      "<table id= 'tabla' class='table table-striped'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th></tr></thead><tbody>";
+      "<table id= 'tabla' class='table table-striped'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th><th scope='col'>Estado</th><th scope='col'>Calificación</th><th scope='col'>Comentario</th></tr></thead><tbody>";
 
     if (posts.length === 0) {
       tabla +=
         "<tr><td colspan='5'>No hay libros leídos por este usuario.</td></tr>";
     } else {
-      posts.forEach((fila) => {
+      posts.forEach((fila, index) => {
         console.log("Objeto fila: ", fila);
         tabla += "<tr>";
         tabla += "<td>" + fila.title + "</td>";
         tabla += "<td>" + fila.author + "</td>";
         tabla += "<td>" + fila.genre + "</td>";
+        tabla += "<td>" + userBookDetails[index].status + "</td>";
+        tabla +=
+          "<td>" +
+          this.convertirCalificacionEnEstrellas(userBookDetails[index].rate) +
+          "</td>";
+        tabla += "<td>" + userBookDetails[index].comment + "</td>";
         tabla +=
           "<td><button value='e" +
           fila.id +
@@ -82,6 +108,30 @@ class User {
     document.getElementById("listado").innerHTML += tabla;
     document.getElementById("listado").style.display = "block";
   }
+
+  convertirCalificacionEnEstrellas(calificacion) {
+    let estrellas = "";
+    for (let i = 0; i < calificacion; i++) {
+      estrellas += "★";
+    }
+    for (let i = calificacion; i < 5; i++) {
+      estrellas += "☆";
+    }
+    return estrellas;
+  }
+
+  // convertirCalificacionEnEstrellas(calificacion) {
+  //   let estrellas = "";
+  //   let estrellaLlena = "<img src='../img/estrellaLlena.png'>";
+  //   let estrellaVacia = "<img src='../img/estrellaVacia.png'>";
+  //   for (let i = 0; i < calificacion; i++) {
+  //     estrellas += estrellaLlena;
+  //   }
+  //   for (let i = calificacion; i < 5; i++) {
+  //     estrellas += estrellaVacia;
+  //   }
+  //   return estrellas;
+  // }
 
   async registrar() {
     const userToRegister = {
@@ -110,7 +160,7 @@ class User {
       swal({
         title: "Error al registrar el usuario",
         text: "Contacte con el administrador de la app",
-        icon: "success",
+        icon: "error",
       });
       console.error("Error:", error);
     }

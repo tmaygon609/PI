@@ -32,5 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 
-### Api Key ###
-application.properties
+### app properties ###
+application-properties
