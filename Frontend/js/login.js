@@ -37,14 +37,15 @@ function abrirRegistro() {
 async function consultar(user, password) {
   const oHttp = new XMLHttpRequest();
 
-  oHttp.open(
-    "GET",
-    "http://localhost:8080/v1/users/login?user=" +
-      user +
-      "&password=" +
-      password
-  );
-  oHttp.send();
+  oHttp.open("POST", "http://localhost:8080/v1/users/login");
+  oHttp.setRequestHeader("Content-Type", "application/json");
+
+  const data = {
+    user: user,
+    password: password,
+  };
+
+  oHttp.send(JSON.stringify(data));
 
   oHttp.onload = () => {
     if (oHttp.status == "200" && oHttp.responseText != "") {
@@ -74,4 +75,10 @@ async function consultar(user, password) {
       document.getElementById("pwd").value = "";
     }
   };
+
+  const formData = new FormData();
+  formData.append("user", user);
+  formData.append("password", password);
+
+  oHttp.send(formData);
 }

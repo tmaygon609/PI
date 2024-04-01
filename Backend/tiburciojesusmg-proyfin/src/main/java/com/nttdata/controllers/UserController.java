@@ -1,11 +1,9 @@
 package com.nttdata.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nttdata.persistence.model.User;
@@ -18,8 +16,10 @@ public class UserController {
 	@Autowired
 	private UserManagementI userService;
 
-	@GetMapping(path = "/login")
-	public User login(@RequestParam("user") String user, @RequestParam("password") String password) {
+	@PostMapping(path = "/login")
+	public User login(@RequestBody User u) {
+		String user = u.getUser();
+		String password = u.getPassword();
 
 		return userService.login(user, password);
 	}

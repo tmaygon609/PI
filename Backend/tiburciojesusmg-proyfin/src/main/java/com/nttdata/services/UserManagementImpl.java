@@ -1,6 +1,7 @@
 package com.nttdata.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nttdata.persistence.model.User;
@@ -14,14 +15,26 @@ public class UserManagementImpl implements UserManagementI {
 	@Autowired
 	private UserRepositoryI userRepo;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@Override
 	public User login(String user, String password) {
 
-		return userRepo.findByUserAndPassword(user, password);
+		User userEntity = userRepo.findByUser(user);
+
+		if (userEntity != null && passwordEncoder.matches(password, userEntity.getPassword())) {
+
+			return userEntity;
+		}
+
+		return null;
 	}
 
 	@Override
 	public void addUser(User u) {
+
+		u.setPassword(passwordEncoder.encode(u.getPassword()));
 
 		userRepo.save(u);
 
