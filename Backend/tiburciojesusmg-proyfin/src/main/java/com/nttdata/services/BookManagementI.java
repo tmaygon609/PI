@@ -17,6 +17,10 @@ public interface BookManagementI {
 
 	public List<Book> searchAllBooks();
 
+//	public Page<Book> searchAllBooks(Pageable pageable);
+
+	public List<Book> searchByGenre(String genre);
+
 	public List<String> getBookTitlesOfUser(Long userId);
 
 	public List<Book> findBooksByUserId(final Long userId);

@@ -20,4 +20,21 @@ public class UserBookImpl implements UserBookI {
 		return userBook;
 	}
 
+	@Override
+	public UserBook updateUserBook(Long id, String status, String rate, String comment) {
+
+		UserBook userBook = userBookRepository.findByBookId(id);
+
+		if (status != null) {
+			userBook.setStatus(status);
+		}
+		if (rate != null) {
+			userBook.setRate(rate);
+		}
+		if (comment != null) {
+			userBook.setComment(comment);
+		}
+
+		return userBookRepository.save(userBook);
+	}
 }

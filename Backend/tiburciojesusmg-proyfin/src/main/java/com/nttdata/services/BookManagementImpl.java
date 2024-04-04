@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.nttdata.persistence.model.Book;
@@ -65,7 +66,20 @@ public class BookManagementImpl implements BookManagementI {
 	@Override
 	public List<Book> searchAllBooks() {
 
-		return bookRepository.findAll();
+		Sort sort = Sort.by(Sort.Direction.ASC, "title");
+
+		return bookRepository.findAll(sort);
+	}
+
+//	@Override
+//	public Page<Book> searchAllBooks(Pageable pageable) {
+//		return bookRepository.findAll(pageable);
+//	}
+
+	@Override
+	public List<Book> searchByGenre(String genre) {
+
+		return bookRepository.searchByGenre(genre);
 	}
 
 	@Override
