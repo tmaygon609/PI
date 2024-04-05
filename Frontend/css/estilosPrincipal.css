@@ -3,7 +3,8 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  overflow-x: hidden; /* Añade esta línea */
+  overflow-x: hidden;
+  overflow: auto;
 }
 
 form {
@@ -11,33 +12,45 @@ form {
 }
 
 #formularios {
-  margin-top: 6.472491909385114vh;
-  flex: 1 0 auto;
+  margin: 0 auto 100px 3vh;
 }
 
-#main-content {
-  flex: 1 0 auto;
+#contenidoPrincipal {
+  margin-top: 3vh;
 }
 
 footer {
-  flex-shrink: 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%; /* Opcional: ajusta el ancho según tus necesidades */
+  background-color: #f7f7f7; /* Opcional: añade un color de fondo */
+  padding: 1%; /* Opcional: añade relleno al footer */
 }
 
 #copyright {
   background-color: #f8f8f8;
-  height: 5vh;
+  padding-top: 1vh;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .navbar {
-  height: 5vh;
+  display: flex;
+  align-items: center;
 }
 
-.navbar .navbar-brand,
-.navbar .navbar-brand img {
-  height: 100%;
-  padding: 0;
-  margin: 1% 0 0 2%;
+#txtTituloLibro {
+  margin-bottom: 10vh;
+  margin-right: 4vh;
+}
+
+#btnAceptarBuscarLibro {
+  margin-bottom: 10vh;
+  margin-right: 1vh;
+}
+
+.dashboard-sideBar-ct {
+  overflow: auto;
 }

@@ -67,7 +67,7 @@ async function consultar(user, password) {
       // Almacena la información del usuario en el localStorage
       localStorage.setItem("usuarioActual", JSON.stringify(usuarioActual));
 
-      window.open("html/principal.html", "_self");
+      window.open("principal.html", "_self");
     } else {
       swal({
         title: "Usuario no registrado.",

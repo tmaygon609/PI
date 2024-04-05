@@ -24,6 +24,24 @@ class User {
     );
   }
 
+  // Método para actualizar el formulario con los datos del usuario
+  actualizarFormularioInformacion() {
+    const usuarioActual = JSON.parse(localStorage.getItem("usuarioActual"));
+
+    if (usuarioActual) {
+      // Actualizar los campos del formulario con los datos del usuario
+      document.getElementById("nombre").value = usuarioActual.name;
+      document.getElementById("apellidos").value = usuarioActual.lastName;
+      document.getElementById("usuario").value = usuarioActual.user;
+
+      // Deshabilitar los campos del formulario si es necesario
+      // Puedes habilitar o deshabilitar según tus necesidades
+      document.getElementById("nombre").disabled = true;
+      document.getElementById("apellidos").disabled = true;
+      document.getElementById("usuario").disabled = true;
+    }
+  }
+
   async listadoLibros() {
     if (!this.userInfo || !this.userInfo.user) {
       console.log("no se ha establecido informacion del usuarioo.");
@@ -78,7 +96,7 @@ class User {
 
     if (posts.length === 0) {
       tabla +=
-        "<tr><td colspan='5'>No hay libros leídos por este usuario.</td></tr>";
+        "<tr><td colspan='5'>No hay libros registrados para este usuario.</td></tr>";
     } else {
       posts.forEach((fila, index) => {
         console.log("Objeto fila: ", fila);
@@ -86,20 +104,32 @@ class User {
         tabla += "<td>" + fila.title + "</td>";
         tabla += "<td>" + fila.author + "</td>";
         tabla += "<td>" + fila.genre + "</td>";
-        tabla += "<td>" + userBookDetails[index].status + "</td>";
         tabla +=
-          "<td>" +
+          "<td id='estado" +
+          fila.id +
+          "'>" +
+          userBookDetails[index].status +
+          "</td>";
+        tabla +=
+          "<td id='calificacion" +
+          fila.id +
+          "'>" +
           this.convertirCalificacionEnEstrellas(userBookDetails[index].rate) +
           "</td>";
-        tabla += "<td>" + userBookDetails[index].comment + "</td>";
+        tabla +=
+          "<td id='comentario" +
+          fila.id +
+          "'>" +
+          userBookDetails[index].comment +
+          "</td>";
         tabla +=
           "<td><button value='e" +
           fila.id +
           "' type='button' class='btn btn-danger fa-regular fa-trash-can'></button></td>";
         tabla +=
-          "<td><button value='a" +
+          "<td><button value='a" + // si necesito actualizar coger el id de userBookDetails[index].id
           fila.id +
-          "' type='button' class='btn btn-success fa-solid fa-pencil'></button></td>";
+          "' type='button' class='btn btn-info fa-solid fa-pencil'></button></td>";
         tabla += "</tr>";
       });
     }
