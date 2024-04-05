@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nttdata.persistence.dto.UserBookDTO;
 import com.nttdata.persistence.model.UserBook;
-import com.nttdata.persistence.model.UserBookDTO;
 import com.nttdata.services.UserBookImpl;
 
 @RestController
