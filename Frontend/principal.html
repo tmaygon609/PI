@@ -1,0 +1,1199 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/estilosEstrella.css" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="bootstrap/js/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script
+      src="https://kit.fontawesome.com/a05c1998d9.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <title>Biblioteca Almudeyne</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="css/estilosPrincipal.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.rtl.min.css"
+    /> -->
+  </head>
+
+  <body class="container-fluid">
+    <section class="full-box cover dashboard-sideBar">
+      <div class="full-box dashboard-sideBar-bg btn-menu-dashboard"></div>
+      <div class="full-box dashboard-sideBar-ct">
+        <!--SideBar Title -->
+        <div
+          class="full-box text-uppercase text-center text-titles dashboard-sideBar-title"
+        >
+          Biblioteca Almudeyne
+          <i class="zmdi zmdi-close btn-menu-dashboard visible-xs"></i>
+          <!-- <a class="navbar-brand" href="principal.html">
+            <img src="img/logo.jpg" alt="Biblioteca Almudeyne Logo" />
+          </a> -->
+          <i class="zmdi zmdi-close btn-menu-dashboard visible-xs"></i>
+        </div>
+        <!-- SideBar User info -->
+        <div class="full-box dashboard-sideBar-UserInfo">
+          <figure class="full-box">
+            <img src="./assets/avatars/AdminMaleAvatar.png" alt="UserIcon" />
+            <figcaption class="text-center text-titles">User Name</figcaption>
+          </figure>
+          <ul class="full-box list-unstyled text-center">
+            <!-- <li>
+              <a href="my-data.html" title="Mis datos">
+                <i class="zmdi zmdi-settings"></i>
+              </a>
+            </li> -->
+            <li>
+              <a
+                id="botonMiCuenta"
+                href="#!"
+                title="Mi cuenta"
+                onclick="gestionFormularios('frmInformacionUsuario');"
+              >
+                <i class="fa fa-user-circle-o"></i>
+              </a>
+            </li>
+            <li>
+              <a
+                id="botonCerrarSesion"
+                href="#!"
+                title="Cerrar sesión"
+                class="btn-exit-system"
+                onclick="cerrarSesion();"
+              >
+                <i class="fa fa-power-off"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <!-- SideBar Menu -->
+        <ul class="list-unstyled full-box dashboard-sideBar-Menu">
+          <li>
+            <a href="principal.html">
+              <i class="fa fa-home"></i>&nbsp; Inicio
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="gestionFormularios('frmListadoLibros');"
+              ><i class="zmdi zmdi-library"></i>&nbsp; Mis libros</a
+            >
+          </li>
+          <li>
+            <a href="#" onclick="gestionFormularios('frmAltaLibro');"
+              ><i class="fa fa-plus-circle"></i>&nbsp; Nuevo libro
+            </a>
+          </li>
+          <!-- <li>
+            <a href="category.html"
+              ><i class="zmdi zmdi-labels zmdi-hc-fw"></i> Categorías</a
+            >
+          </li>
+          <li>
+            <a href="provider.html"
+              ><i class="zmdi zmdi-truck zmdi-hc-fw"></i> Proveedores</a
+            >
+          </li> -->
+          <li>
+            <a href="#!" class="btn-sideBar-SubMenu">
+              <i class="zmdi zmdi-account-add"></i>&nbsp; Usuarios
+              <i class="zmdi zmdi-caret-down pull-right"></i>
+            </a>
+            <ul class="list-unstyled full-box">
+              <li>
+                <a href="#" onclick="gestionFormularios('frmListadoAdmin')"
+                  ><i class="fa fa-user"></i>&nbsp; Administradores</a
+                >
+              </li>
+              <li>
+                <a href="#" onclick="gestionFormularios('frmListadoStudents')"
+                  ><i class="zmdi zmdi-male-female"></i>&nbsp; Estudiantes</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#" onclick="gestionFormularios('frmCatalogo')">
+              <i class="fa fa-book"></i>&nbsp; Catalogo
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Modales fuera del section -->
+    <!-- Modal Book-->
+    <div
+      class="modal fade"
+      id="bookModal"
+      tabindex="-1"
+      aria-labelledby="bookModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header float-right">
+            <h3 class="modal-title" id="bookModalLabel">Libro encontrado</h3>
+            <button
+              type="button"
+              class="close"
+              id="closeModalButton"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="bookModalBody">
+            <!-- Aquí se insertará la tabla generada por JavaScript -->
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="closeModalFooterButton"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <!-- Puedes añadir un botón de "Guardar cambios" si es necesario -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal IA-->
+    <div
+      class="modal fade"
+      id="iaModal"
+      tabindex="-1"
+      aria-labelledby="iaModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header float-right">
+            <h3 class="modal-title" id="iaModalLabel">
+              Libro recomendado por IA
+            </h3>
+            <button
+              type="button"
+              class="close"
+              id="closeModalButton"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="iaModalBody">
+            <!-- Aquí se insertará la tabla generada por JavaScript -->
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="closeModalFooterButton"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <!-- Puedes añadir un botón de "Guardar cambios" si es necesario -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <section class="full-box dashboard-contentPage">
+      <!-- Navbar -->
+      <nav class="full-box dashboard-Navbar">
+        <ul class="full-box list-unstyled text-right">
+          <li class="pull-left">
+            <a href="#!" class="btn-menu-dashboard">
+              <i class="fas fa-chevron-left"></i>
+            </a>
+          </li>
+          <li>
+            <div
+              class="container-fluid d-flex justify-content-between align-items-center"
+            >
+              <!-- Formulario buscar libro -->
+              <!-- Text input and Button -->
+              <div class="navbar-form navbar-right" id="frmBusqueda">
+                <div class="form-group row">
+                  <div class="col-xs-8">
+                    <input
+                      id="txtTituloLibro"
+                      name="txtTituloLibro"
+                      placeholder="Buscar libro toda biblioteca"
+                      class="form-control"
+                      type="text"
+                      onkeypress="if (event.keyCode == 13) { document.getElementById('btnAceptarBuscarLibro').click(); return false; }"
+                    />
+                  </div>
+                  <div class="col-xs-4">
+                    <button
+                      type="button"
+                      id="btnAceptarBuscarLibro"
+                      name="btnAceptarBuscarLibro"
+                      class="btn btn-dark"
+                      onclick="aceptarBuscarLibro();"
+                    >
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Contenido principal -->
+      <div class="main-content" id="formularios">
+        <!-- Texto contenido principal -->
+        <div id="contenidoPrincipal" class="container py-5">
+          <h1 class="display-4">
+            Bienvenido/a, <span id="nombreUsuario"></span>!
+          </h1>
+          <p class="lead">
+            En la Biblioteca Almudeyne, podrás registrar tus libros favoritos,
+            ver los libros que has registrado y recibir recomendaciones de
+            libros personalizadas.
+          </p>
+          <hr class="my-4" />
+          <p>Comienza a explorar nuestra biblioteca ahora.</p>
+          <a
+            class="btn btn-info btn-lg"
+            href="#"
+            role="button"
+            onclick="gestionFormularios('frmCatalogo')"
+            >Explorar libros</a
+          >
+        </div>
+
+        <!-- Formulario Libros-->
+        <!-- Listado libros -->
+        <form
+          class="form-horizontal"
+          name="frmListadoLibros"
+          id="frmListadoLibros"
+        >
+          <fieldset>
+            <div class="page-header">
+              <h2 class="text-titles">
+                <i class="zmdi zmdi-library"></i>&nbsp; Mis libros
+              </h2>
+            </div>
+            <!-- MAS IMPORTANTE -->
+            <div class="container-fluid">
+              <div class="panel panel-info">
+                <div class="panel-heading">
+                  <h3 class="panel-title">
+                    <i class="fa fa-list-alt"></i> &nbsp; LISTA LIBROS
+                  </h3>
+                </div>
+                <div class="panel-body">
+                  <div class="table-responsive">
+                    <div id="listado" style="display: none"></div>
+                    <!-- Aquí se mostrará la lista de libros -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Formulario recomendacion libro -->
+          <fieldset>
+            <div class="page-header">
+              <h2 class="text-titles">
+                <i class="fa fa-desktop"></i>&nbsp; Libro recomendado por IA
+              </h2>
+            </div>
+            <div class="form-group">
+              <div class="col-xs-4">
+                <input
+                  type="button"
+                  id="btnRecomendar"
+                  name="btnRecomendar"
+                  class="btn btn-primary"
+                  value="Recomendar IA"
+                  onclick="recomendarLibro();"
+                />
+              </div>
+            </div>
+          </fieldset>
+        </form>
+
+        <!-- Formulario recomendacion libro -->
+        <form
+          class="form-horizontal"
+          name="frmRecomendador"
+          id="frmRecomendador"
+        >
+          <fieldset>
+            <legend>Libro recomendado por IA</legend>
+
+            <div class="form-group">
+              <label class="col-xs-4 control-label" for="btnRecomendar"></label>
+              <div class="col-xs-4">
+                <input
+                  type="button"
+                  id="btnRecomendar"
+                  name="btnRecomendar"
+                  class="btn btn-primary"
+                  value="Recomendar"
+                  onclick="recomendarLibro();"
+                />
+              </div>
+            </div>
+          </fieldset>
+        </form>
+
+        <!-- Formulario alta libros -->
+        <form class="form-horizontal" name="frmAltaLibro" id="frmAltaLibro">
+          <!-- Form Name -->
+          <div class="page-header">
+            <h2 class="text-titles">
+              <i class="fa fa-plus-circle"></i>&nbsp; Añadir nuevo libro
+            </h2>
+          </div>
+          <!-- Panel nuevo libro -->
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                <!-- Panel nuevo libro -->
+                <div class="panel panel-success">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">
+                      <i class="fa fa-plus"></i> &nbsp; NUEVO LIBRO
+                    </h3>
+                  </div>
+                  <div class="panel-body">
+                    <form class="form-horizontal">
+                      <fieldset>
+                        <div class="container-fluid">
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <div class="form-group">
+                                <label class="control-label col-xs-3"
+                                  >Título</label
+                                >
+                                <div class="col-xs-6">
+                                  <input
+                                    pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
+                                    class="form-control"
+                                    type="text"
+                                    id="txtTitulo"
+                                    name="txtTitulo"
+                                    required=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <div class="form-group">
+                                <label class="control-label col-xs-3"
+                                  >Autor/a</label
+                                >
+                                <div class="col-xs-6">
+                                  <input
+                                    pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
+                                    class="form-control"
+                                    type="text"
+                                    id="txtAutor"
+                                    name="txtAutor"
+                                    required=""
+                                    maxlength="30"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <div class="form-group">
+                                <label class="control-label col-xs-3"
+                                  >Género</label
+                                >
+                                <div class="col-xs-6">
+                                  <select
+                                    id="txtGenero"
+                                    name="txtGenero"
+                                    class="form-control"
+                                  >
+                                    <option selected value="">
+                                      Selecciona un género
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <div class="form-group">
+                                <label class="control-label col-xs-3"
+                                  >Estado</label
+                                >
+                                <div class="col-xs-6" id="divEstados">
+                                  <!-- Los radios se cargarán dinámicamente aquí -->
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <div class="form-group">
+                                <label class="control-label col-xs-3"
+                                  >Calificación</label
+                                >
+                                <div class="col-xs-6 rating" id="star-rating">
+                                  <input
+                                    id="radio1"
+                                    type="radio"
+                                    name="estrellas"
+                                    value="5"
+                                  />
+                                  <label for="radio1">★</label>
+                                  <input
+                                    id="radio2"
+                                    type="radio"
+                                    name="estrellas"
+                                    value="4"
+                                  />
+                                  <label for="radio2">★</label>
+                                  <input
+                                    id="radio3"
+                                    type="radio"
+                                    name="estrellas"
+                                    value="3"
+                                  />
+                                  <label for="radio3">★</label>
+                                  <input
+                                    id="radio4"
+                                    type="radio"
+                                    name="estrellas"
+                                    value="2"
+                                  />
+                                  <label for="radio4">★</label>
+                                  <input
+                                    id="radio5"
+                                    type="radio"
+                                    name="estrellas"
+                                    value="1"
+                                  />
+                                  <label for="radio5">★</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <div class="form-group">
+                                <label class="control-label col-xs-3"
+                                  >Comentarios</label
+                                >
+                                <div class="col-xs-6">
+                                  <textarea
+                                    id="txtComments"
+                                    name="txtComments"
+                                    class="form-control"
+                                  ></textarea>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <div class="form-group">
+                                <div class="col-xs-offset-3 col-xs-9">
+                                  <button
+                                    type="button"
+                                    id="btnAceptarAltaLibro"
+                                    name="btnAceptarAltaLibro"
+                                    class="btn btn-success"
+                                    onclick="aceptarAltaLibro();"
+                                  >
+                                    Añadir
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- Formulario Mi cuenta -->
+        <form
+          class="form-horizontal"
+          name="frmInformacionUsuario"
+          id="frmInformacionUsuario"
+        >
+          <!-- Form Name -->
+          <div class="page-header">
+            <h2 class="text-titles">
+              <i class="fa fa-address-book-o"></i>&nbsp; Mi cuenta
+            </h2>
+          </div>
+          <!-- Información personal -->
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                <div class="panel panel-info">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">
+                      <i class="zmdi zmdi-account-box"></i> Información personal
+                    </h3>
+                  </div>
+                  <div class="panel-body">
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                          <div class="form-group">
+                            <label class="control-label col-xs-3"
+                              >Nombres</label
+                            >
+                            <div class="col-xs-9">
+                              <input
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
+                                class="form-control"
+                                type="text"
+                                name="nombre"
+                                id="nombre"
+                                required=""
+                                maxlength="30"
+                                value="Nombre del usuario"
+                                disabled
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                          <div class="form-group">
+                            <label class="control-label col-xs-3"
+                              >Apellidos</label
+                            >
+                            <div class="col-xs-9">
+                              <input
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
+                                class="form-control"
+                                type="text"
+                                name="apellidos"
+                                id="apellidos"
+                                required=""
+                                maxlength="30"
+                                value="Apellidos del usuario"
+                                disabled
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                          <div class="form-group">
+                            <label class="control-label col-xs-3"
+                              >Nombre de usuario</label
+                            >
+                            <div class="col-xs-9">
+                              <input
+                                pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]{1,15}"
+                                class="form-control"
+                                type="text"
+                                name="usuario"
+                                id="usuario"
+                                required=""
+                                maxlength="15"
+                                value="Nombre de usuario"
+                                disabled
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cambio de contraseña -->
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                <div class="panel panel-info">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">
+                      <i class="fa fa-cog"></i> Cambio de contraseña
+                    </h3>
+                  </div>
+                  <div class="panel-body">
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                          <div class="form-group">
+                            <label class="control-label col-xs-3"
+                              >Contraseña antigua</label
+                            >
+                            <div class="col-xs-9">
+                              <input
+                                class="form-control"
+                                type="password"
+                                name="antigua-contrasena"
+                                id="antigua-contrasena"
+                                required=""
+                                maxlength="70"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                          <div class="form-group">
+                            <label class="control-label col-xs-3"
+                              >Nueva contraseña</label
+                            >
+                            <div class="col-xs-9">
+                              <input
+                                class="form-control"
+                                type="password"
+                                name="nueva-contrasena"
+                                id="nueva-contrasena"
+                                required=""
+                                maxlength="70"
+                                disabled
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                          <div class="form-group">
+                            <label class="control-label col-xs-3"
+                              >Confirmar contraseña</label
+                            >
+                            <div class="col-xs-9">
+                              <input
+                                class="form-control"
+                                type="password"
+                                name="confirmar-contrasena"
+                                id="confirmar-contrasena"
+                                required=""
+                                maxlength="70"
+                                disabled
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botones -->
+          <p class="text-center" style="margin-top: 20px">
+            <button type="submit" class="btn btn-success btn-raised">
+              <i class="fa fa-floppy-o"></i> Guardar cambios
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger btn-raised"
+              onclick="eliminarCuenta()"
+            >
+              <i class="fa-regular fa-trash-can"></i> Eliminar cuenta
+            </button>
+          </p>
+        </form>
+
+        <!-- Administradores -->
+        <form
+          class="form-horizontal"
+          name="frmListadoAdmin"
+          id="frmListadoAdmin"
+        >
+          <!-- Content page -->
+          <div class="container-fluid">
+            <div class="page-header">
+              <h2 class="text-titles">
+                <i class="zmdi zmdi-account zmdi-hc-fw"></i> Usuarios
+                <small>ADMINISTRADORES</small>
+              </h2>
+            </div>
+            <p class="lead">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse
+              voluptas reiciendis tempora voluptatum eius porro ipsa quae
+              voluptates officiis sapiente sunt dolorem, velit quos a qui nobis
+              sed, dignissimos possimus!
+            </p>
+          </div>
+
+          <div class="container-fluid">
+            <ul class="breadcrumb breadcrumb-tabs">
+              <li>
+                <a
+                  href="#"
+                  onclick="gestionFormularios('frmListadoAdmin')"
+                  class="btn btn-info"
+                >
+                  <i class="zmdi zmdi-plus"></i> &nbsp; NUEVO ADMINISTRADOR
+                </a>
+              </li>
+              <li>
+                <a href="admin-list.html" class="btn btn-success">
+                  <i class="zmdi zmdi-format-list-bulleted"></i> &nbsp; LISTA DE
+                  ADMINISTRADORES
+                </a>
+              </li>
+              <li>
+                <a href="admin-search.html" class="btn btn-primary">
+                  <i class="zmdi zmdi-search"></i> &nbsp; BUSCAR ADMINISTRADOR
+                </a>
+              </li>
+            </ul>
+          </div>
+          <!-- Panel nuevo administrador -->
+          <div class="container-fluid">
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  <i class="zmdi zmdi-plus"></i> &nbsp; NUEVO ADMINISTRADOR
+                </h3>
+              </div>
+              <div class="panel-body">
+                <form>
+                  <fieldset>
+                    <legend>
+                      <i class="zmdi zmdi-account-box"></i> &nbsp; Información
+                      personal
+                    </legend>
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-6">
+                          <div class="form-group label-floating">
+                            <label class="control-label">Nombres *</label>
+                            <input
+                              pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
+                              class="form-control"
+                              type="text"
+                              name="nombre-reg"
+                              required=""
+                              maxlength="30"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                          <div class="form-group label-floating">
+                            <label class="control-label">Apellidos *</label>
+                            <input
+                              pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
+                              class="form-control"
+                              type="text"
+                              name="apellido-reg"
+                              required=""
+                              maxlength="30"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <br />
+                  <fieldset>
+                    <legend>
+                      <i class="zmdi zmdi-key"></i> &nbsp; Datos de la cuenta
+                    </legend>
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <div class="form-group label-floating">
+                            <label class="control-label"
+                              >Nombre de usuario *</label
+                            >
+                            <input
+                              pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]{1,15}"
+                              class="form-control"
+                              type="text"
+                              name="usuario-reg"
+                              required=""
+                              maxlength="15"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                          <div class="form-group label-floating">
+                            <label class="control-label">Contraseña *</label>
+                            <input
+                              class="form-control"
+                              type="password"
+                              name="password1-reg"
+                              required=""
+                              maxlength="70"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                          <div class="form-group label-floating">
+                            <label class="control-label"
+                              >Repita la contraseña *</label
+                            >
+                            <input
+                              class="form-control"
+                              type="password"
+                              name="password2-reg"
+                              required=""
+                              maxlength="70"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <p class="text-center" style="margin-top: 20px">
+                    <button
+                      type="submit"
+                      class="btn btn-info btn-raised btn-sm"
+                    >
+                      <i class="fa fa-floppy-o"></i> Guardar
+                    </button>
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- FORMULARIO ESTUDIANTES -->
+        <form
+          class="form-horizontal"
+          name="frmListadoStudents"
+          id="frmListadoStudents"
+        >
+          <!-- Content page -->
+          <div class="container-fluid">
+            <div class="page-header">
+              <h2 class="text-titles">
+                <i class="zmdi zmdi-male-alt zmdi-hc-fw"></i> Usuarios
+                <small>ESTUDIANTES</small>
+              </h2>
+            </div>
+            <p class="lead">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse
+              voluptas reiciendis tempora voluptatum eius porro ipsa quae
+              voluptates officiis sapiente sunt dolorem, velit quos a qui nobis
+              sed, dignissimos possimus!
+            </p>
+          </div>
+
+          <div class="container-fluid">
+            <ul class="breadcrumb breadcrumb-tabs">
+              <li>
+                <a href="client.html" class="btn btn-info">
+                  <i class="zmdi zmdi-plus"></i> &nbsp; NUEVO CLIENTE
+                </a>
+              </li>
+              <li>
+                <a href="client-list.html" class="btn btn-success">
+                  <i class="zmdi zmdi-format-list-bulleted"></i> &nbsp; LISTA DE
+                  CLIENTES
+                </a>
+              </li>
+              <li>
+                <a href="client-search.html" class="btn btn-primary">
+                  <i class="zmdi zmdi-search"></i> &nbsp; BUSCAR CLIENTE
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Panel nuevo cliente -->
+          <div class="container-fluid">
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  <i class="zmdi zmdi-plus"></i> &nbsp; NUEVO CLIENTE
+                </h3>
+              </div>
+              <div class="panel-body">
+                <form>
+                  <fieldset>
+                    <legend>
+                      <i class="zmdi zmdi-account-box"></i> &nbsp; Información
+                      personal
+                    </legend>
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-6">
+                          <div class="form-group label-floating">
+                            <label class="control-label">Nombres *</label>
+                            <input
+                              pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
+                              class="form-control"
+                              type="text"
+                              name="nombre-reg"
+                              required=""
+                              maxlength="30"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                          <div class="form-group label-floating">
+                            <label class="control-label">Apellidos *</label>
+                            <input
+                              pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
+                              class="form-control"
+                              type="text"
+                              name="apellido-reg"
+                              required=""
+                              maxlength="30"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <br />
+                  <fieldset>
+                    <legend>
+                      <i class="zmdi zmdi-key"></i> &nbsp; Datos de la cuenta
+                    </legend>
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <div class="form-group label-floating">
+                            <label class="control-label"
+                              >Nombre de usuario *</label
+                            >
+                            <input
+                              pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]{1,15}"
+                              class="form-control"
+                              type="text"
+                              name="usuario-reg"
+                              required=""
+                              maxlength="15"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                          <div class="form-group label-floating">
+                            <label class="control-label">Contraseña *</label>
+                            <input
+                              class="form-control"
+                              type="password"
+                              name="password1-reg"
+                              required=""
+                              maxlength="70"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                          <div class="form-group label-floating">
+                            <label class="control-label"
+                              >Repita la contraseña *</label
+                            >
+                            <input
+                              class="form-control"
+                              type="password"
+                              name="password2-reg"
+                              required=""
+                              maxlength="70"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-xs-12">
+                          <div class="form-group">
+                            <label class="control-label">Genero</label>
+                            <div class="radio radio-primary">
+                              <label>
+                                <input
+                                  type="radio"
+                                  name="optionsGenero"
+                                  id="optionsRadios1"
+                                  value="Masculino"
+                                  checked=""
+                                />
+                                <i class="zmdi zmdi-male-alt"></i> &nbsp;
+                                Masculino
+                              </label>
+                            </div>
+                            <div class="radio radio-primary">
+                              <label>
+                                <input
+                                  type="radio"
+                                  name="optionsGenero"
+                                  id="optionsRadios2"
+                                  value="Femenino"
+                                />
+                                <i class="zmdi zmdi-female"></i> &nbsp; Femenino
+                              </label>
+                            </div>
+                            <div class="radio radio-primary">
+                              <label>
+                                <input
+                                  type="radio"
+                                  name="optionsGenero"
+                                  id="optionsRadios3"
+                                  value="Indefinido"
+                                />
+                                <i class="zmdi zmdi-male-female"></i> &nbsp;
+                                Indefinido
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <p class="text-center" style="margin-top: 20px">
+                    <button
+                      type="submit"
+                      class="btn btn-info btn-raised btn-sm"
+                    >
+                      <i class="zmdi zmdi-floppy"></i> Guardar
+                    </button>
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- CATALOGO TODOS LOS LIBROS -->
+        <form class="form-horizontal" name="frmCatalogo" id="frmCatalogo">
+          <div class="container-fluid">
+            <div class="page-header">
+              <h2 class="text-titles">
+                <i class="fa fa-book"></i>&nbsp; CATALOGO
+              </h2>
+            </div>
+            <p class="lead">
+              Aquí se muestra el listado de libros de nuestra biblioteca y se
+              puede filtrar por géneros.
+            </p>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="control-label col-xs-3">Género</label>
+                <div class="col-xs-6">
+                  <select id="txtGenero2" name="txtGenero" class="form-control">
+                    <option selected value="">Selecciona un género</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid">
+            <h2 class="text-titles text-center">Categoría seleccionada</h2>
+            <div class="row">
+              <div class="col-xs-12">
+                <div id="book-details-container" class="list-group">
+                  <!-- Aquí se mostrará la lista de libros -->
+                </div>
+                <nav class="text-center">
+                  <ul id="pagination" class="pagination pagination-sm">
+                    <li class="disabled"><a href="javascript:void(0)">«</a></li>
+                    <li class="active"><a href="javascript:void(0)">1</a></li>
+                    <li><a href="javascript:void(0)">2</a></li>
+                    <li><a href="javascript:void(0)">3</a></li>
+                    <li><a href="javascript:void(0)">4</a></li>
+                    <li><a href="javascript:void(0)">5</a></li>
+                    <li><a href="javascript:void(0)">»</a></li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <footer class="bg-body-tertiary text-center fixed-bottom">
+        <!-- Grid container -->
+        <div class="container p-4 pb-0">
+          <!-- Section: Social media -->
+          <section class="mb-4">
+            <!-- Google -->
+            <a
+              data-mdb-ripple-init
+              class="btn text-white btn-floating m-1"
+              style="background-color: #dd4b39"
+              href="mailto:tmaygon609@iesalmudeyne.es"
+              target="_blank"
+              role="button"
+              ><i class="fab fa-google"></i
+            ></a>
+
+            <!-- Linkedin -->
+            <a
+              data-mdb-ripple-init
+              class="btn text-white btn-floating m-1"
+              style="background-color: #0082ca"
+              href="https://www.linkedin.com/in/tibu-mayo/"
+              target="_blank"
+              role="button"
+              ><i class="fab fa-linkedin-in"></i
+            ></a>
+            <!-- Github -->
+            <a
+              data-mdb-ripple-init
+              class="btn text-white btn-floating m-1"
+              style="background-color: #333333"
+              href="https://github.com/tmaygon609"
+              target="_blank"
+              role="button"
+              ><i class="fab fa-github"></i
+            ></a>
+          </section>
+          <!-- Section: Social media -->
+        </div>
+        <!-- Grid container -->
+
+        <!-- Copyright -->
+        <div id="copyright" class="text-center p-3">
+          <h4 style="margin: 0">© 2024 Copyright: Tibu Mayo - IES Almudeyne</h4>
+        </div>
+        <!-- Copyright -->
+      </footer>
+    </section>
+
+    <script type="text/javascript" src="js/codigo.js"></script>
+    <script type="text/javascript" src="js/classBook.js"></script>
+    <script type="text/javascript" src="js/clasesUser.js"></script>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>
