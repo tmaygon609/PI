@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let oBook = new Book();
   oBook.cargarGeneros();
   oBook.cargarEstados();
+  // oBook.listadoLibrosCompleto();
 
   mostrarContenidoPrincipal();
 });
@@ -48,15 +49,24 @@ function gestionFormularios(sFormularioVisible) {
     case "frmAltaLibro":
       frmAltaLibro.style.display = "block";
       break;
-    // case "frmBusqueda":
-    //   frmBuscarLibro.style.display = "block";
-    //   break;
     case "frmListadoLibros":
       frmListadoLibros.style.display = "block";
       aceptarListadoLibros();
       break;
-    case "frmRecomendador":
-      frmRecomendador.style.display = "block";
+    case "frmListadoAdmin":
+      frmListadoAdmin.style.display = "block";
+      break;
+    case "frmListadoStudents":
+      frmListadoStudents.style.display = "block";
+      break;
+    case "frmCatalogo":
+      frmCatalogo.style.display = "block";
+      mostrarListadoEnCatalogo();
+      break;
+    case "frmInformacionUsuario":
+      frmInformacionUsuario.style.display = "block";
+      const usuario = new User();
+      usuario.actualizarFormularioInformacion();
       break;
     case "CerrarSesion":
       cerrarSesion();
@@ -76,6 +86,14 @@ function ocultarTodosLosFormularios() {
   }
 }
 
+//Función que elimina y muestra el listado completo en catalogo
+function mostrarListadoEnCatalogo() {
+  document.getElementById("txtGenero2").selectedIndex = 0;
+  let oBook = new Book();
+  oBook.listadoLibrosCompleto();
+}
+
+// Función que muestra el contenido principal
 function mostrarContenidoPrincipal() {
   let storedUser = localStorage.getItem("usuarioActual");
 
@@ -86,6 +104,14 @@ function mostrarContenidoPrincipal() {
     let nombreUsuario = usuarioActual.name;
     let divUsuario = document.getElementById("nombreUsuario");
     divUsuario.innerHTML = `${nombreUsuario}`;
+
+    // Selecciona el elemento figcaption
+    let figcaption = document.querySelector(
+      "figcaption.text-center.text-titles"
+    );
+
+    // Asigna el nombre de usuario al contenido de figcaption
+    figcaption.textContent = nombreUsuario;
   } else {
     console.error("No se encontró la información del usuario.");
   }
@@ -216,7 +242,17 @@ async function recomendarLibro() {
 
 // Volvemos a la página de login
 function cerrarSesion() {
-  window.open("../index.html", "_self");
+  swal({
+    title: "Cerrar sesión",
+    text: "¿Estás seguro de que quieres cerrar sesión?",
+    icon: "warning",
+    buttons: ["Cancelar", "Cerrar sesión"],
+    dangerMode: true,
+  }).then((cerrar) => {
+    if (cerrar) {
+      window.open("index.html", "_self");
+    }
+  });
 }
 
 // Maneja el evento de los botones borrar del listado de todos los libros.
@@ -228,28 +264,235 @@ function manejadorEvento(event) {
     console.log(btn);
 
     if (String(btn).substring(0, 1) == "e") {
-      let eliminar = confirm("¿Quieres eliminar?");
+      swal({
+        title: "¿Quieres eliminar este libro?",
+        text: "Esta acción no se puede deshacer",
+        icon: "warning",
+        buttons: ["Cancelar", "Eliminar"],
+        dangerMode: true,
+      }).then((eliminar) => {
+        if (eliminar) {
+          let id = String(btn).substring(1, btn.length);
 
-      if (eliminar) {
-        let id = String(btn).substring(1, btn.length);
-
-        let oBook = new Book();
-        oBook.eliminar(id);
-      } else {
-        alert("Se ha cancelado la operación.");
-        swal({
-          title: "Se ha cancelado la operación",
-          icon: "error",
-        });
-      }
+          let oBook = new Book();
+          oBook.eliminar(id);
+        } else {
+          swal({
+            title: "Se ha cancelado la operación",
+            icon: "error",
+          });
+        }
+      });
     } else if (String(btn).substring(0, 1) == "a") {
-      let id = String(btn).substring(1, btn.length);
-      let nuevoEstado = prompt("Ingrese el nuevo estado del libro");
-      if (nuevoEstado) {
-        let oBook = new Book();
+      let id = String(btn).substring(1);
 
-        oBook.actualizarEstado(id, nuevoEstado);
+      convertirCamposAInputs(id);
+    } else if (String(btn).substring(0, 1) === "g") {
+      let id = String(btn).substring(1);
+
+      const { status, rate, comment } = obtenerValores(id);
+
+      console.log("Valores obtenidos:", status, rate, comment);
+
+      // Verificar si el rate es 0 y mostrar un swal diferente
+      if (rate === 0) {
+        swal({
+          title: "No tiene calificación",
+          text: "¿Estás seguro de introducir un libro sin calificación?",
+          icon: "info",
+          buttons: ["Cancelar", "Guardar cambios"],
+          dangerMode: false,
+        }).then((guardar) => {
+          if (guardar) {
+            let oBook = new Book();
+            oBook.guardarCambios(id, status, rate, comment);
+            revertirCamposAInputs(id);
+          }
+        });
+        return; // Retornar temprano para evitar mostrar el swal de guardar cambios
+      } else {
+        let oBook = new Book();
+        oBook.guardarCambios(id, status, rate, comment);
+        revertirCamposAInputs(id);
       }
+    }
+  }
+
+  function obtenerValores(id) {
+    const estadoSelect = document.getElementById("estadoSelect" + id);
+    const status = estadoSelect.options[estadoSelect.selectedIndex].value;
+
+    const calificacionInputs = document.querySelectorAll(
+      'input[name="estrellas-' + id + '"]:checked'
+    );
+    let rate = 0;
+    calificacionInputs.forEach((input) => {
+      if (input.checked) {
+        rate = input.value;
+      }
+    });
+
+    const comentarioInput = document.getElementById("comentarioInput" + id);
+    const comment = comentarioInput.value;
+
+    return { status, rate, comment };
+  }
+
+  // Convierte los campos de estado, calificación y comentario en inputs editables
+  function convertirCamposAInputs(id) {
+    let estadoElement = document.getElementById("estado" + id);
+    let calificacionElement = document.getElementById("calificacion" + id);
+    let comentarioElement = document.getElementById("comentario" + id);
+
+    // Create the <select> element
+    let selectElement = document.createElement("select");
+    selectElement.id = "estadoSelect" + id;
+    selectElement.classList.add("form-control", "form-control-sm");
+
+    // Create the three <option> elements
+    let opcion1 = document.createElement("option");
+    opcion1.value = "Leido";
+    opcion1.text = "Leído";
+    let opcion2 = document.createElement("option");
+    opcion2.value = "En curso";
+    opcion2.text = "En curso";
+    let opcion3 = document.createElement("option");
+    opcion3.value = "Sin empezar";
+    opcion3.text = "Sin empezar";
+
+    // Add the <option> elements to the <select> element
+    selectElement.appendChild(opcion1);
+    selectElement.appendChild(opcion2);
+    selectElement.appendChild(opcion3);
+
+    // Set the initial value of the <select> element based on the current value of the `estado` field
+    for (let i = 0; i < selectElement.options.length; i++) {
+      if (selectElement.options[i].value === estadoElement.innerHTML) {
+        selectElement.selectedIndex = i;
+        break;
+      }
+    }
+    // Reemplazar el contenido del elemento estadoElement con el select
+    let selectContainer = document.createElement("div");
+    selectContainer.classList.add("col-xs-6");
+    selectContainer.style.minWidth = "15vh";
+    selectContainer.appendChild(selectElement);
+    estadoElement.innerHTML = "";
+    estadoElement.appendChild(selectContainer);
+
+    // Create the rating elements
+    let calificacionContainer = document.createElement("div");
+    calificacionContainer.classList.add("form-group");
+
+    let calificacionLabel = document.createElement("label");
+    calificacionLabel.classList.add("control-label", "col-xs-3");
+
+    calificacionContainer.appendChild(calificacionLabel);
+
+    let calificacionRating = document.createElement("div");
+    calificacionRating.classList.add("col-xs-6", "rating");
+    calificacionRating.id = "star-rating";
+    calificacionRating.setAttribute("data-id", id); // Añade un atributo data-id para identificar de manera única
+    calificacionRating.style.display = "flex"; // Utilizamos flexbox para alinear los elementos horizontalmente
+
+    for (let i = 5; i >= 1; i--) {
+      let radioInput = document.createElement("input");
+      radioInput.type = "radio";
+      radioInput.id = "radio" + i + "-" + id;
+      radioInput.name = "estrellas-" + id;
+      radioInput.value = i;
+      calificacionRating.appendChild(radioInput);
+
+      let labelElement = document.createElement("label");
+      labelElement.htmlFor = "radio" + i + "-" + id;
+      labelElement.textContent = "★";
+      calificacionRating.appendChild(labelElement);
+    }
+
+    calificacionContainer.appendChild(calificacionRating);
+
+    // Replace the contents of the `calificacion` field with the rating elements
+    let ratingContainer = document.createElement("div");
+    ratingContainer.classList.add("col-xs-6");
+    ratingContainer.style.display = "flex"; // Utilizamos flexbox para alinear los elementos horizontalmente
+    ratingContainer.appendChild(calificacionContainer);
+    calificacionElement.innerHTML = "";
+    calificacionElement.appendChild(ratingContainer);
+
+    // Obtener el valor actual del comentario
+    let comentarioValue =
+      comentarioElement.textContent || comentarioElement.innerText;
+
+    // Crear el elemento de input de comentarios
+    let comentarioInput = document.createElement("input");
+    comentarioInput.type = "text";
+    comentarioInput.id = "comentarioInput" + id;
+    comentarioInput.value = comentarioValue;
+
+    // Reemplazar el contenido del elemento comentarioElement con el input de comentarios
+    comentarioElement.innerHTML = "";
+    comentarioElement.appendChild(comentarioInput);
+
+    // Cambiar el botón de lápiz por el de guardar cambios
+    let btn = document.querySelector("button[value='a" + id + "']");
+    btn.innerHTML = ""; // Limpiamos el contenido del botón
+
+    // Cambiamos el valor del botón para que sea reconocido como un botón de guardar cambios
+    btn.setAttribute("value", "g" + id);
+
+    // Cambiar las clases del botón para reflejar el cambio a un botón de guardar
+    btn.classList.remove("btn-info", "fa-pencil");
+    btn.classList.add("btn-success", "fa-save");
+  }
+
+  // Revierte los campos de estado, calificación y comentario a texto
+  function revertirCamposAInputs(id) {
+    // Recuperar los valores actuales
+    const estadoSelect = document.getElementById("estadoSelect" + id);
+    const status = estadoSelect.options[estadoSelect.selectedIndex].text;
+
+    const calificacionInputs = document.querySelectorAll(
+      'input[name="estrellas-' + id + '"]:checked'
+    );
+    let rate = null;
+    calificacionInputs.forEach((input) => {
+      if (input.checked) {
+        rate = input.value;
+      }
+    });
+
+    const comentarioInput = document.getElementById("comentarioInput" + id);
+    const comment = comentarioInput.value;
+
+    // Convertir los elementos editables de nuevo a texto
+    let estadoElement = document.getElementById("estado" + id);
+    estadoElement.innerHTML = status;
+
+    let calificacionElement = document.getElementById("calificacion" + id);
+    let estrellas = "";
+    for (let i = 0; i < rate; i++) {
+      estrellas += "★";
+    }
+    for (let i = rate; i < 5; i++) {
+      estrellas += "☆";
+    }
+    calificacionElement.innerHTML = estrellas;
+
+    let comentarioElement = document.getElementById("comentario" + id);
+    comentarioElement.innerHTML = comment;
+
+    // Actualizar el botón
+    let btn = document.querySelector("button[value='g" + id + "']");
+    if (btn) {
+      // Limpiar el contenido del botón
+      btn.innerHTML = "";
+
+      // Agregar el icono de lápiz y cambiar el valor del botón
+      btn.setAttribute("value", "a" + id);
+
+      // Cambiar las clases del botón
+      btn.classList.remove("btn-success", "fa-save");
+      btn.classList.add("btn-info", "fa-pencil");
     }
   }
 }

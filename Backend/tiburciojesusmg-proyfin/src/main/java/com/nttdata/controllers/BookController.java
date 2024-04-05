@@ -37,6 +37,19 @@ public class BookController {
 		return bookService.searchAllBooks();
 	}
 
+//	@GetMapping
+//	public Page<Book> showBooks(int page, int size, String sortBy) {
+//
+//		PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
+//		return bookService.searchAllBooks(pageRequest);
+//	}
+
+	@GetMapping(path = "/searchByGenre")
+	public List<Book> searchByGenre(@RequestParam String genre) {
+
+		return bookService.searchByGenre(genre);
+	}
+
 	@PostMapping(path = "/saveBook")
 	public ResponseEntity<Book> saveBook(@RequestBody Book b) {
 

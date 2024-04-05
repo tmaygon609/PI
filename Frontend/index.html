@@ -13,6 +13,10 @@
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css"
+    />
     <script
       src="https://kit.fontawesome.com/a05c1998d9.js"
       crossorigin="anonymous"
@@ -32,7 +36,13 @@
         <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 formulario">
           <form>
             <div class="form-group text-center pt-3">
-              <h1 class="text-light">Iniciar Sesión</h1>
+              <p class="text-center text-muted">
+                <i
+                  class="zmdi zmdi-account-circle zmdi-hc-5x fs-1 fs-md-2 fs-lg-3 fs-xl-4"
+                  style="color: white"
+                ></i>
+              </p>
+              <h4 class="text-light">Inicia sesión con su cuenta</h4>
             </div>
             <!-- Usuario input -->
             <div class="form-group mx-sm-5 pt-3">
@@ -60,12 +70,15 @@
                 Entrar
               </button>
             </div>
-            <div class="form-group mx-sm-5 text-right">
+            <!-- <div class="form-group mx-sm-5 text-right">
               <span><a href="#" class="olvide">Olvide mi contraseña</a></span>
-            </div>
+            </div> -->
             <div class="form-group mx-sm-5 text-center">
               <span
-                ><a id="enlaceRegistrar" href="#" class="registrarse"
+                ><a
+                  id="enlaceRegistrar"
+                  href="#"
+                  class="btn btn-light btn-lg rounded-pill py-2 my-2 registrarse"
                   >Registrarse</a
                 ></span
               >

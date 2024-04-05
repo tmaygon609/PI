@@ -310,7 +310,6 @@ class Book {
           // Manejar este caso según sea necesario
         }
       } else {
-        alert("Has llegado al límite de recomendaciones, prueba más tarde.");
         swal({
           title: "Has llegado al límite de recomendaciones",
           text: "Prueba más tarde",
@@ -322,6 +321,102 @@ class Book {
     }
   }
 
+  async listadoLibrosCompleto() {
+    try {
+      // Realiza la petición para obtener los detalles de los libros
+      const response = await fetch("http://localhost:8080/v1/books");
+      const books = await response.json();
+
+      // Selecciona el contenedor donde se cargarán los detalles de los libros
+      const bookDetailsContainer = document.getElementById(
+        "book-details-container"
+      );
+
+      // Limpiar el contenedor antes de agregar nuevos libros
+      bookDetailsContainer.innerHTML = "";
+
+      // Itera sobre los libros y crea los elementos HTML correspondientes
+      books.forEach((book, index) => {
+        const listItem = document.createElement("div");
+        listItem.classList.add("list-group-item");
+
+        const rowContent = document.createElement("div");
+        rowContent.classList.add("row-content");
+
+        const title = document.createElement("h4");
+        title.classList.add("list-group-item-heading");
+        title.textContent = `${index + 1} - ${book.title}`;
+
+        const author = document.createElement("p");
+        author.classList.add("list-group-item-text");
+        author.innerHTML = `<strong>Autor: </strong>${book.author}<br/>`;
+
+        // Agrega los enlaces de acción
+        const actionLinks = document.createElement("p");
+        actionLinks.classList.add("list-group-item-text");
+        actionLinks.innerHTML = `
+              <a href="book-info.html" class="btn btn-primary" title="Más información"><i class="zmdi zmdi-info"></i></a>
+              <a href="#!" class="btn btn-primary" title="Ver PDF"><i class="zmdi zmdi-file"></i></a>
+              <a href="#!" class="btn btn-primary" title="Descargar PDF"><i class="zmdi zmdi-cloud-download"></i></a>
+              <a href="book-config.html" class="btn btn-primary" title="Gestionar libro"><i class="zmdi zmdi-wrench"></i></a>
+          `;
+
+        // Agrega los elementos al contenedor principal
+        rowContent.appendChild(title);
+        rowContent.appendChild(author);
+        rowContent.appendChild(actionLinks);
+        listItem.appendChild(rowContent);
+        bookDetailsContainer.appendChild(listItem);
+
+        // Agrega el separador entre cada elemento de la lista
+        if (index < books.length - 1) {
+          const separator = document.createElement("div");
+          separator.classList.add("list-group-separator");
+          bookDetailsContainer.appendChild(separator);
+        }
+      });
+    } catch (error) {
+      console.error("Error al cargar los detalles de los libros:", error);
+    }
+  }
+
+  async guardarCambios(id, status, rate, comment) {
+    console.log("id", id);
+    console.log("status", status);
+    console.log("rate", rate);
+    console.log("comment", comment);
+
+    // URL del endpoint
+    const url = `http://localhost:8080/v1/usersBooks/${id}`;
+
+    // Datos que deseas enviar. Asegúrate de que estos coincidan con los parámetros esperados por tu endpoint.
+    const data = {
+      status: status,
+      rate: rate,
+      comment: comment,
+    };
+
+    // Opciones de la solicitud
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+
+    try {
+      const response = await fetch(url, requestOptions); // Utilizamos requestOptions aquí en lugar de requestData
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const responseData = await response.json(); // Cambiamos el nombre de la variable para evitar conflicto con la variable 'data' anterior
+      console.log(responseData);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
   // Método que carga los generos de los libros.
   async cargarGeneros() {
     try {
@@ -329,15 +424,93 @@ class Book {
       const generos = await response.json();
 
       const selectGenero = document.getElementById("txtGenero");
+      const selectGenero2 = document.getElementById("txtGenero2");
 
       generos.forEach((genero) => {
         const option = document.createElement("option");
         option.value = genero.genreName;
         option.text = genero.genreName;
         selectGenero.appendChild(option);
+
+        const option2 = document.createElement("option");
+        option2.value = genero.genreName;
+        option2.text = genero.genreName;
+        selectGenero2.appendChild(option2);
+      });
+
+      // Agregar un evento para cargar los libros filtrados por género
+      selectGenero2.addEventListener("change", () => {
+        const selectedGenre = selectGenero2.value;
+        if (!selectedGenre) {
+          // Si no se ha seleccionado un género, cargar todos los libros
+          this.listadoLibrosCompleto();
+        } else {
+          // Realizar una nueva consulta y cargar los libros filtrados por género
+          this.cargarLibrosPorGenero(selectedGenre);
+        }
       });
     } catch (error) {
       console.error("Error al cargar los géneros:", error);
+    }
+  }
+
+  // Método para cargar libros filtrados por género
+  async cargarLibrosPorGenero(genre) {
+    try {
+      // Realizar la petición para obtener los libros filtrados por género
+      const response = await fetch(
+        `http://localhost:8080/v1/books/searchByGenre?genre=${genre}`
+      );
+      const books = await response.json();
+
+      // Limpiar el contenedor de detalles de libros
+      const bookDetailsContainer = document.getElementById(
+        "book-details-container"
+      );
+      bookDetailsContainer.innerHTML = "";
+
+      // Iterar sobre los libros y crear los elementos HTML correspondientes
+      books.forEach((book, index) => {
+        const listItem = document.createElement("div");
+        listItem.classList.add("list-group-item");
+
+        const rowContent = document.createElement("div");
+        rowContent.classList.add("row-content");
+
+        const title = document.createElement("h4");
+        title.classList.add("list-group-item-heading");
+        title.textContent = `${index + 1} - ${book.title}`;
+
+        const author = document.createElement("p");
+        author.classList.add("list-group-item-text");
+        author.innerHTML = `<strong>Autor: </strong>${book.author}<br/>`;
+
+        // Agrega los enlaces de acción
+        const actionLinks = document.createElement("p");
+        actionLinks.classList.add("list-group-item-text");
+        actionLinks.innerHTML = `
+                <a href="book-info.html" class="btn btn-primary" title="Más información"><i class="zmdi zmdi-info"></i></a>
+                <a href="#!" class="btn btn-primary" title="Ver PDF"><i class="zmdi zmdi-file"></i></a>
+                <a href="#!" class="btn btn-primary" title="Descargar PDF"><i class="zmdi zmdi-cloud-download"></i></a>
+                <a href="book-config.html" class="btn btn-primary" title="Gestionar libro"><i class="zmdi zmdi-wrench"></i></a>
+            `;
+
+        // Agrega los elementos al contenedor principal
+        rowContent.appendChild(title);
+        rowContent.appendChild(author);
+        rowContent.appendChild(actionLinks);
+        listItem.appendChild(rowContent);
+        bookDetailsContainer.appendChild(listItem);
+
+        // Agrega el separador entre cada elemento de la lista
+        if (index < books.length - 1) {
+          const separator = document.createElement("div");
+          separator.classList.add("list-group-separator");
+          bookDetailsContainer.appendChild(separator);
+        }
+      });
+    } catch (error) {
+      console.error("Error al cargar los libros por género:", error);
     }
   }
 
@@ -365,7 +538,11 @@ class Book {
         label.htmlFor = "rbt" + estado.statusName.replace(/\s+/g, "");
         label.textContent = estado.statusName;
 
+        const space = document.createElement("span");
+        space.innerHTML = "&nbsp;&nbsp;"; // Añade espacio entre el radio y el texto
+
         divFormCheck.appendChild(radio);
+        divFormCheck.appendChild(space);
         divFormCheck.appendChild(label);
 
         divEstados.appendChild(divFormCheck);
@@ -374,4 +551,26 @@ class Book {
       console.error("Error al cargar los estados:", error);
     }
   }
+
+  // Función para cargar los estados de los libros en el menú desplegable
+  // async cargarGenerosDropdown() {
+  //   try {
+  //     const response = await fetch("http://localhost:8080/v1/genres");
+  //     const generos = await response.json();
+
+  //     const dropdownMenu = document.getElementById("dropdown-menu");
+
+  //     generos.forEach((genero) => {
+  //       const listItem = document.createElement("li");
+  //       const link = document.createElement("a");
+  //       link.href = "#!";
+  //       link.textContent = genero.genreName;
+
+  //       listItem.appendChild(link);
+  //       dropdownMenu.appendChild(listItem);
+  //     });
+  //   } catch (error) {
+  //     console.error("Error al cargar los géneros:", error);
+  //   }
+  // }
 }
