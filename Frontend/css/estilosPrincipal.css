@@ -54,3 +54,99 @@ footer {
 .dashboard-sideBar-ct {
   overflow: auto;
 }
+
+/* Estilos para catalogo */
+
+.list-group-item {
+  display: flex;
+  align-items: center; /* Alinear verticalmente el contenido dentro del elemento de la lista */
+}
+
+.book-item {
+  display: flex;
+  flex-direction: row;
+}
+
+.book-cover {
+  width: 100px; /* Ajusta el ancho según sea necesario */
+  margin-right: 10px; /* Agrega espacio entre la imagen y el texto */
+}
+
+.book-info {
+  flex: 1; /* Permite que el espacio restante se use para el contenido del texto */
+}
+
+/* Estilos input flotante */
+
+/* .validate-input {
+  position: relative;
+}
+
+.wrap-input100 {
+  width: 100%;
+  position: relative;
+  border-bottom: 2px solid #adadad;
+  margin-bottom: 37px;
+}
+
+.input100 {
+  font-family: Poppins-Regular;
+  font-size: 15px;
+  color: #555;
+  line-height: 1.2;
+  display: block;
+  width: 100%;
+  height: 45px;
+  background: 0 0;
+  padding: 0 5px;
+  border: none;
+
+  outline: none;
+}
+
+.focus-input100 {
+  position: absolute;
+  pointer-events: none;
+  left: 20px;
+  top: 10px;
+  transition: 0.2s ease all;
+  color: #999999;
+  font-size: 120%;
+}
+
+.input100:focus ~ .focus-input100,
+.input100:not(:focus):valid ~ .focus-input100 {
+  top: -20px;
+  font-size: 20px;
+  opacity: 1;
+  color: #999999;
+} */
+
+/* Nuevo estilo para el efecto de carga */
+/* Modificación para el efecto de carga */
+/* .wrap-input100::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet
+  );
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: width 0.5s ease-in-out;
+} */
+
+/* Aplicar el efecto de carga al contenedor cuando el input está en foco */
+/* .wrap-input100:focus-within::after {
+  width: 100%;
+} */

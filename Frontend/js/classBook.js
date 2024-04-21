@@ -52,17 +52,20 @@ class Book {
         console.log("El libro ya existe. Solo se crea la relación.");
 
         //Confirmar por el usuario si quiere añadir el libro
-        const confirmacion = confirm(
-          `El libro ya existe, ¿quieres añadirlo a tu lista de libros?
-          Título: ${this.title}
-          Autor: ${this.author}
-          Género: ${this.genre}`
-        );
+        const confirmacion = await swal({
+          title: "El libro ya existe",
+          text: `¿Quieres añadirlo a tu lista de libros?
+          Título: ${resultado.libro.title}
+          Autor: ${resultado.libro.author}
+          Género: ${resultado.libro.genre}`,
+          icon: "info",
+          buttons: ["Cancelar", "Aceptar"],
+        });
 
         if (confirmacion) {
           await this.crearRelacionUserBook(
             userId,
-            resultado.libroId,
+            resultado.libro.id,
             this.status,
             this.rate,
             this.comment
@@ -104,14 +107,14 @@ class Book {
     const libroEncontrado = await response.json();
 
     if (libroEncontrado.length > 0) {
-      return { existe: true, libroId: libroEncontrado[0].id };
+      return { existe: true, libro: libroEncontrado[0] };
     } else {
-      return { existe: false, libroId: null };
+      return { existe: false, libro: null };
     }
   }
 
   async crearLibro(libro) {
-    const response = await fetch("http://localhost:8080/v1/books/saveBook", {
+    const response = await fetch("http://localhost:8080/v1/books", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -128,13 +131,22 @@ class Book {
   }
 
   async crearRelacionUserBook(userId, libroId, status, rate, comment) {
+    const userBook = {
+      user: { id: userId },
+      book: { id: libroId },
+      status: status,
+      rate: rate,
+      comment: comment,
+    };
+
     const response = await fetch(
-      `http://localhost:8080/v1/books/addBookToUser?userId=${userId}&bookId=${libroId}&status=${status}&rate=${rate}&comment=${comment}`,
+      `http://localhost:8080/v1/books/addBookToUser`,
       {
         method: "POST",
         headers: {
           "Content-type": "application/json",
         },
+        body: JSON.stringify(userBook),
       }
     );
 
@@ -321,7 +333,7 @@ class Book {
     }
   }
 
-  async listadoLibrosCompleto() {
+  async catalogo() {
     try {
       // Realiza la petición para obtener los detalles de los libros
       const response = await fetch("http://localhost:8080/v1/books");
@@ -340,8 +352,16 @@ class Book {
         const listItem = document.createElement("div");
         listItem.classList.add("list-group-item");
 
-        const rowContent = document.createElement("div");
-        rowContent.classList.add("row-content");
+        const bookItem = document.createElement("div");
+        bookItem.classList.add("book-item");
+
+        const bookCover = document.createElement("img");
+        bookCover.src = "img/portadas/elregalo.jpg";
+        bookCover.alt = "Portada del libro";
+        bookCover.classList.add("book-cover");
+
+        const bookInfo = document.createElement("div");
+        bookInfo.classList.add("book-info");
 
         const title = document.createElement("h4");
         title.classList.add("list-group-item-heading");
@@ -351,29 +371,30 @@ class Book {
         author.classList.add("list-group-item-text");
         author.innerHTML = `<strong>Autor: </strong>${book.author}<br/>`;
 
+        const genre = document.createElement("p");
+        genre.classList.add("list-group-item-text");
+        genre.innerHTML = `<strong>Género: </strong>${book.genre}<br/><br/>`;
+
         // Agrega los enlaces de acción
         const actionLinks = document.createElement("p");
         actionLinks.classList.add("list-group-item-text");
         actionLinks.innerHTML = `
-              <a href="book-info.html" class="btn btn-primary" title="Más información"><i class="zmdi zmdi-info"></i></a>
-              <a href="#!" class="btn btn-primary" title="Ver PDF"><i class="zmdi zmdi-file"></i></a>
-              <a href="#!" class="btn btn-primary" title="Descargar PDF"><i class="zmdi zmdi-cloud-download"></i></a>
-              <a href="book-config.html" class="btn btn-primary" title="Gestionar libro"><i class="zmdi zmdi-wrench"></i></a>
+              <a href="book-info.html" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
+              <a href="book-config.html" class="btn btn-info" title="Gestionar libro"><i class="fa fa-wrench"></i></a>
           `;
 
         // Agrega los elementos al contenedor principal
-        rowContent.appendChild(title);
-        rowContent.appendChild(author);
-        rowContent.appendChild(actionLinks);
-        listItem.appendChild(rowContent);
-        bookDetailsContainer.appendChild(listItem);
 
-        // Agrega el separador entre cada elemento de la lista
-        if (index < books.length - 1) {
-          const separator = document.createElement("div");
-          separator.classList.add("list-group-separator");
-          bookDetailsContainer.appendChild(separator);
-        }
+        bookInfo.appendChild(title);
+        bookInfo.appendChild(author);
+        bookInfo.appendChild(genre);
+        bookInfo.appendChild(actionLinks);
+
+        bookItem.appendChild(bookCover);
+        bookItem.appendChild(bookInfo);
+
+        listItem.appendChild(bookItem);
+        bookDetailsContainer.appendChild(listItem);
       });
     } catch (error) {
       console.error("Error al cargar los detalles de los libros:", error);
@@ -443,7 +464,7 @@ class Book {
         const selectedGenre = selectGenero2.value;
         if (!selectedGenre) {
           // Si no se ha seleccionado un género, cargar todos los libros
-          this.listadoLibrosCompleto();
+          this.catalogo();
         } else {
           // Realizar una nueva consulta y cargar los libros filtrados por género
           this.cargarLibrosPorGenero(selectedGenre);
@@ -485,19 +506,28 @@ class Book {
         author.classList.add("list-group-item-text");
         author.innerHTML = `<strong>Autor: </strong>${book.author}<br/>`;
 
+        const genreElement = document.createElement("p");
+        genreElement.classList.add("list-group-item-text");
+        genreElement.innerHTML = `<strong>Género: </strong>${genre}<br/>`;
+
         // Agrega los enlaces de acción
         const actionLinks = document.createElement("p");
         actionLinks.classList.add("list-group-item-text");
         actionLinks.innerHTML = `
-                <a href="book-info.html" class="btn btn-primary" title="Más información"><i class="zmdi zmdi-info"></i></a>
-                <a href="#!" class="btn btn-primary" title="Ver PDF"><i class="zmdi zmdi-file"></i></a>
-                <a href="#!" class="btn btn-primary" title="Descargar PDF"><i class="zmdi zmdi-cloud-download"></i></a>
-                <a href="book-config.html" class="btn btn-primary" title="Gestionar libro"><i class="zmdi zmdi-wrench"></i></a>
-            `;
+              <a href="book-info.html" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
+              <a href="book-config.html" class="btn btn-info" title="Gestionar libro"><i class="fa fa-wrench"></i></a>
+          `;
+        // actionLinks.innerHTML = `
+        //         <a href="book-info.html" class="btn btn-primary" title="Más información"><i class="zmdi zmdi-info"></i></a>
+        //         <a href="#!" class="btn btn-primary" title="Ver PDF"><i class="zmdi zmdi-file"></i></a>
+        //         <a href="#!" class="btn btn-primary" title="Descargar PDF"><i class="zmdi zmdi-cloud-download"></i></a>
+        //         <a href="book-config.html" class="btn btn-primary" title="Gestionar libro"><i class="zmdi zmdi-wrench"></i></a>
+        //     `;
 
         // Agrega los elementos al contenedor principal
         rowContent.appendChild(title);
         rowContent.appendChild(author);
+        rowContent.appendChild(genreElement);
         rowContent.appendChild(actionLinks);
         listItem.appendChild(rowContent);
         bookDetailsContainer.appendChild(listItem);

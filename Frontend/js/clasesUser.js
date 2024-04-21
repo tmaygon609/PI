@@ -52,7 +52,7 @@ class User {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/v1/books/getBooksByUserId?userId=${userId}`,
+        `http://localhost:8080/v1/books/users/${userId}`,
         {
           method: "GET",
         }
@@ -91,49 +91,44 @@ class User {
   }
 
   tablaLibros(posts, userBookDetails) {
-    let tabla =
-      "<table id= 'tabla' class='table table-striped table-hover'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th><th scope='col'>Estado</th><th scope='col'>Calificación</th><th scope='col'>Comentario</th></tr></thead><tbody>";
+    let tabla = `<div class="table-responsive">
+        <table id="tabla" class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Titulo</th>
+              <th scope="col">Autor</th>
+              <th scope="col">Genero</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Calificación</th>
+              <th scope="col">Comentario</th>
+            </tr>
+          </thead>
+          <tbody>`;
 
     if (posts.length === 0) {
-      tabla +=
-        "<tr><td colspan='5'>No hay libros registrados para este usuario.</td></tr>";
+      tabla += `<tr>
+          <td colspan="5">No hay libros registrados para este usuario.</td>
+        </tr>`;
     } else {
       posts.forEach((fila, index) => {
         console.log("Objeto fila: ", fila);
-        tabla += "<tr>";
-        tabla += "<td>" + fila.title + "</td>";
-        tabla += "<td>" + fila.author + "</td>";
-        tabla += "<td>" + fila.genre + "</td>";
-        tabla +=
-          "<td id='estado" +
-          fila.id +
-          "'>" +
-          userBookDetails[index].status +
-          "</td>";
-        tabla +=
-          "<td id='calificacion" +
-          fila.id +
-          "'>" +
-          this.convertirCalificacionEnEstrellas(userBookDetails[index].rate) +
-          "</td>";
-        tabla +=
-          "<td id='comentario" +
-          fila.id +
-          "'>" +
-          userBookDetails[index].comment +
-          "</td>";
-        tabla +=
-          "<td><button value='e" +
-          fila.id +
-          "' type='button' class='btn btn-danger fa-regular fa-trash-can'></button></td>";
-        tabla +=
-          "<td><button value='a" + // si necesito actualizar coger el id de userBookDetails[index].id
-          fila.id +
-          "' type='button' class='btn btn-info fa-solid fa-pencil'></button></td>";
-        tabla += "</tr>";
+        tabla += `<tr>`;
+        tabla += `<td>${fila.title}</td>`;
+        tabla += `<td>${fila.author}</td>`;
+        tabla += `<td>${fila.genre}</td>`;
+        tabla += `<td id="estado${fila.id}">${userBookDetails[index].status}</td>`;
+        tabla += `<td id="calificacion${
+          fila.id
+        }">${this.convertirCalificacionEnEstrellas(
+          userBookDetails[index].rate
+        )}</td>`;
+        tabla += `<td id="comentario${fila.id}">${userBookDetails[index].comment}</td>`;
+        tabla += `<td><button value="e${fila.id}" type="button" class="btn btn-danger fa-regular fa-trash-can"></button></td>`;
+        tabla += `<td><button value="a${fila.id}" type="button" class="btn btn-info fa-solid fa-pencil"></button></td>`;
+        tabla += `</tr>`;
       });
     }
-    tabla += "</tbody></table>";
+    tabla += `</tbody></table></div>`;
 
     document.getElementById("listado").innerHTML += tabla;
     document.getElementById("listado").style.display = "block";

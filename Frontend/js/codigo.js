@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let oBook = new Book();
   oBook.cargarGeneros();
   oBook.cargarEstados();
-  // oBook.listadoLibrosCompleto();
+  // oBook.catalogo();
 
   mostrarContenidoPrincipal();
 });
@@ -90,7 +90,7 @@ function ocultarTodosLosFormularios() {
 function mostrarListadoEnCatalogo() {
   document.getElementById("txtGenero2").selectedIndex = 0;
   let oBook = new Book();
-  oBook.listadoLibrosCompleto();
+  oBook.catalogo();
 }
 
 // Función que muestra el contenido principal
