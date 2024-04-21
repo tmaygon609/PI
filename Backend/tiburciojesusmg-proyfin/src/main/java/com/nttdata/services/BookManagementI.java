@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.nttdata.persistence.model.Book;
+import com.nttdata.persistence.model.UserBook;
 
 public interface BookManagementI {
 
@@ -25,7 +26,7 @@ public interface BookManagementI {
 
 	public List<Book> findBooksByUserId(final Long userId);
 
-	void addBookToUser(Long userId, Long bookId, String status, String rate, String comment);
+	void addBookToUser(UserBook userBook);
 
 	Set<Book> getBooksByUserId(Long userId);
 

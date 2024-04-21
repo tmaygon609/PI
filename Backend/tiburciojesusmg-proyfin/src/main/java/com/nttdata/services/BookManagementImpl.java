@@ -107,10 +107,10 @@ public class BookManagementImpl implements BookManagementI {
 	}
 
 	@Override
-	public void addBookToUser(Long userId, Long bookId, String status, String rate, String comment) {
+	public void addBookToUser(UserBook userBook) {
 
-		Optional<User> userOptional = userRepository.findById(userId);
-		Optional<Book> bookOptional = bookRepository.findById(bookId);
+		Optional<User> userOptional = userRepository.findById(userBook.getUser().getId());
+		Optional<Book> bookOptional = bookRepository.findById(userBook.getBook().getId());
 
 		if (userOptional.isPresent() && bookOptional.isPresent()) {
 
@@ -118,13 +118,9 @@ public class BookManagementImpl implements BookManagementI {
 			Book book = bookOptional.get();
 
 			// Crear una nueva entrada en la tabla de unión
-			UserBook userBook = new UserBook();
+
 			userBook.setUser(user);
 			userBook.setBook(book);
-			userBook.setStatus(status);
-			userBook.setRate(rate);
-			userBook.setComment(comment);
-
 			userBookRepository.save(userBook);
 
 //			User user = userOptional.get();

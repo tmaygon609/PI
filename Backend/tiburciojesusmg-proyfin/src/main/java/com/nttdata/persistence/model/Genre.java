@@ -24,10 +24,10 @@ public class Genre implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
+	@Column(name = "C_ID")
 	private Long id;
 
-	@Column(name = "GENRE_NAME")
+	@Column(name = "C_GENRE_NAME")
 	private String genreName;
 
 }

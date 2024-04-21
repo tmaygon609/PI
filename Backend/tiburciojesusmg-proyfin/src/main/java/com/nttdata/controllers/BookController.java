@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nttdata.persistence.model.Book;
 import com.nttdata.persistence.model.OpenAIRequest;
 import com.nttdata.persistence.model.OpenAIResponse;
+import com.nttdata.persistence.model.UserBook;
 import com.nttdata.services.BookManagementI;
 import com.nttdata.services.OpenAIService;
 
@@ -31,10 +32,53 @@ public class BookController {
 	@Autowired
 	private OpenAIService openAIService;
 
+	/**
+	 * Obtener todos los libros.
+	 * 
+	 * @return ResponseEntity<List<Book>>
+	 */
 	@GetMapping
-	public List<Book> showBooks() {
+	public ResponseEntity<List<Book>> showBooks() {
 
-		return bookService.searchAllBooks();
+		List<Book> books = bookService.searchAllBooks();
+
+		return ResponseEntity.ok().body(books);
+	}
+
+	/**
+	 * Buscar libros por género.
+	 * 
+	 * @param genre
+	 * @return ResponseEntity<List<Book>>
+	 */
+	@GetMapping("/searchByGenre")
+	public ResponseEntity<List<Book>> searchBooksByGenre(@RequestParam String genre) {
+		List<Book> books = bookService.searchByGenre(genre);
+		return ResponseEntity.ok().body(books);
+	}
+
+	/**
+	 * Buscar libros por título.
+	 * 
+	 * @param title
+	 * @return ResponseEntity<List<Book>>
+	 */
+	@GetMapping(path = "/searchByTitle")
+	public ResponseEntity<List<Book>> searchBooksByTitle(@RequestParam String title) {
+		List<Book> books = bookService.searchByTitle(title);
+		return ResponseEntity.ok().body(books);
+	}
+
+	/**
+	 * Obtiene los libros de un usuario específico.
+	 * 
+	 * @param userId
+	 * @return ResponseEntity<Set<Book>>
+	 */
+	@GetMapping("/users/{userId}")
+	public ResponseEntity<Set<Book>> getBooksByUserId(@PathVariable Long userId) {
+		Set<Book> userBooks = bookService.getBooksByUserId(userId);
+		return ResponseEntity.ok().body(userBooks);
 	}
 
 //	@GetMapping
@@ -44,46 +88,48 @@ public class BookController {
 //		return bookService.searchAllBooks(pageRequest);
 //	}
 
-	@GetMapping(path = "/searchByGenre")
-	public List<Book> searchByGenre(@RequestParam String genre) {
+	/**
+	 * Registra/crea un libro.
+	 * 
+	 * @param book
+	 * @return ResponseEntity<Book>
+	 */
+	@PostMapping
+	public ResponseEntity<Book> saveBook(@RequestBody Book book) {
 
-		return bookService.searchByGenre(genre);
+		Book savedBook = bookService.addBook(book);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
 	}
 
-	@PostMapping(path = "/saveBook")
-	public ResponseEntity<Book> saveBook(@RequestBody Book b) {
-
-		Book savedBook = bookService.addBook(b);
-
-		return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
-	}
-
+	/**
+	 * Crea un UserBook, relación entre un libro y un usuario.
+	 * 
+	 * @param userBook
+	 * @return ResponseEntity<String>
+	 */
 	@PostMapping(path = "/addBookToUser")
-	public ResponseEntity<String> addBookToUser(@RequestParam Long userId, @RequestParam Long bookId,
-			@RequestParam String status, @RequestParam String rate, @RequestParam String comment) {
-		bookService.addBookToUser(userId, bookId, status, rate, comment);
-		return new ResponseEntity<>("Book added successfully", HttpStatus.CREATED);
+	public ResponseEntity<String> addBookToUser(@RequestBody UserBook userBook) {
+		bookService.addBookToUser(userBook);
+		return ResponseEntity.status(HttpStatus.CREATED).body("Creada relación de usuario y libro.");
 	}
 
+	/**
+	 * Eliminar un libro por id.
+	 * 
+	 * @param id
+	 * @return ResponseEntity<String>
+	 */
 	@DeleteMapping("/{id}")
-	public void deleteBook(final @PathVariable Long id) {
-
-		bookService.deleteBook(id);
-	}
-
-	@GetMapping(path = "/searchByTitle")
-	public List<Book> searchByTitle(@RequestParam String title) {
-		return bookService.searchByTitle(title);
-	}
-
-	@GetMapping(path = "/searchByTitleAndUser")
-	public List<Book> searchByTitle(@RequestParam String title, @RequestParam Long userId) {
-		return bookService.searchByTitleAndUser(title, userId);
-	}
-
-	@GetMapping("/getBooksByUserId")
-	public Set<Book> getBooksByUserId(@RequestParam Long userId) {
-		return bookService.getBooksByUserId(userId);
+	public ResponseEntity<String> deleteBook(@PathVariable Long id) {
+		try {
+			bookService.deleteBook(id);
+			return ResponseEntity.ok().body("Libro borrado con éxito.");
+		} catch (Exception e) {
+			// Manejar cualquier excepción que pueda ocurrir durante la eliminación del
+			// libro
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al borrar el libro.");
+		}
 	}
 
 	@PostMapping(path = "/getOpenAIResponse")

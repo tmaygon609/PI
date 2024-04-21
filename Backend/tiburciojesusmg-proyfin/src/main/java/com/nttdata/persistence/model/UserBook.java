@@ -26,7 +26,7 @@ public class UserBook implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
+	@Column(name = "C_ID")
 	private Long id;
 
 	@ManyToOne
@@ -37,13 +37,13 @@ public class UserBook implements Serializable {
 	@JoinColumn(name = "C_BOOK_ID")
 	private Book book;
 
-	@Column(name = "STATUS")
+	@Column(name = "C_STATUS")
 	private String status;
 
-	@Column(name = "RATE")
+	@Column(name = "C_RATE")
 	private String rate;
 
-	@Column(name = "COMMENT")
+	@Column(name = "C_COMMENT")
 	private String comment;
 
 }
