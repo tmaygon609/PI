@@ -40,4 +40,16 @@ public class UserManagementImpl implements UserManagementI {
 
 	}
 
+	@Override
+	public void changePassword(Long userId, String newPassword) {
+		User user = userRepo.findById(userId)
+				.orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con id: " + userId));
+
+		// Codificar la nueva contraseña antes de guardarla
+		String encodedPassword = passwordEncoder.encode(newPassword);
+		user.setPassword(encodedPassword);
+
+		userRepo.save(user);
+	}
+
 }

@@ -4,15 +4,29 @@ const listado = document.getElementById("listado");
 // Se agrega un evento de escucha al listado de libros
 listado.addEventListener("click", manejadorEvento);
 
-// Se cargan al iniciar los generos y estados en los select y radio buttons
-document.addEventListener("DOMContentLoaded", () => {
-  let oBook = new Book();
-  oBook.cargarGeneros();
-  oBook.cargarEstados();
-  // oBook.catalogo();
+// Oculta todo el contenido de la página al principio
+document.body.style.display = "none";
 
-  mostrarContenidoPrincipal();
-});
+// Y esta sería tu función para comprobar el inicio de sesión
+function comprobarInicioSesion() {
+  // Compruebas si el usuario está logueado
+  if (localStorage.getItem("estaLogueado") !== "true") {
+    // Si no está logueado, rediriges a la página de inicio de sesión
+    window.location.href = "index.html";
+  } else {
+    // Si el usuario está logueado, muestra el contenido de la página y carga los géneros y estados
+    document.body.style.display = "block";
+    let oBook = new Book();
+    oBook.cargarGeneros();
+    oBook.cargarEstados();
+    // oBook.catalogo();
+
+    mostrarContenidoPrincipal();
+  }
+}
+
+// Llamas a la función comprobarInicioSesion al cargar tu página principal.html
+window.onload = comprobarInicioSesion;
 
 // Selecciona el modal por su id
 let modalBook = document.getElementById("bookModal");
@@ -117,6 +131,13 @@ function mostrarContenidoPrincipal() {
   }
 }
 
+// let imagen = null;
+// document
+//   .getElementById("fileImagen")
+//   .addEventListener("change", function (event) {
+//     imagen = event.target.files[0];
+//   });
+
 // aceptarAltaLibro. Clic en boton del formulario de registrar libro.
 function aceptarAltaLibro() {
   if (
@@ -135,46 +156,118 @@ function aceptarAltaLibro() {
     let genreBook = document.getElementById("txtGenero");
     let selectedGenre = genreBook.options[genreBook.selectedIndex].text;
 
-    let status;
+    const fileInput = document.querySelector('input[type="file"]');
+    const imagen = fileInput.files[0];
 
-    if (document.getElementById("rbtSinempezar").checked) {
-      status = capitalizeFirstLetter(
-        document.getElementById("rbtSinempezar").value
-      );
-    } else if (document.getElementById("rbtEncurso").checked) {
-      status = capitalizeFirstLetter(
-        document.getElementById("rbtEncurso").value
-      );
-    } else {
-      status = capitalizeFirstLetter(document.getElementById("rbtLeido").value);
+    if (!imagen) {
+      swal({
+        title: "Imagen no seleccionada",
+        text: "Por favor, seleccione una imagen para el libro",
+        icon: "warning",
+      });
+      return;
     }
 
-    let rate;
-    if (document.getElementById("radio1").checked) {
-      rate = document.getElementById("radio1").value;
-    } else if (document.getElementById("radio2").checked) {
-      rate = document.getElementById("radio2").value;
-    } else if (document.getElementById("radio3").checked) {
-      rate = document.getElementById("radio3").value;
-    } else if (document.getElementById("radio4").checked) {
-      rate = document.getElementById("radio4").value;
-    } else if (document.getElementById("radio5").checked) {
-      rate = document.getElementById("radio5").value;
-    }
+    // Comprimir la imagen antes de enviarla
+    compressImage(imagen, 0.6) // Llama a la función con los parámetros adecuados
+      .then((imagenComprimida) => {
+        console.log("Imagen comprimida:", imagenComprimida);
 
-    let comments = document.getElementById("txtComments").value;
+        console.log("Imagen original:", imagen);
 
-    let oBook = new Book(title, author, selectedGenre, status, rate, comments);
+        let status;
 
-    oBook.altaLibro();
+        if (document.getElementById("rbtSinempezar").checked) {
+          status = capitalizeFirstLetter(
+            document.getElementById("rbtSinempezar").value
+          );
+        } else if (document.getElementById("rbtEncurso").checked) {
+          status = capitalizeFirstLetter(
+            document.getElementById("rbtEncurso").value
+          );
+        } else {
+          status = capitalizeFirstLetter(
+            document.getElementById("rbtLeido").value
+          );
+        }
 
-    frmAltaLibro.reset();
+        let rate;
+        if (document.getElementById("radio1").checked) {
+          rate = document.getElementById("radio1").value;
+        } else if (document.getElementById("radio2").checked) {
+          rate = document.getElementById("radio2").value;
+        } else if (document.getElementById("radio3").checked) {
+          rate = document.getElementById("radio3").value;
+        } else if (document.getElementById("radio4").checked) {
+          rate = document.getElementById("radio4").value;
+        } else if (document.getElementById("radio5").checked) {
+          rate = document.getElementById("radio5").value;
+        }
+
+        let comments = document.getElementById("txtComments").value;
+
+        let oBook = new Book(
+          title,
+          author,
+          selectedGenre,
+          status,
+          rate,
+          comments,
+          imagenComprimida // Utiliza la imagen comprimida aquí
+        );
+
+        oBook.altaLibro(imagenComprimida); // Pasa la imagen comprimida a altaLibro
+
+        frmAltaLibro.reset();
+      })
+      .catch((error) => {
+        console.error("Error al comprimir la imagen:", error);
+      });
   }
 }
 
 // Primeras letras en mayúscula para el campo género y estado del libro
 function capitalizeFirstLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// Función para comprimir la imagen
+function compressImage(image, quality) {
+  const maxWidth = 167;
+  const maxHeight = 250;
+
+  return new Promise((resolve, reject) => {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+
+    const img = new Image();
+    img.src = URL.createObjectURL(image);
+    img.onload = () => {
+      let width = img.width;
+      let height = img.height;
+
+      const ratio = Math.min(maxWidth / width, maxHeight / height);
+      width *= ratio;
+      height *= ratio;
+
+      canvas.width = width;
+      canvas.height = height;
+
+      context.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(
+        (blob) => {
+          resolve(blob);
+        },
+        "image/jpeg",
+        quality
+      );
+    };
+
+    img.onerror = (error) => {
+      reject(error);
+    };
+  });
 }
 
 // aceptarBuscarLibro. Clic en boton del formulario de buscar libro por titulo.
@@ -250,6 +343,7 @@ function cerrarSesion() {
     dangerMode: true,
   }).then((cerrar) => {
     if (cerrar) {
+      localStorage.setItem("estaLogueado", "false");
       window.open("index.html", "_self");
     }
   });

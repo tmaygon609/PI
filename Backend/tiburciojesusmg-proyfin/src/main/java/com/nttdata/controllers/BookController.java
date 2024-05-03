@@ -1,5 +1,6 @@
 package com.nttdata.controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -93,13 +94,16 @@ public class BookController {
 	 * 
 	 * @param book
 	 * @return ResponseEntity<Book>
+	 * @throws IOException
 	 */
 	@PostMapping
-	public ResponseEntity<Book> saveBook(@RequestBody Book book) {
+	public ResponseEntity<Book> uploadLibro(@RequestBody Book book) {
 
 		Book savedBook = bookService.addBook(book);
 
+		// Ejemplo de respuesta exitosa
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
+
 	}
 
 	/**

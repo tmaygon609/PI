@@ -30,4 +30,6 @@ public interface BookManagementI {
 
 	Set<Book> getBooksByUserId(Long userId);
 
+//	public Book addBookWithImage(Book book, MultipartFile image) throws IOException;
+
 }

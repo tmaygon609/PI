@@ -8,4 +8,6 @@ public interface UserManagementI {
 
 	public void addUser(final User u);
 
+	void changePassword(Long userId, String newPassword);
+
 }

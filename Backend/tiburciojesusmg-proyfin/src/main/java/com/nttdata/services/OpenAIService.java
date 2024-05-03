@@ -43,28 +43,6 @@ public class OpenAIService {
 		return response.getBody();
 	}
 
-//	public OpenAIResponse getBookRecommendation() {
-//		OpenAIRequest request = new OpenAIRequest();
-//		request.setModel("gpt-3.5-turbo");
-//		request.setTemperature(0.8);
-//
-//		List<Message> messages = new ArrayList<>();
-//		Message message = new Message();
-//		message.setRole("user");
-//
-//		List<String> bookTitles = buildingManagement.getAllBookTitles();
-//		System.out.println("Book Titles: " + bookTitles);
-//
-//		String content = "Recomiéndame solo un libro similar a '" + String.join("', '", bookTitles)
-//				+ "' en términos de temática y estilo literario. Por favor, proporciona una recomendación basada en estas obras, sin necesidad de explicaciones adicionales, el formato de la respuesta quiero que siempre sea: 'titulo', autor.";
-//		message.setContent(content);
-//		messages.add(message);
-//
-//		request.setMessages(messages);
-//
-//		return getOpenAIResponse(request);
-//	}
-
 	public OpenAIResponse getBookRecommendation(Long userId) {
 		OpenAIRequest request = new OpenAIRequest();
 		request.setModel("gpt-3.5-turbo");

@@ -38,6 +38,35 @@ public class BookManagementImpl implements BookManagementI {
 
 	}
 
+//	@Override
+//	public Book addBook(Book b) {
+//		// Guarda el libro en la base de datos
+//		Book savedBook = bookRepository.save(b);
+//
+//		// Guarda la imagen del libro en el servidor
+//		if (savedBook.getImagenBytes() != null) {
+//			try {
+//
+//				// Genera un nombre de archivo aleatorio usando un GUID
+//				String fileName = UUID.randomUUID().toString() + ".jpg";
+//
+//				// Crea el directorio si no existe
+//				FileUtils.forceMkdir(new File("src/main/resources/static/images"));
+//
+//				// Crea el archivo de imagen
+//				File imageFile = new File("src/main/resources/static/images", fileName);
+//
+//				// Escribe los bytes de la imagen en el archivo
+//				FileUtils.writeByteArrayToFile(imageFile, savedBook.getImagenBytes());
+//			} catch (IOException e) {
+//				// Maneja la excepción
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		return savedBook;
+//	}
+
 	@Override
 	public void deleteBook(Long id) {
 
@@ -85,8 +114,25 @@ public class BookManagementImpl implements BookManagementI {
 	@Override
 	public List<Book> searchByTitle(String title) {
 
-		return bookRepository.searchByTitle(title);
+		return bookRepository.searchByTitleContaining(title);
 	}
+
+//	@Override
+//	public List<Book> searchByTitleOrAuthorOrGenre(String title, String author, String genre) {
+//		if (title != null && !title.trim().isEmpty()) {
+//		    // Buscar por título
+//		    return bookRepository.searchByTitleContaining(title);
+//		} else if (author != null && !author.trim().isEmpty()) {
+//		    // Buscar por autor
+//		    return bookRepository.searchByAuthorContaining(author);
+//		} else if (genre != null && !genre.trim().isEmpty()) {
+//		    // Buscar por género
+//		    return bookRepository.searchByGenre(genre);
+//		} else {
+//		    // Si no se proporciona ningún parámetro, retornar una lista vacía
+//		    return Collections.emptyList();
+//		}
+//	}
 
 	@Override
 	public List<Book> searchByTitleAndUser(String title, Long userId) {

@@ -13,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -50,6 +51,13 @@ public class Book implements Serializable {
 	/** Genero */
 	@Column(name = "C_GENRE")
 	private String genre;
+
+//	@Column(name = "image_path")
+//	private String imagePath;
+
+	@Lob
+	@Column(name = "imagen_bytes", columnDefinition = "BLOB", length = 6291456)
+	private byte[] imagenBytes;
 
 	@OneToMany(mappedBy = "book")
 	@JsonProperty(access = Access.WRITE_ONLY)

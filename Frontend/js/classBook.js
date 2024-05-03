@@ -3,13 +3,14 @@ class Book {
   author;
   genre;
 
-  constructor(t, a, g, s, r, c) {
+  constructor(t, a, g, s, r, c, i) {
     this.title = t;
     this.author = a;
     this.genre = g;
     this.status = s;
     this.rate = r;
     this.comment = c;
+    this.imagen = i;
   }
 
   // Método para obtener el usuario actual desde el localStorage
@@ -27,7 +28,7 @@ class Book {
   }
 
   // Metodo que da de alta a un libro.
-  async altaLibro() {
+  async altaLibro(imagen) {
     const usuarioActual = this.obtenerUsuarioActual();
     console.log("usuarioActual", usuarioActual);
 
@@ -39,57 +40,65 @@ class Book {
     let userId = usuarioActual.userInfo.id;
     console.log("userid ", usuarioActual.userInfo.id);
 
-    const nuevoLibro = {
-      title: this.title,
-      author: this.author,
-      genre: this.genre,
-    };
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const imagenData = event.target.result;
+        const bytesImagen = Array.from(new Uint8Array(imagenData));
 
-    try {
-      const resultado = await this.comprobarLibro(this.title);
+        const nuevoLibro = {
+          title: this.title,
+          author: this.author,
+          genre: this.genre,
+          imagenBytes: bytesImagen,
+        };
 
-      if (resultado.existe) {
-        console.log("El libro ya existe. Solo se crea la relación.");
+        const resultado = await this.comprobarLibro(this.title);
 
-        //Confirmar por el usuario si quiere añadir el libro
-        const confirmacion = await swal({
-          title: "El libro ya existe",
-          text: `¿Quieres añadirlo a tu lista de libros?
-          Título: ${resultado.libro.title}
-          Autor: ${resultado.libro.author}
-          Género: ${resultado.libro.genre}`,
-          icon: "info",
-          buttons: ["Cancelar", "Aceptar"],
-        });
+        if (resultado.existe) {
+          console.log("El libro ya existe. Solo se crea la relación.");
 
-        if (confirmacion) {
+          const confirmacion = await swal({
+            title: "El libro ya existe",
+            text: `¿Quieres añadirlo a tu lista de libros?
+            Título: ${resultado.libro.title}
+            Autor: ${resultado.libro.author}
+            Género: ${resultado.libro.genre}`,
+            icon: "info",
+            buttons: ["Cancelar", "Aceptar"],
+          });
+
+          if (confirmacion) {
+            await this.crearRelacionUserBook(
+              userId,
+              resultado.libro.id,
+              this.status,
+              this.rate,
+              this.comment
+            );
+          }
+        } else {
+          console.log("El libro no existe. Creando nuevo libro y relación.");
+          const libroId = await this.crearLibro(nuevoLibro);
           await this.crearRelacionUserBook(
             userId,
-            resultado.libro.id,
+            libroId,
             this.status,
             this.rate,
             this.comment
           );
-        }
-      } else {
-        console.log("El libro no existe. Creando nuevo libro y relación.");
-        const libroId = await this.crearLibro(nuevoLibro);
-        await this.crearRelacionUserBook(
-          userId,
-          libroId,
-          this.status,
-          this.rate,
-          this.comment
-        );
 
-        swal({
-          title: "Libro añadido correctamente",
-          icon: "success",
-        });
+          swal({
+            title: "Libro añadido correctamente",
+            icon: "success",
+          });
+        }
+      } catch (error) {
+        console.error("Error al procesar el libro:", error);
       }
-    } catch (error) {
-      console.error("Error al comprobar el libro", error);
-    }
+    };
+
+    reader.readAsArrayBuffer(imagen);
   }
 
   async comprobarLibro(title) {
@@ -113,21 +122,27 @@ class Book {
     }
   }
 
-  async crearLibro(libro) {
-    const response = await fetch("http://localhost:8080/v1/books", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(libro),
-    });
+  async crearLibro(nuevoLibro) {
+    try {
+      const response = await fetch("http://localhost:8080/v1/books", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(nuevoLibro),
+      });
 
-    if (!response.ok) {
-      throw new Error("Error al crear el libro");
+      if (!response.ok) {
+        const errorDetails = await response.text();
+        throw new Error("Error al crear el libro: " + errorDetails);
+      }
+
+      const libroCreado = await response.json();
+      return libroCreado.id;
+    } catch (error) {
+      console.error("Error al crear el libro:", error);
+      throw new Error("Error al crear el libro: " + error.message);
     }
-
-    const libroCreado = await response.json();
-    return libroCreado.id;
   }
 
   async crearRelacionUserBook(userId, libroId, status, rate, comment) {
@@ -212,20 +227,30 @@ class Book {
 
         if (libroEncontrado.length > 0) {
           // Libro encontrado, mostrar listado
-          let tabla =
-            "<table id= 'tabla' class='table table-striped'><thead><tr><th scope='col'>Titulo</th><th scope='col'>Autor</th><th scope='col'>Genero</th></tr></thead><tbody>";
+          let contenido = "<div class='container'>"; // Envuelve el contenido en un contenedor
 
           libroEncontrado.forEach((fila) => {
-            tabla += "<tr>";
-            tabla += "<td>" + fila.title + "</td>";
-            tabla += "<td>" + fila.author + "</td>";
-            tabla += "<td>" + fila.genre + "</td>";
-            tabla += "</tr>";
+            contenido += "<div class='row mb-4'>"; // Crea una fila con margen para espaciado
+            contenido += "<div class='col-md-2'>"; // Columna de imagen (4 columnas en dispositivos medianos)
+            contenido +=
+              "<img src='data:image/jpeg;base64," +
+              fila.imagenBytes +
+              "' class='img-fluid'>";
+            contenido += "</div>";
+
+            contenido +=
+              "<div class='col-md-10 d-flex flex-column justify-content-center'>"; // Columna de texto (8 columnas en dispositivos medianos)
+            contenido += "<p><strong>Título:</strong> " + fila.title + "</p>";
+            contenido += "<p><strong>Autor:</strong> " + fila.author + "</p>";
+            contenido += "<p><strong>Género:</strong> " + fila.genre + "</p>";
+            contenido += "</div>";
+
+            contenido += "</div><br>"; // Cierra la fila
           });
 
-          tabla += "</tbody></table>";
+          contenido += "</div>"; // Cierra el contenedor
 
-          return tabla;
+          return contenido;
         } else {
           // No se encontró el libro
           swal({
@@ -247,10 +272,7 @@ class Book {
         });
       }
     } catch (error) {
-      console.error("Error inesperado:", error);
-      alert(
-        "Ocurrio un error inesperado. Por favor, inténtelo de nuevo más tarde."
-      );
+      console.error("Error inesperado intentalo de nuevo:", error);
     }
   }
 
@@ -355,8 +377,20 @@ class Book {
         const bookItem = document.createElement("div");
         bookItem.classList.add("book-item");
 
+        let base64String = book.imagenBytes;
+        let binaryString = window.atob(base64String);
+        let len = binaryString.length;
+        let bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        let blob = new Blob([bytes.buffer]);
+
+        let imgUrl = URL.createObjectURL(blob);
+
         const bookCover = document.createElement("img");
-        bookCover.src = "img/portadas/elregalo.jpg";
+        bookCover.src = imgUrl;
         bookCover.alt = "Portada del libro";
         bookCover.classList.add("book-cover");
 
@@ -495,8 +529,28 @@ class Book {
         const listItem = document.createElement("div");
         listItem.classList.add("list-group-item");
 
-        const rowContent = document.createElement("div");
-        rowContent.classList.add("row-content");
+        const bookItem = document.createElement("div");
+        bookItem.classList.add("book-item");
+
+        let base64String = book.imagenBytes;
+        let binaryString = window.atob(base64String);
+        let len = binaryString.length;
+        let bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        let blob = new Blob([bytes.buffer]);
+
+        let imgUrl = URL.createObjectURL(blob);
+
+        const bookCover = document.createElement("img");
+        bookCover.src = imgUrl; // Aquí necesitarás la portada del libro actual
+        bookCover.alt = "Portada del libro";
+        bookCover.classList.add("book-cover");
+
+        const bookInfo = document.createElement("div");
+        bookInfo.classList.add("book-info");
 
         const title = document.createElement("h4");
         title.classList.add("list-group-item-heading");
@@ -508,36 +562,27 @@ class Book {
 
         const genreElement = document.createElement("p");
         genreElement.classList.add("list-group-item-text");
-        genreElement.innerHTML = `<strong>Género: </strong>${genre}<br/>`;
+        genreElement.innerHTML = `<strong>Género: </strong>${genre}<br/><br/>`;
 
         // Agrega los enlaces de acción
         const actionLinks = document.createElement("p");
         actionLinks.classList.add("list-group-item-text");
         actionLinks.innerHTML = `
-              <a href="book-info.html" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
-              <a href="book-config.html" class="btn btn-info" title="Gestionar libro"><i class="fa fa-wrench"></i></a>
-          `;
-        // actionLinks.innerHTML = `
-        //         <a href="book-info.html" class="btn btn-primary" title="Más información"><i class="zmdi zmdi-info"></i></a>
-        //         <a href="#!" class="btn btn-primary" title="Ver PDF"><i class="zmdi zmdi-file"></i></a>
-        //         <a href="#!" class="btn btn-primary" title="Descargar PDF"><i class="zmdi zmdi-cloud-download"></i></a>
-        //         <a href="book-config.html" class="btn btn-primary" title="Gestionar libro"><i class="zmdi zmdi-wrench"></i></a>
-        //     `;
+            <a href="book-info.html" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
+            <a href="book-config.html" class="btn btn-info" title="Gestionar libro"><i class="fa fa-wrench"></i></a>
+        `;
 
         // Agrega los elementos al contenedor principal
-        rowContent.appendChild(title);
-        rowContent.appendChild(author);
-        rowContent.appendChild(genreElement);
-        rowContent.appendChild(actionLinks);
-        listItem.appendChild(rowContent);
-        bookDetailsContainer.appendChild(listItem);
+        bookInfo.appendChild(title);
+        bookInfo.appendChild(author);
+        bookInfo.appendChild(genreElement);
+        bookInfo.appendChild(actionLinks);
 
-        // Agrega el separador entre cada elemento de la lista
-        if (index < books.length - 1) {
-          const separator = document.createElement("div");
-          separator.classList.add("list-group-separator");
-          bookDetailsContainer.appendChild(separator);
-        }
+        bookItem.appendChild(bookCover);
+        bookItem.appendChild(bookInfo);
+
+        listItem.appendChild(bookItem);
+        bookDetailsContainer.appendChild(listItem);
       });
     } catch (error) {
       console.error("Error al cargar los libros por género:", error);
@@ -581,26 +626,4 @@ class Book {
       console.error("Error al cargar los estados:", error);
     }
   }
-
-  // Función para cargar los estados de los libros en el menú desplegable
-  // async cargarGenerosDropdown() {
-  //   try {
-  //     const response = await fetch("http://localhost:8080/v1/genres");
-  //     const generos = await response.json();
-
-  //     const dropdownMenu = document.getElementById("dropdown-menu");
-
-  //     generos.forEach((genero) => {
-  //       const listItem = document.createElement("li");
-  //       const link = document.createElement("a");
-  //       link.href = "#!";
-  //       link.textContent = genero.genreName;
-
-  //       listItem.appendChild(link);
-  //       dropdownMenu.appendChild(listItem);
-  //     });
-  //   } catch (error) {
-  //     console.error("Error al cargar los géneros:", error);
-  //   }
-  // }
 }

@@ -8,7 +8,6 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="bootstrap/js/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="bootstrap/css/bootstrap-material-design.min.css"></script>
     <script
       src="https://kit.fontawesome.com/a05c1998d9.js"
       crossorigin="anonymous"
@@ -172,7 +171,6 @@
             >
               Cerrar
             </button>
-            <!-- Puedes añadir un botón de "Guardar cambios" si es necesario -->
           </div>
         </div>
       </div>
@@ -394,30 +392,30 @@
                     </h3>
                   </div>
                   <div class="panel-body">
-                    <form class="form-horizontal">
-                      <fieldset>
-                        <div class="container-fluid">
-                          <div class="row">
-                            <div class="col-xs-12">
-                              <div class="form-group">
-                                <label class="control-label col-xs-3"
-                                  >Título</label
-                                >
-                                <div class="col-xs-6">
-                                  <input
-                                    pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
-                                    class="form-control"
-                                    type="text"
-                                    id="txtTitulo"
-                                    name="txtTitulo"
-                                    required=""
-                                    maxlength="30"
-                                  />
-                                </div>
+                    <!-- <form class="form-horizontal"> -->
+                    <fieldset>
+                      <div class="container-fluid">
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <label class="control-label col-xs-3"
+                                >Título</label
+                              >
+                              <div class="col-xs-6">
+                                <input
+                                  pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
+                                  class="form-control"
+                                  type="text"
+                                  id="txtTitulo"
+                                  name="txtTitulo"
+                                  required=""
+                                  maxlength="30"
+                                />
                               </div>
                             </div>
                           </div>
-                          <!-- <div class="row">
+                        </div>
+                        <!-- <div class="row">
                             <div class="col-xs-12">
                               <div class="form-group">
                                 <div class="col-xs-6">
@@ -437,140 +435,158 @@
                               </div>
                             </div>
                           </div> -->
-                          <div class="row">
-                            <div class="col-xs-12">
-                              <div class="form-group">
-                                <label class="control-label col-xs-3"
-                                  >Autor/a</label
-                                >
-                                <div class="col-xs-6">
-                                  <input
-                                    pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
-                                    class="form-control"
-                                    type="text"
-                                    id="txtAutor"
-                                    name="txtAutor"
-                                    required=""
-                                    maxlength="30"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-xs-12">
-                              <div class="form-group">
-                                <label class="control-label col-xs-3"
-                                  >Género</label
-                                >
-                                <div class="col-xs-6">
-                                  <select
-                                    id="txtGenero"
-                                    name="txtGenero"
-                                    class="form-control"
-                                  >
-                                    <option selected value="">
-                                      Selecciona un género
-                                    </option>
-                                  </select>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-xs-12">
-                              <div class="form-group">
-                                <label class="control-label col-xs-3"
-                                  >Estado</label
-                                >
-                                <div class="col-xs-6" id="divEstados">
-                                  <!-- Los radios se cargarán dinámicamente aquí -->
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-xs-12">
-                              <div class="form-group">
-                                <label class="control-label col-xs-3"
-                                  >Calificación</label
-                                >
-                                <div class="col-xs-6 rating" id="star-rating">
-                                  <input
-                                    id="radio1"
-                                    type="radio"
-                                    name="estrellas"
-                                    value="5"
-                                  />
-                                  <label for="radio1">★</label>
-                                  <input
-                                    id="radio2"
-                                    type="radio"
-                                    name="estrellas"
-                                    value="4"
-                                  />
-                                  <label for="radio2">★</label>
-                                  <input
-                                    id="radio3"
-                                    type="radio"
-                                    name="estrellas"
-                                    value="3"
-                                  />
-                                  <label for="radio3">★</label>
-                                  <input
-                                    id="radio4"
-                                    type="radio"
-                                    name="estrellas"
-                                    value="2"
-                                  />
-                                  <label for="radio4">★</label>
-                                  <input
-                                    id="radio5"
-                                    type="radio"
-                                    name="estrellas"
-                                    value="1"
-                                  />
-                                  <label for="radio5">★</label>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-xs-12">
-                              <div class="form-group">
-                                <label class="control-label col-xs-3"
-                                  >Comentarios</label
-                                >
-                                <div class="col-xs-6">
-                                  <textarea
-                                    id="txtComments"
-                                    name="txtComments"
-                                    class="form-control"
-                                  ></textarea>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-xs-12">
-                              <div class="form-group">
-                                <div class="col-xs-offset-3 col-xs-9">
-                                  <button
-                                    type="button"
-                                    id="btnAceptarAltaLibro"
-                                    name="btnAceptarAltaLibro"
-                                    class="btn btn-success"
-                                    onclick="aceptarAltaLibro();"
-                                  >
-                                    Añadir
-                                  </button>
-                                </div>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <label class="control-label col-xs-3"
+                                >Autor/a</label
+                              >
+                              <div class="col-xs-6">
+                                <input
+                                  pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
+                                  class="form-control"
+                                  type="text"
+                                  id="txtAutor"
+                                  name="txtAutor"
+                                  required=""
+                                  maxlength="30"
+                                />
                               </div>
                             </div>
                           </div>
                         </div>
-                      </fieldset>
-                    </form>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <label class="control-label col-xs-3"
+                                >Género</label
+                              >
+                              <div class="col-xs-6">
+                                <select
+                                  id="txtGenero"
+                                  name="txtGenero"
+                                  class="form-control"
+                                >
+                                  <option selected value="">
+                                    Selecciona un género
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <label class="control-label col-xs-3"
+                                >Estado</label
+                              >
+                              <div class="col-xs-6" id="divEstados">
+                                <!-- Los radios se cargarán dinámicamente aquí -->
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <label class="control-label col-xs-3"
+                                >Calificación</label
+                              >
+                              <div class="col-xs-6 rating" id="star-rating">
+                                <input
+                                  id="radio1"
+                                  type="radio"
+                                  name="estrellas"
+                                  value="5"
+                                />
+                                <label for="radio1">★</label>
+                                <input
+                                  id="radio2"
+                                  type="radio"
+                                  name="estrellas"
+                                  value="4"
+                                />
+                                <label for="radio2">★</label>
+                                <input
+                                  id="radio3"
+                                  type="radio"
+                                  name="estrellas"
+                                  value="3"
+                                />
+                                <label for="radio3">★</label>
+                                <input
+                                  id="radio4"
+                                  type="radio"
+                                  name="estrellas"
+                                  value="2"
+                                />
+                                <label for="radio4">★</label>
+                                <input
+                                  id="radio5"
+                                  type="radio"
+                                  name="estrellas"
+                                  value="1"
+                                />
+                                <label for="radio5">★</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <label class="control-label col-xs-3"
+                                >Comentarios</label
+                              >
+                              <div class="col-xs-6">
+                                <textarea
+                                  id="txtComments"
+                                  name="txtComments"
+                                  class="form-control"
+                                ></textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <label class="control-label col-xs-3"
+                                >Imagen</label
+                              >
+                              <div class="col-xs-6">
+                                <input
+                                  type="file"
+                                  id="fileImagen"
+                                  name="fileImagen"
+                                  accept="image/*"
+                                  enctype="multipart/form-data"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <div class="col-xs-offset-3 col-xs-9">
+                                <button
+                                  type="button"
+                                  id="btnAceptarAltaLibro"
+                                  name="btnAceptarAltaLibro"
+                                  class="btn btn-success"
+                                  onclick="aceptarAltaLibro();"
+                                >
+                                  Añadir
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                    <!-- </form> -->
                   </div>
                 </div>
               </div>
@@ -618,7 +634,6 @@
                                 required=""
                                 maxlength="30"
                                 value="Nombre del usuario"
-                                disabled
                               />
                             </div>
                           </div>
@@ -640,7 +655,6 @@
                                 required=""
                                 maxlength="30"
                                 value="Apellidos del usuario"
-                                disabled
                               />
                             </div>
                           </div>
@@ -691,36 +705,16 @@
                         <div class="col-xs-12 col-sm-8 col-sm-offset-2">
                           <div class="form-group">
                             <label class="control-label col-xs-3"
-                              >Contraseña antigua</label
-                            >
-                            <div class="col-xs-9">
-                              <input
-                                class="form-control"
-                                type="password"
-                                name="antigua-contrasena"
-                                id="antigua-contrasena"
-                                required=""
-                                maxlength="70"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-                          <div class="form-group">
-                            <label class="control-label col-xs-3"
                               >Nueva contraseña</label
                             >
                             <div class="col-xs-9">
                               <input
                                 class="form-control"
                                 type="password"
-                                name="nueva-contrasena"
-                                id="nueva-contrasena"
+                                name="nuevaContrasena"
+                                id="nuevaContrasena"
                                 required=""
                                 maxlength="70"
-                                disabled
                               />
                             </div>
                           </div>
@@ -736,11 +730,10 @@
                               <input
                                 class="form-control"
                                 type="password"
-                                name="confirmar-contrasena"
-                                id="confirmar-contrasena"
+                                name="confirmarContrasena"
+                                id="confirmarContrasena"
                                 required=""
                                 maxlength="70"
-                                disabled
                               />
                             </div>
                           </div>
@@ -867,6 +860,7 @@
       </footer>
     </section>
 
+    <!-- Propios -->
     <script type="text/javascript" src="js/codigo.js"></script>
     <script type="text/javascript" src="js/classBook.js"></script>
     <script type="text/javascript" src="js/clasesUser.js"></script>

@@ -31,9 +31,9 @@ function abrirPrincipal() {
 }
 
 // Abre página de registro usuario
-function abrirRegistro() {
-  window.open("html/registro.html", "_self");
-}
+// function abrirRegistro() {
+//   window.open("html/registro.html", "_self");
+// }
 
 // Consulta en base de datos si el usuario existe
 async function consultar(user, password) {
@@ -66,6 +66,7 @@ async function consultar(user, password) {
 
       // Almacena la información del usuario en el localStorage
       localStorage.setItem("usuarioActual", JSON.stringify(usuarioActual));
+      localStorage.setItem("estaLogueado", "true"); // Agregamos esta línea
 
       window.open("principal.html", "_self");
     } else {
@@ -78,10 +79,6 @@ async function consultar(user, password) {
       limpiarValidaciones();
     }
   };
-
-  const formData = new FormData();
-  formData.append("user", user);
-  formData.append("password", password);
-
-  oHttp.send(formData);
 }
+
+// window.onload = comprobarInicioSesion;

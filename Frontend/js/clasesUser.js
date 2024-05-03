@@ -145,19 +145,6 @@ class User {
     return estrellas;
   }
 
-  // convertirCalificacionEnEstrellas(calificacion) {
-  //   let estrellas = "";
-  //   let estrellaLlena = "<img src='../img/estrellaLlena.png'>";
-  //   let estrellaVacia = "<img src='../img/estrellaVacia.png'>";
-  //   for (let i = 0; i < calificacion; i++) {
-  //     estrellas += estrellaLlena;
-  //   }
-  //   for (let i = calificacion; i < 5; i++) {
-  //     estrellas += estrellaVacia;
-  //   }
-  //   return estrellas;
-  // }
-
   async registrar() {
     const userToRegister = {
       name: this.name,
