@@ -21,7 +21,7 @@ import com.nttdata.persistence.model.OpenAIRequest;
 import com.nttdata.persistence.model.OpenAIResponse;
 import com.nttdata.persistence.model.UserBook;
 import com.nttdata.services.BookManagementI;
-import com.nttdata.services.OpenAIService;
+import com.nttdata.services.impl.OpenAIService;
 
 @RestController
 @RequestMapping("/v1/books")

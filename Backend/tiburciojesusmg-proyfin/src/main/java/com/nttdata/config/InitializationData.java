@@ -12,6 +12,7 @@ import org.springframework.util.FileCopyUtils;
 
 import com.nttdata.persistence.model.Book;
 import com.nttdata.persistence.model.Genre;
+import com.nttdata.persistence.model.Role;
 import com.nttdata.persistence.model.Status;
 import com.nttdata.persistence.model.User;
 import com.nttdata.persistence.model.UserBook;
@@ -57,6 +58,7 @@ public class InitializationData implements CommandLineRunner {
 		user1.setLastName("Mayo Gonzalez");
 		user1.setUser("tmaygon");
 		user1.setPassword(passwordEncoder.encode("hola22;"));
+		user1.setRole(Role.USER);
 		userRepository.save(user1);
 
 		// Usuario 1
@@ -65,6 +67,7 @@ public class InitializationData implements CommandLineRunner {
 		user2.setLastName("Campanario Manzano");
 		user2.setUser("mcamman");
 		user2.setPassword(passwordEncoder.encode("adios22;"));
+		user2.setRole(Role.USER);
 		userRepository.save(user2);
 
 		// Libro 1

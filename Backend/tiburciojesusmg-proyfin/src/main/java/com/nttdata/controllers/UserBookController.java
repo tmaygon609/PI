@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nttdata.persistence.dto.UserBookDTO;
 import com.nttdata.persistence.model.UserBook;
-import com.nttdata.services.UserBookImpl;
+import com.nttdata.services.impl.UserBookImpl;
 
 @RestController
 @RequestMapping("/v1/usersBooks")
