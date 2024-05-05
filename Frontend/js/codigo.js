@@ -9,12 +9,12 @@ document.body.style.display = "none";
 
 // Y esta sería tu función para comprobar el inicio de sesión
 function comprobarInicioSesion() {
-  // Compruebas si el usuario está logueado
-  if (localStorage.getItem("estaLogueado") !== "true") {
-    // Si no está logueado, rediriges a la página de inicio de sesión
+  // Compruebas si el token JWT existe
+  if (!localStorage.getItem("jwtToken")) {
+    // Si no existe el token, rediriges a la página de inicio de sesión
     window.location.href = "index.html";
   } else {
-    // Si el usuario está logueado, muestra el contenido de la página y carga los géneros y estados
+    // Si existe el token, muestra el contenido de la página y carga los géneros y estados
     document.body.style.display = "block";
     let oBook = new Book();
     oBook.cargarGeneros();
@@ -343,7 +343,7 @@ function cerrarSesion() {
     dangerMode: true,
   }).then((cerrar) => {
     if (cerrar) {
-      localStorage.setItem("estaLogueado", "false");
+      localStorage.removeItem("jwtToken");
       window.open("index.html", "_self");
     }
   });

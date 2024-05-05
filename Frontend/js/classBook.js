@@ -106,7 +106,12 @@ class Book {
       `http://localhost:8080/v1/books/searchByTitle?title=${encodeURIComponent(
         title
       )}`,
-      { method: "GET" }
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+        },
+      }
     );
 
     if (!response.ok) {
@@ -128,6 +133,7 @@ class Book {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
         },
         body: JSON.stringify(nuevoLibro),
       });
@@ -160,6 +166,7 @@ class Book {
         method: "POST",
         headers: {
           "Content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
         },
         body: JSON.stringify(userBook),
       }
@@ -219,7 +226,12 @@ class Book {
         `http://localhost:8080/v1/books/searchByTitle?title=${encodeURIComponent(
           title
         )}`,
-        { method: "GET" }
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+          },
+        }
       );
 
       if (response.ok) {
@@ -302,6 +314,7 @@ class Book {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
           },
           body: JSON.stringify(requestData),
         }
@@ -358,7 +371,13 @@ class Book {
   async catalogo() {
     try {
       // Realiza la petición para obtener los detalles de los libros
-      const response = await fetch("http://localhost:8080/v1/books");
+      const response = await fetch("http://localhost:8080/v1/books", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+        },
+      });
+
       const books = await response.json();
 
       // Selecciona el contenedor donde se cargarán los detalles de los libros
@@ -414,7 +433,6 @@ class Book {
         actionLinks.classList.add("list-group-item-text");
         actionLinks.innerHTML = `
               <a href="book-info.html" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
-              <a href="book-config.html" class="btn btn-info" title="Gestionar libro"><i class="fa fa-wrench"></i></a>
           `;
 
         // Agrega los elementos al contenedor principal
@@ -456,6 +474,7 @@ class Book {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
       },
       body: JSON.stringify(data),
     };
@@ -474,8 +493,15 @@ class Book {
 
   // Método que carga los generos de los libros.
   async cargarGeneros() {
+    console.log("jwtToken", localStorage.getItem("jwtToken"));
     try {
-      const response = await fetch("http://localhost:8080/v1/genres");
+      const response = await fetch("http://localhost:8080/v1/genres", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+        },
+      });
+
       const generos = await response.json();
 
       const selectGenero = document.getElementById("txtGenero");
@@ -513,9 +539,17 @@ class Book {
   async cargarLibrosPorGenero(genre) {
     try {
       // Realizar la petición para obtener los libros filtrados por género
+
       const response = await fetch(
-        `http://localhost:8080/v1/books/searchByGenre?genre=${genre}`
+        `http://localhost:8080/v1/books/searchByGenre?genre=${genre}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+          },
+        }
       );
+
       const books = await response.json();
 
       // Limpiar el contenedor de detalles de libros
@@ -569,7 +603,6 @@ class Book {
         actionLinks.classList.add("list-group-item-text");
         actionLinks.innerHTML = `
             <a href="book-info.html" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
-            <a href="book-config.html" class="btn btn-info" title="Gestionar libro"><i class="fa fa-wrench"></i></a>
         `;
 
         // Agrega los elementos al contenedor principal
@@ -592,7 +625,13 @@ class Book {
   // Método que carga los tipos de estados de los libros.
   async cargarEstados() {
     try {
-      const response = await fetch("http://localhost:8080/v1/status");
+      const response = await fetch("http://localhost:8080/v1/status", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+        },
+      });
+
       const estados = await response.json();
 
       const divEstados = document.getElementById("divEstados");

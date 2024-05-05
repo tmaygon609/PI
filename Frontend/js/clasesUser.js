@@ -53,10 +53,15 @@ class User {
     try {
       const response = await fetch(
         `http://localhost:8080/v1/books/users/${userId}`,
+
         {
           method: "GET",
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+          },
         }
       );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -73,6 +78,9 @@ class User {
           `http://localhost:8080/v1/usersBooks/getUserDetails?userId=${userId}&bookId=${post.id}`,
           {
             method: "GET",
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+            },
           }
         );
         if (!userResponse.ok) {
@@ -152,6 +160,8 @@ class User {
       user: this.user,
       password: this.password,
     };
+
+    console.log("pass", this.password);
 
     try {
       const response = await fetch("http://localhost:8080/v1/users/saveUser", {
