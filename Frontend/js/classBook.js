@@ -185,6 +185,7 @@ class Book {
         headers: {
           "Content-type": "application/json",
           "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
         },
       });
 
@@ -432,7 +433,7 @@ class Book {
         const actionLinks = document.createElement("p");
         actionLinks.classList.add("list-group-item-text");
         actionLinks.innerHTML = `
-              <a href="book-info.html" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
+        <a value="n${book.id}" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
           `;
 
         // Agrega los elementos al contenedor principal
@@ -447,9 +448,207 @@ class Book {
 
         listItem.appendChild(bookItem);
         bookDetailsContainer.appendChild(listItem);
+
+        // Agregar evento click al enlace de añadir libro
+        actionLinks.querySelector("a").addEventListener("click", async () => {
+          // Obtener el ID del libro
+          const libroId = book.id;
+          console.log("libroId", libroId);
+
+          const usuarioActual = this.obtenerUsuarioActual();
+          if (!usuarioActual) {
+            console.error("No se ha encontrado la información del usuario.");
+            return;
+          }
+
+          let userId = usuarioActual.userInfo.id;
+          console.log("usuarioActual", userId);
+          console.log("book.title", book.title);
+
+          try {
+            const libroExistente = await this.comprobarLibroUsuario(
+              book.id,
+              userId
+            );
+
+            if (libroExistente.existe) {
+              swal({
+                title: `El libro ${book.title} ya esta en tu lista.`,
+                icon: "warning",
+              });
+            } else {
+              this.crearRelacionUserBook(
+                userId,
+                libroId,
+                "Sin empezar",
+                "",
+                ""
+              );
+              swal({
+                title: "Libro añadido a tu lista.",
+                text: "",
+                icon: "success",
+              });
+            }
+          } catch (error) {
+            console.error("Error al crear la relación usuario-libro:", error);
+            swal("Error al añadir el libro", "", "error");
+          }
+        });
       });
     } catch (error) {
       console.error("Error al cargar los detalles de los libros:", error);
+    }
+  }
+
+  // Método para cargar libros filtrados por género
+  async cargarLibrosPorGenero(genre) {
+    try {
+      // Realizar la petición para obtener los libros filtrados por género
+
+      const response = await fetch(
+        `http://localhost:8080/v1/books/searchByGenre?genre=${genre}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+          },
+        }
+      );
+
+      const books = await response.json();
+
+      // Limpiar el contenedor de detalles de libros
+      const bookDetailsContainer = document.getElementById(
+        "book-details-container"
+      );
+      bookDetailsContainer.innerHTML = "";
+
+      // Iterar sobre los libros y crear los elementos HTML correspondientes
+      books.forEach((book, index) => {
+        const listItem = document.createElement("div");
+        listItem.classList.add("list-group-item");
+
+        const bookItem = document.createElement("div");
+        bookItem.classList.add("book-item");
+
+        let base64String = book.imagenBytes;
+        let binaryString = window.atob(base64String);
+        let len = binaryString.length;
+        let bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        let blob = new Blob([bytes.buffer]);
+
+        let imgUrl = URL.createObjectURL(blob);
+
+        const bookCover = document.createElement("img");
+        bookCover.src = imgUrl; // Aquí necesitarás la portada del libro actual
+        bookCover.alt = "Portada del libro";
+        bookCover.classList.add("book-cover");
+
+        const bookInfo = document.createElement("div");
+        bookInfo.classList.add("book-info");
+
+        const title = document.createElement("h4");
+        title.classList.add("list-group-item-heading");
+        title.textContent = `${index + 1} - ${book.title}`;
+
+        const author = document.createElement("p");
+        author.classList.add("list-group-item-text");
+        author.innerHTML = `<strong>Autor: </strong>${book.author}<br/>`;
+
+        const genreElement = document.createElement("p");
+        genreElement.classList.add("list-group-item-text");
+        genreElement.innerHTML = `<strong>Género: </strong>${genre}<br/><br/>`;
+
+        // Agrega los enlaces de acción
+        const actionLinks = document.createElement("p");
+        actionLinks.classList.add("list-group-item-text");
+        actionLinks.innerHTML = `
+        <a value="n${book.id}" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
+        `;
+
+        // Agrega los elementos al contenedor principal
+        bookInfo.appendChild(title);
+        bookInfo.appendChild(author);
+        bookInfo.appendChild(genreElement);
+        bookInfo.appendChild(actionLinks);
+
+        bookItem.appendChild(bookCover);
+        bookItem.appendChild(bookInfo);
+
+        listItem.appendChild(bookItem);
+        bookDetailsContainer.appendChild(listItem);
+
+        // Agregar evento click al enlace de añadir libro
+        actionLinks.querySelector("a").addEventListener("click", () => {
+          // Obtener el ID del libro
+          const libroId = book.id;
+          console.log("libroId", libroId);
+
+          const usuarioActual = this.obtenerUsuarioActual();
+          if (!usuarioActual) {
+            console.error("No se ha encontrado la información del usuario.");
+            return;
+          }
+
+          let userId = usuarioActual.userInfo.id;
+          console.log("usuarioActual", userId);
+
+          try {
+            this.crearRelacionUserBook(userId, libroId, "Sin empezar", "", "");
+            swal({
+              title: "Libro añadido a tu lista.",
+              text: "",
+              icon: "success",
+            });
+          } catch (error) {
+            console.error("Error al crear la relación usuario-libro:", error);
+            swal("Error al añadir el libro", "", "error");
+          }
+        });
+      });
+    } catch (error) {
+      console.error("Error al cargar los detalles de los libros:", error);
+    }
+  }
+
+  async comprobarLibroUsuario(bookId, userId) {
+    try {
+      // Realizar una petición para buscar el libro por título y usuario
+      const response = await fetch(
+        `http://localhost:8080/v1/usersBooks/searchByBookIdAndUserId?bookId=${bookId}&userId=${userId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+          },
+        }
+      );
+
+      // Verificar si la respuesta es exitosa
+      if (!response.ok) {
+        throw new Error("Error al buscar el libro");
+      }
+
+      // Convertir la respuesta a formato JSON
+      const libroEncontrado = await response.json();
+
+      // Verificar si se encontró algún libro
+      if (libroEncontrado.length > 0) {
+        // Si se encontró al menos un libro, devuelve que existe y el primer libro encontrado
+        return { existe: true, libro: libroEncontrado[0] };
+      } else {
+        // Si no se encontró ningún libro, devuelve que no existe y null
+        return { existe: false, libro: null };
+      }
+    } catch (error) {
+      // Manejar cualquier error que ocurra durante la ejecución de la función
+      console.error("Error en comprobarLibro:", error);
+      throw new Error("Error al comprobar el libro");
     }
   }
 
@@ -532,93 +731,6 @@ class Book {
       });
     } catch (error) {
       console.error("Error al cargar los géneros:", error);
-    }
-  }
-
-  // Método para cargar libros filtrados por género
-  async cargarLibrosPorGenero(genre) {
-    try {
-      // Realizar la petición para obtener los libros filtrados por género
-
-      const response = await fetch(
-        `http://localhost:8080/v1/books/searchByGenre?genre=${genre}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
-          },
-        }
-      );
-
-      const books = await response.json();
-
-      // Limpiar el contenedor de detalles de libros
-      const bookDetailsContainer = document.getElementById(
-        "book-details-container"
-      );
-      bookDetailsContainer.innerHTML = "";
-
-      // Iterar sobre los libros y crear los elementos HTML correspondientes
-      books.forEach((book, index) => {
-        const listItem = document.createElement("div");
-        listItem.classList.add("list-group-item");
-
-        const bookItem = document.createElement("div");
-        bookItem.classList.add("book-item");
-
-        let base64String = book.imagenBytes;
-        let binaryString = window.atob(base64String);
-        let len = binaryString.length;
-        let bytes = new Uint8Array(len);
-        for (let i = 0; i < len; i++) {
-          bytes[i] = binaryString.charCodeAt(i);
-        }
-
-        let blob = new Blob([bytes.buffer]);
-
-        let imgUrl = URL.createObjectURL(blob);
-
-        const bookCover = document.createElement("img");
-        bookCover.src = imgUrl; // Aquí necesitarás la portada del libro actual
-        bookCover.alt = "Portada del libro";
-        bookCover.classList.add("book-cover");
-
-        const bookInfo = document.createElement("div");
-        bookInfo.classList.add("book-info");
-
-        const title = document.createElement("h4");
-        title.classList.add("list-group-item-heading");
-        title.textContent = `${index + 1} - ${book.title}`;
-
-        const author = document.createElement("p");
-        author.classList.add("list-group-item-text");
-        author.innerHTML = `<strong>Autor: </strong>${book.author}<br/>`;
-
-        const genreElement = document.createElement("p");
-        genreElement.classList.add("list-group-item-text");
-        genreElement.innerHTML = `<strong>Género: </strong>${genre}<br/><br/>`;
-
-        // Agrega los enlaces de acción
-        const actionLinks = document.createElement("p");
-        actionLinks.classList.add("list-group-item-text");
-        actionLinks.innerHTML = `
-            <a href="book-info.html" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
-        `;
-
-        // Agrega los elementos al contenedor principal
-        bookInfo.appendChild(title);
-        bookInfo.appendChild(author);
-        bookInfo.appendChild(genreElement);
-        bookInfo.appendChild(actionLinks);
-
-        bookItem.appendChild(bookCover);
-        bookItem.appendChild(bookInfo);
-
-        listItem.appendChild(bookItem);
-        bookDetailsContainer.appendChild(listItem);
-      });
-    } catch (error) {
-      console.error("Error al cargar los libros por género:", error);
     }
   }
 

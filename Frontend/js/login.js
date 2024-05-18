@@ -15,6 +15,17 @@ document.getElementById("volverLogin").addEventListener("click", function () {
   limpiarValidaciones();
 });
 
+document
+  .getElementById("togglePassword")
+  .addEventListener("click", function () {
+    const pwdInput = document.getElementById("pwd");
+    if (pwdInput.type === "password") {
+      pwdInput.type = "text";
+    } else {
+      pwdInput.type = "password";
+    }
+  });
+
 // Abre la página principal
 function abrirPrincipal() {
   const user = document.getElementById("user").value;
@@ -65,7 +76,8 @@ async function consultar(user, password) {
         userInfo.name,
         userInfo.lastName,
         userInfo.user,
-        userInfo.password
+        userInfo.password,
+        userInfo.gender
       );
 
       usuarioActual.setUserInfo(userInfo);
@@ -84,4 +96,20 @@ async function consultar(user, password) {
       limpiarValidaciones();
     }
   };
+}
+
+// Enlace para restablecer contraseña
+function olvideContrasena() {
+  swal({
+    title:
+      "Por favor, contacte al administrador para restablecer su contraseña:",
+    content: {
+      element: "a",
+      attributes: {
+        href: "mailto:tmaygon609@iesalmudeyne.es",
+        text: "tmaygon609@iesalmudeyne.es",
+      },
+    },
+    icon: "info",
+  });
 }

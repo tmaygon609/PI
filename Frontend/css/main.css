@@ -232,35 +232,44 @@ html {
   padding-left: 270px;
 }
 
-.dashboard-Navbar > ul,
-.dashboard-Navbar > ul > li,
-.dashboard-Navbar > ul > li > a {
-  height: 50px;
-  line-height: 50px;
-}
-.dashboard-Navbar > ul > li > a {
-  outline: none;
-}
 .dashboard-Navbar {
   background-color: #1d393d;
   overflow: hidden;
   align-items: center;
 }
-.dashboard-Navbar > ul > li,
-.dashboard-Navbar > ul > li > a {
-  display: inline-block;
-  width: 50px;
+
+.dashboard-Navbar > ul {
+  display: flex; /* Utilizamos flexbox para alinear los elementos horizontalmente */
+  padding: 0; /* Eliminamos el relleno predeterminado de la lista */
+}
+
+.dashboard-Navbar > ul > li {
   text-align: center;
+}
+
+.dashboard-Navbar > ul > li:first-child {
+  width: 50px; /* Mantenemos el primer elemento li con un ancho fijo de 50px */
+}
+
+.dashboard-Navbar > ul > li:last-child {
+  flex-grow: 1; /* Hace que el último elemento li, que contiene el formulario de búsqueda, ocupe todo el espacio disponible */
+}
+
+.dashboard-Navbar > ul > li > a {
+  display: block;
+  height: 50px;
+  line-height: 50px;
+  outline: none;
   color: #fff;
-  margin: 0;
-  padding: 0;
   font-size: 20px;
   transition: all 0.3s ease-in-out;
   position: relative;
 }
+
 .dashboard-Navbar > ul > li > a:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
+
 .dashboard-Navbar > ul > li > a > span.badge {
   position: absolute;
   top: 7px;
