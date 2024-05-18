@@ -1,11 +1,17 @@
 package com.nttdata.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nttdata.persistence.dto.ChangePasswordDTO;
 import com.nttdata.persistence.model.User;
 import com.nttdata.services.UserManagementI;
 
@@ -16,13 +22,13 @@ public class UserController {
 	@Autowired
 	private UserManagementI userService;
 
-	@PostMapping(path = "/login")
-	public User login(@RequestBody User u) {
-		String user = u.getUser();
-		String password = u.getPassword();
-
-		return userService.login(user, password);
-	}
+//	@PostMapping(path = "/login")
+//	public User login(@RequestBody User u) {
+//		String user = u.getUser();
+//		String password = u.getPassword();
+//
+//		return userService.login(user, password);
+//	}
 
 	@PostMapping("/saveUser")
 	public void saveUser(final @RequestBody User u) {
@@ -30,4 +36,19 @@ public class UserController {
 		userService.addUser(u);
 	}
 
+	@PutMapping("/changePassword/{userId}")
+	public ResponseEntity<String> changePassword(@PathVariable("userId") Long userId,
+			@RequestBody ChangePasswordDTO changePasswordDTO) {
+		return userService.changePassword(userId, changePasswordDTO);
+	}
+
+	@DeleteMapping("/delete/{userId}")
+	public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) {
+		try {
+			userService.deleteUser(userId);
+			return new ResponseEntity<>("Usuario eliminado correctamente", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Error al eliminar el usuario", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

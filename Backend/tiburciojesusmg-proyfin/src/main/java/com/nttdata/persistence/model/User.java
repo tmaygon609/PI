@@ -66,6 +66,9 @@ public class User implements Serializable, UserDetails {
 	@Column(name = "C_PASSWORD")
 	private String password;
 
+	@Column(name = "C_GENDER")
+	private String gender;
+
 	@Enumerated(EnumType.STRING)
 	private Role role;
 

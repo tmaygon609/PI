@@ -15,8 +15,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.nttdata.persistence.model.OpenAIRequest;
 import com.nttdata.persistence.model.OpenAIRequest.Message;
-import com.nttdata.services.BookManagementI;
 import com.nttdata.persistence.model.OpenAIResponse;
+import com.nttdata.services.BookManagementI;
 
 @Service
 public class OpenAIService {
@@ -35,6 +35,8 @@ public class OpenAIService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("Authorization", "Bearer " + apiKey);
+
+		System.out.println("Api key: " + apiKey);
 
 		HttpEntity<OpenAIRequest> entity = new HttpEntity<>(request, headers);
 

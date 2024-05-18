@@ -1,5 +1,9 @@
 package com.nttdata.services.impl;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,19 +27,31 @@ public class UserBookImpl implements UserBookI {
 
 	@Override
 	public UserBook updateUserBook(Long id, String status, String rate, String comment) {
+		Optional<UserBook> userBookOptional = userBookRepository.findById(id);
 
-		UserBook userBook = userBookRepository.findByBookId(id);
+		if (userBookOptional.isPresent()) {
+			UserBook userBook = userBookOptional.get();
 
-		if (status != null) {
-			userBook.setStatus(status);
-		}
-		if (rate != null) {
-			userBook.setRate(rate);
-		}
-		if (comment != null) {
-			userBook.setComment(comment);
-		}
+			if (status != null) {
+				userBook.setStatus(status);
+			}
+			if (rate != null) {
+				userBook.setRate(rate);
+			}
+			if (comment != null) {
+				userBook.setComment(comment);
+			}
 
-		return userBookRepository.save(userBook);
+			return userBookRepository.save(userBook);
+		} else {
+			// Si no se encuentra el UserBook con el ID proporcionado, puedes manejarlo de
+			// acuerdo a tu lógica de negocio.
+			throw new NoSuchElementException("No se encontró el UserBook con ID: " + id);
+		}
 	}
+
+	public List<UserBook> searchBooksByBookIdAndUserId(Long bookId, Long userId) {
+		return userBookRepository.findByBookIdAndUserId(bookId, userId);
+	}
+
 }

@@ -135,11 +135,11 @@ public class BookManagementImpl implements BookManagementI {
 //		}
 //	}
 
-	@Override
-	public List<Book> searchByTitleAndUser(String title, Long userId) {
-
-		return userBookRepository.findByTitleAndUserId(title, userId);
-	}
+//	@Override
+//	public List<Book> searchByTitleAndUser(String title, Long userId) {
+//
+//		return userBookRepository.findByBookTitleAndUserId(title, userId);
+//	}
 
 	@Override
 	public List<String> getBookTitlesOfUser(Long userId) {
