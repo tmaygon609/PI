@@ -4,26 +4,18 @@ const listado = document.getElementById("listado");
 // Se agrega un evento de escucha al listado de libros
 listado.addEventListener("click", manejadorEvento);
 
+const guardarCambiosBtn = document.getElementById("guardarCambiosBtn");
+
+guardarCambiosBtn.addEventListener("click", guardarCambios);
+
+// Obtener el botón de eliminar cuenta por su ID
+const eliminarCuentaBtn = document.getElementById("eliminarCuentaBtn");
+
+// Agregar un EventListener para manejar el clic en el botón de eliminar cuenta
+eliminarCuentaBtn.addEventListener("click", aceptarEliminarCuenta);
+
 // Oculta todo el contenido de la página al principio
 document.body.style.display = "none";
-
-// Y esta sería tu función para comprobar el inicio de sesión
-function comprobarInicioSesion() {
-  // Compruebas si el usuario está logueado
-  if (localStorage.getItem("estaLogueado") !== "true") {
-    // Si no está logueado, rediriges a la página de inicio de sesión
-    window.location.href = "index.html";
-  } else {
-    // Si el usuario está logueado, muestra el contenido de la página y carga los géneros y estados
-    document.body.style.display = "block";
-    let oBook = new Book();
-    oBook.cargarGeneros();
-    oBook.cargarEstados();
-    // oBook.catalogo();
-
-    mostrarContenidoPrincipal();
-  }
-}
 
 // Llamas a la función comprobarInicioSesion al cargar tu página principal.html
 window.onload = comprobarInicioSesion;
@@ -40,6 +32,24 @@ $(modalBook).on("hidden.bs.modal", function () {
 $(modalIA).on("hidden.bs.modal", function () {
   recuperarListadoUsuario();
 });
+
+// Función para comprobar el inicio de sesión
+function comprobarInicioSesion() {
+  // Compruebas si el token JWT existe
+  if (!localStorage.getItem("jwtToken")) {
+    // Si no existe el token, rediriges a la página de inicio de sesión
+    window.location.href = "index.html";
+  } else {
+    // Si existe el token, muestra el contenido de la página y carga los géneros y estados
+    document.body.style.display = "block";
+    let oBook = new Book();
+    oBook.cargarGeneros();
+    oBook.cargarEstados();
+    // oBook.catalogo();
+
+    mostrarContenidoPrincipal();
+  }
+}
 
 function recuperarListadoUsuario() {
   let storedUser = localStorage.getItem("usuarioActual");
@@ -126,17 +136,24 @@ function mostrarContenidoPrincipal() {
 
     // Asigna el nombre de usuario al contenido de figcaption
     figcaption.textContent = nombreUsuario;
+
+    // Selecciona la imagen por su ID
+    let userIcon = document.getElementById("avatar");
+
+    console.log("genero", usuarioActual.gender);
+    // Verifica el género del usuario y asigna el src de la imagen correspondiente
+    if (usuarioActual.gender === "masculino") {
+      userIcon.src = "./assets/avatars/StudetMaleAvatar.png";
+    } else if (usuarioActual.gender === "femenino") {
+      userIcon.src = "./assets/avatars/StudetFemaleAvatar.png";
+    } else {
+      // Si el género no está definido, puedes usar un avatar genérico o un estilo predeterminado
+      userIcon.src = "./assets/avatars/TeacherFemaleAvatar2.png";
+    }
   } else {
     console.error("No se encontró la información del usuario.");
   }
 }
-
-// let imagen = null;
-// document
-//   .getElementById("fileImagen")
-//   .addEventListener("change", function (event) {
-//     imagen = event.target.files[0];
-//   });
 
 // aceptarAltaLibro. Clic en boton del formulario de registrar libro.
 function aceptarAltaLibro() {
@@ -146,8 +163,8 @@ function aceptarAltaLibro() {
     document.getElementById("txtGenero").value == ""
   ) {
     swal({
-      title: "Campos vacíos",
-      text: "por favor rellene correctamente los campos",
+      title: "Campos obligatorios vacíos",
+      text: "Por favor rellene correctamente los campos Titulo, Autor y Género.",
       icon: "warning",
     });
   } else {
@@ -185,10 +202,12 @@ function aceptarAltaLibro() {
           status = capitalizeFirstLetter(
             document.getElementById("rbtEncurso").value
           );
-        } else {
+        } else if (document.getElementById("rbtLeido").checked) {
           status = capitalizeFirstLetter(
             document.getElementById("rbtLeido").value
           );
+        } else {
+          status = "Sin empezar";
         }
 
         let rate;
@@ -343,10 +362,91 @@ function cerrarSesion() {
     dangerMode: true,
   }).then((cerrar) => {
     if (cerrar) {
-      localStorage.setItem("estaLogueado", "false");
+      localStorage.removeItem("jwtToken");
       window.open("index.html", "_self");
     }
   });
+}
+
+// Función para guardar los cambios en la contraseña
+function guardarCambios() {
+  // Recupera la información del usuario almacenada en el localStorage
+  const storedUser = localStorage.getItem("usuarioActual");
+
+  const nuevaContrasena = document.getElementById("nuevaContrasena").value;
+  const confirmarContrasena = document.getElementById(
+    "confirmarContrasena"
+  ).value;
+
+  // Validar que las contraseñas coincidan
+  if (nuevaContrasena !== confirmarContrasena) {
+    swal({
+      title: "Error",
+      text: "Las contraseñas no coinciden.",
+      icon: "error",
+    });
+    return;
+  }
+
+  // Validar los requisitos de la nueva contraseña
+  const resultadoValidacion = validarRequisitosContrasena(nuevaContrasena);
+  if (!resultadoValidacion.esValida) {
+    swal({
+      title: "Error validación",
+      text: resultadoValidacion.mensaje,
+      icon: "warning",
+    });
+    return;
+  }
+
+  if (storedUser) {
+    const usuarioActual = new User();
+    Object.assign(usuarioActual, JSON.parse(storedUser));
+
+    usuarioActual.cambiarContrasena(nuevaContrasena);
+
+    nuevaContrasena.value = "";
+    confirmarContrasena.value = "";
+  } else {
+    console.error("no se contro la informacion del usuario.");
+  }
+}
+
+function aceptarEliminarCuenta() {
+  // Recupera la información del usuario almacenada en el localStorage
+  const storedUser = localStorage.getItem("usuarioActual");
+
+  if (storedUser) {
+    // Mostrar un SweetAlert de confirmación
+    swal({
+      title: "¿Estás seguro?",
+      text: "¿Seguro que quieres eliminar tu cuenta?",
+      icon: "warning",
+      buttons: ["Cancelar", "Eliminar"],
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        // Si el usuario confirma la eliminación, continuar con la operación
+        const usuarioActual = new User();
+        Object.assign(usuarioActual, JSON.parse(storedUser));
+
+        usuarioActual.eliminarCuenta();
+
+        // Eliminar el token JWT del localStorage después de 4 segundos
+        setTimeout(function () {
+          localStorage.removeItem("jwtToken");
+          window.open("index.html", "_self");
+        }, 4000);
+      } else {
+        // Si el usuario cancela, no hacer nada
+        console.log("Eliminación cancelada.");
+      }
+    });
+  } else {
+    console.error(
+      "No se encontró la información del usuario en el localStorage."
+    );
+  }
 }
 
 // Maneja el evento de los botones borrar del listado de todos los libros.
@@ -409,6 +509,11 @@ function manejadorEvento(event) {
         oBook.guardarCambios(id, status, rate, comment);
         revertirCamposAInputs(id);
       }
+      //   } else if (String(btn).substring(0, 1) === "n"){
+
+      //     let id = String(btn).substring(1);
+
+      //
     }
   }
 

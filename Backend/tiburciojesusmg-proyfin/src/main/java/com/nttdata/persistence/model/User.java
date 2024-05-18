@@ -1,19 +1,30 @@
 package com.nttdata.persistence.model;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -25,7 +36,10 @@ import lombok.Setter;
 @Table(name = "T_USER")
 @Getter
 @Setter
-public class User implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class User implements Serializable, UserDetails {
 
 	/** Serial Version */
 	private static final long serialVersionUID = 1L;
@@ -52,12 +66,50 @@ public class User implements Serializable {
 	@Column(name = "C_PASSWORD")
 	private String password;
 
-//	@ManyToMany
-//	@JoinTable(name = "T_USER_BOOK", joinColumns = @JoinColumn(name = "C_USER_ID"), inverseJoinColumns = @JoinColumn(name = "C_BOOK_ID"))
-//	private Set<Book> books;
+	@Column(name = "C_GENDER")
+	private String gender;
+
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
 	@OneToMany(mappedBy = "user")
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private Set<UserBook> userBooks;
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+
+		return List.of(new SimpleGrantedAuthority(role.name()));
+	}
+
+	@Override
+	public String getUsername() {
+
+		return user;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+
+		return true;
+	}
 
 }

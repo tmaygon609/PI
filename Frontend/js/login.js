@@ -15,6 +15,17 @@ document.getElementById("volverLogin").addEventListener("click", function () {
   limpiarValidaciones();
 });
 
+document
+  .getElementById("togglePassword")
+  .addEventListener("click", function () {
+    const pwdInput = document.getElementById("pwd");
+    if (pwdInput.type === "password") {
+      pwdInput.type = "text";
+    } else {
+      pwdInput.type = "password";
+    }
+  });
+
 // Abre la página principal
 function abrirPrincipal() {
   const user = document.getElementById("user").value;
@@ -31,15 +42,15 @@ function abrirPrincipal() {
 }
 
 // Abre página de registro usuario
-// function abrirRegistro() {
-//   window.open("html/registro.html", "_self");
-// }
+function abrirRegistro() {
+  window.open("html/registro.html", "_self");
+}
 
 // Consulta en base de datos si el usuario existe
 async function consultar(user, password) {
   const oHttp = new XMLHttpRequest();
 
-  oHttp.open("POST", "http://localhost:8080/v1/users/login");
+  oHttp.open("POST", "http://localhost:8080/api/v1/auth/signin");
   oHttp.setRequestHeader("Content-Type", "application/json");
 
   const data = {
@@ -51,24 +62,30 @@ async function consultar(user, password) {
 
   oHttp.onload = () => {
     if (oHttp.status == "200" && oHttp.responseText != "") {
-      const userInfo = JSON.parse(oHttp.responseText);
+      const response = JSON.parse(oHttp.responseText);
+      const jwtToken = response.accessToken;
+      const userInfo = response.user;
 
+      console.log("token:", jwtToken);
       console.log("Usuario obtenido:", userInfo);
 
-      // Crear una instancia de User solo con el nombre de usuario
+      localStorage.setItem("jwtToken", jwtToken);
+
+      // Crear una instancia de User con la información actualizada
       const usuarioActual = new User(
         userInfo.name,
         userInfo.lastName,
         userInfo.user,
-        userInfo.password
+        userInfo.password,
+        userInfo.gender
       );
+
       usuarioActual.setUserInfo(userInfo);
 
       // Almacena la información del usuario en el localStorage
       localStorage.setItem("usuarioActual", JSON.stringify(usuarioActual));
-      localStorage.setItem("estaLogueado", "true"); // Agregamos esta línea
 
-      window.open("principal.html", "_self");
+      window.location.href = "principal.html";
     } else {
       swal({
         title: "Usuario no registrado.",
@@ -81,4 +98,18 @@ async function consultar(user, password) {
   };
 }
 
-// window.onload = comprobarInicioSesion;
+// Enlace para restablecer contraseña
+function olvideContrasena() {
+  swal({
+    title:
+      "Por favor, contacte al administrador para restablecer su contraseña:",
+    content: {
+      element: "a",
+      attributes: {
+        href: "mailto:tmaygon609@iesalmudeyne.es",
+        text: "tmaygon609@iesalmudeyne.es",
+      },
+    },
+    icon: "info",
+  });
+}

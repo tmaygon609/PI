@@ -19,8 +19,8 @@ public interface UserBookRepositoryI extends JpaRepository<UserBook, Long> {
 
 	public UserBook findByUserAndBook(User user, Book book);
 
-	@Query("SELECT ub.book FROM UserBook ub WHERE ub.book.title = :title AND ub.user.id = :userId")
-	List<Book> findByTitleAndUserId(String title, Long userId);
+//	@Query("SELECT ub.book FROM UserBook ub WHERE ub.book.title = :title AND ub.user.id = :userId")
+//	List<Book> findByBookTitleAndUserId(String title, Long userId);
 
 	@Query("SELECT ub.book FROM UserBook ub WHERE ub.user.id = :userId")
 	List<Book> findBooksByUserId(@Param("userId") Long userId);
@@ -28,5 +28,7 @@ public interface UserBookRepositoryI extends JpaRepository<UserBook, Long> {
 	UserBook findByUserIdAndBookId(Long userId, Long bookId);
 
 	UserBook findByBookId(Long bookId);
+
+	List<UserBook> findByBookIdAndUserId(Long bookId, Long userId);
 
 }

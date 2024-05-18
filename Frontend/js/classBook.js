@@ -106,7 +106,12 @@ class Book {
       `http://localhost:8080/v1/books/searchByTitle?title=${encodeURIComponent(
         title
       )}`,
-      { method: "GET" }
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+        },
+      }
     );
 
     if (!response.ok) {
@@ -128,6 +133,7 @@ class Book {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
         },
         body: JSON.stringify(nuevoLibro),
       });
@@ -160,6 +166,7 @@ class Book {
         method: "POST",
         headers: {
           "Content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
         },
         body: JSON.stringify(userBook),
       }
@@ -178,6 +185,7 @@ class Book {
         headers: {
           "Content-type": "application/json",
           "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
         },
       });
 
@@ -219,7 +227,12 @@ class Book {
         `http://localhost:8080/v1/books/searchByTitle?title=${encodeURIComponent(
           title
         )}`,
-        { method: "GET" }
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+          },
+        }
       );
 
       if (response.ok) {
@@ -302,6 +315,7 @@ class Book {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
           },
           body: JSON.stringify(requestData),
         }
@@ -358,7 +372,13 @@ class Book {
   async catalogo() {
     try {
       // Realiza la petición para obtener los detalles de los libros
-      const response = await fetch("http://localhost:8080/v1/books");
+      const response = await fetch("http://localhost:8080/v1/books", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+        },
+      });
+
       const books = await response.json();
 
       // Selecciona el contenedor donde se cargarán los detalles de los libros
@@ -413,8 +433,7 @@ class Book {
         const actionLinks = document.createElement("p");
         actionLinks.classList.add("list-group-item-text");
         actionLinks.innerHTML = `
-              <a href="book-info.html" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
-              <a href="book-config.html" class="btn btn-info" title="Gestionar libro"><i class="fa fa-wrench"></i></a>
+        <a value="n${book.id}" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
           `;
 
         // Agrega los elementos al contenedor principal
@@ -429,83 +448,56 @@ class Book {
 
         listItem.appendChild(bookItem);
         bookDetailsContainer.appendChild(listItem);
+
+        // Agregar evento click al enlace de añadir libro
+        actionLinks.querySelector("a").addEventListener("click", async () => {
+          // Obtener el ID del libro
+          const libroId = book.id;
+          console.log("libroId", libroId);
+
+          const usuarioActual = this.obtenerUsuarioActual();
+          if (!usuarioActual) {
+            console.error("No se ha encontrado la información del usuario.");
+            return;
+          }
+
+          let userId = usuarioActual.userInfo.id;
+          console.log("usuarioActual", userId);
+          console.log("book.title", book.title);
+
+          try {
+            const libroExistente = await this.comprobarLibroUsuario(
+              book.id,
+              userId
+            );
+
+            if (libroExistente.existe) {
+              swal({
+                title: `El libro ${book.title} ya esta en tu lista.`,
+                icon: "warning",
+              });
+            } else {
+              this.crearRelacionUserBook(
+                userId,
+                libroId,
+                "Sin empezar",
+                "",
+                ""
+              );
+              swal({
+                title: "Libro añadido a tu lista.",
+                text: "",
+                icon: "success",
+              });
+            }
+          } catch (error) {
+            console.error("Error al crear la relación usuario-libro:", error);
+            swal("Error al añadir el libro", "", "error");
+          }
+        });
       });
     } catch (error) {
       console.error("Error al cargar los detalles de los libros:", error);
-    }
-  }
-
-  async guardarCambios(id, status, rate, comment) {
-    console.log("id", id);
-    console.log("status", status);
-    console.log("rate", rate);
-    console.log("comment", comment);
-
-    // URL del endpoint
-    const url = `http://localhost:8080/v1/usersBooks/${id}`;
-
-    // Datos que deseas enviar. Asegúrate de que estos coincidan con los parámetros esperados por tu endpoint.
-    const data = {
-      status: status,
-      rate: rate,
-      comment: comment,
-    };
-
-    // Opciones de la solicitud
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    };
-
-    try {
-      const response = await fetch(url, requestOptions); // Utilizamos requestOptions aquí en lugar de requestData
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const responseData = await response.json(); // Cambiamos el nombre de la variable para evitar conflicto con la variable 'data' anterior
-      console.log(responseData);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  }
-
-  // Método que carga los generos de los libros.
-  async cargarGeneros() {
-    try {
-      const response = await fetch("http://localhost:8080/v1/genres");
-      const generos = await response.json();
-
-      const selectGenero = document.getElementById("txtGenero");
-      const selectGenero2 = document.getElementById("txtGenero2");
-
-      generos.forEach((genero) => {
-        const option = document.createElement("option");
-        option.value = genero.genreName;
-        option.text = genero.genreName;
-        selectGenero.appendChild(option);
-
-        const option2 = document.createElement("option");
-        option2.value = genero.genreName;
-        option2.text = genero.genreName;
-        selectGenero2.appendChild(option2);
-      });
-
-      // Agregar un evento para cargar los libros filtrados por género
-      selectGenero2.addEventListener("change", () => {
-        const selectedGenre = selectGenero2.value;
-        if (!selectedGenre) {
-          // Si no se ha seleccionado un género, cargar todos los libros
-          this.catalogo();
-        } else {
-          // Realizar una nueva consulta y cargar los libros filtrados por género
-          this.cargarLibrosPorGenero(selectedGenre);
-        }
-      });
-    } catch (error) {
-      console.error("Error al cargar los géneros:", error);
     }
   }
 
@@ -513,9 +505,17 @@ class Book {
   async cargarLibrosPorGenero(genre) {
     try {
       // Realizar la petición para obtener los libros filtrados por género
+
       const response = await fetch(
-        `http://localhost:8080/v1/books/searchByGenre?genre=${genre}`
+        `http://localhost:8080/v1/books/searchByGenre?genre=${genre}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+          },
+        }
       );
+
       const books = await response.json();
 
       // Limpiar el contenedor de detalles de libros
@@ -568,8 +568,7 @@ class Book {
         const actionLinks = document.createElement("p");
         actionLinks.classList.add("list-group-item-text");
         actionLinks.innerHTML = `
-            <a href="book-info.html" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
-            <a href="book-config.html" class="btn btn-info" title="Gestionar libro"><i class="fa fa-wrench"></i></a>
+        <a value="n${book.id}" class="btn btn-success" title="Añadir libro"><i class="fa fa-plus"></i></a>
         `;
 
         // Agrega los elementos al contenedor principal
@@ -583,16 +582,168 @@ class Book {
 
         listItem.appendChild(bookItem);
         bookDetailsContainer.appendChild(listItem);
+
+        // Agregar evento click al enlace de añadir libro
+        actionLinks.querySelector("a").addEventListener("click", () => {
+          // Obtener el ID del libro
+          const libroId = book.id;
+          console.log("libroId", libroId);
+
+          const usuarioActual = this.obtenerUsuarioActual();
+          if (!usuarioActual) {
+            console.error("No se ha encontrado la información del usuario.");
+            return;
+          }
+
+          let userId = usuarioActual.userInfo.id;
+          console.log("usuarioActual", userId);
+
+          try {
+            this.crearRelacionUserBook(userId, libroId, "Sin empezar", "", "");
+            swal({
+              title: "Libro añadido a tu lista.",
+              text: "",
+              icon: "success",
+            });
+          } catch (error) {
+            console.error("Error al crear la relación usuario-libro:", error);
+            swal("Error al añadir el libro", "", "error");
+          }
+        });
       });
     } catch (error) {
-      console.error("Error al cargar los libros por género:", error);
+      console.error("Error al cargar los detalles de los libros:", error);
+    }
+  }
+
+  async comprobarLibroUsuario(bookId, userId) {
+    try {
+      // Realizar una petición para buscar el libro por título y usuario
+      const response = await fetch(
+        `http://localhost:8080/v1/usersBooks/searchByBookIdAndUserId?bookId=${bookId}&userId=${userId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+          },
+        }
+      );
+
+      // Verificar si la respuesta es exitosa
+      if (!response.ok) {
+        throw new Error("Error al buscar el libro");
+      }
+
+      // Convertir la respuesta a formato JSON
+      const libroEncontrado = await response.json();
+
+      // Verificar si se encontró algún libro
+      if (libroEncontrado.length > 0) {
+        // Si se encontró al menos un libro, devuelve que existe y el primer libro encontrado
+        return { existe: true, libro: libroEncontrado[0] };
+      } else {
+        // Si no se encontró ningún libro, devuelve que no existe y null
+        return { existe: false, libro: null };
+      }
+    } catch (error) {
+      // Manejar cualquier error que ocurra durante la ejecución de la función
+      console.error("Error en comprobarLibro:", error);
+      throw new Error("Error al comprobar el libro");
+    }
+  }
+
+  async guardarCambios(id, status, rate, comment) {
+    console.log("id", id);
+    console.log("status", status);
+    console.log("rate", rate);
+    console.log("comment", comment);
+
+    // URL del endpoint
+    const url = `http://localhost:8080/v1/usersBooks/${id}`;
+
+    // Datos que deseas enviar. Asegúrate de que estos coincidan con los parámetros esperados por tu endpoint.
+    const data = {
+      status: status,
+      rate: rate,
+      comment: comment,
+    };
+
+    // Opciones de la solicitud
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+      },
+      body: JSON.stringify(data),
+    };
+
+    try {
+      const response = await fetch(url, requestOptions); // Utilizamos requestOptions aquí en lugar de requestData
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const responseData = await response.json(); // Cambiamos el nombre de la variable para evitar conflicto con la variable 'data' anterior
+      console.log(responseData);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  // Método que carga los generos de los libros.
+  async cargarGeneros() {
+    console.log("jwtToken", localStorage.getItem("jwtToken"));
+    try {
+      const response = await fetch("http://localhost:8080/v1/genres", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+        },
+      });
+
+      const generos = await response.json();
+
+      const selectGenero = document.getElementById("txtGenero");
+      const selectGenero2 = document.getElementById("txtGenero2");
+
+      generos.forEach((genero) => {
+        const option = document.createElement("option");
+        option.value = genero.genreName;
+        option.text = genero.genreName;
+        selectGenero.appendChild(option);
+
+        const option2 = document.createElement("option");
+        option2.value = genero.genreName;
+        option2.text = genero.genreName;
+        selectGenero2.appendChild(option2);
+      });
+
+      // Agregar un evento para cargar los libros filtrados por género
+      selectGenero2.addEventListener("change", () => {
+        const selectedGenre = selectGenero2.value;
+        if (!selectedGenre) {
+          // Si no se ha seleccionado un género, cargar todos los libros
+          this.catalogo();
+        } else {
+          // Realizar una nueva consulta y cargar los libros filtrados por género
+          this.cargarLibrosPorGenero(selectedGenre);
+        }
+      });
+    } catch (error) {
+      console.error("Error al cargar los géneros:", error);
     }
   }
 
   // Método que carga los tipos de estados de los libros.
   async cargarEstados() {
     try {
-      const response = await fetch("http://localhost:8080/v1/status");
+      const response = await fetch("http://localhost:8080/v1/status", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Aquí es donde incluyes el token en la cabecera de la petición
+        },
+      });
+
       const estados = await response.json();
 
       const divEstados = document.getElementById("divEstados");

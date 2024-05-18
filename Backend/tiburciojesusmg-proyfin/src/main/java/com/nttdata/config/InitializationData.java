@@ -12,6 +12,7 @@ import org.springframework.util.FileCopyUtils;
 
 import com.nttdata.persistence.model.Book;
 import com.nttdata.persistence.model.Genre;
+import com.nttdata.persistence.model.Role;
 import com.nttdata.persistence.model.Status;
 import com.nttdata.persistence.model.User;
 import com.nttdata.persistence.model.UserBook;
@@ -57,6 +58,8 @@ public class InitializationData implements CommandLineRunner {
 		user1.setLastName("Mayo Gonzalez");
 		user1.setUser("tmaygon");
 		user1.setPassword(passwordEncoder.encode("hola22;"));
+		user1.setRole(Role.USER);
+		user1.setGender("masculino");
 		userRepository.save(user1);
 
 		// Usuario 1
@@ -65,6 +68,8 @@ public class InitializationData implements CommandLineRunner {
 		user2.setLastName("Campanario Manzano");
 		user2.setUser("mcamman");
 		user2.setPassword(passwordEncoder.encode("adios22;"));
+		user2.setRole(Role.USER);
+		user2.setGender("femenino");
 		userRepository.save(user2);
 
 		// Libro 1
@@ -87,7 +92,7 @@ public class InitializationData implements CommandLineRunner {
 		Book book2 = new Book();
 		book2.setTitle("Mis raices");
 		book2.setAuthor("Rafaela Santos");
-		book2.setGenre("Crónica");
+		book2.setGenre("Autoayuda");
 
 		// Carga la imagen desde un recurso del classpath y la convierte en un array de
 		// bytes
@@ -830,10 +835,9 @@ public class InitializationData implements CommandLineRunner {
 
 		// Crear generos literarios.
 		List<String> namesGenres = Arrays.asList("Novela", "Thriller", "Ciencia ficción", "Romance", "Misterio",
-				"Fantasía", "Terror", "Policíaca", "Aventura", "Histórica", "Biografía", "Autobiografía", "Ensayo",
-				"Poesía", "Drama", "Cuento", "Fábula", "Mitología", "Manga", "Cómic / Novela gráfica",
-				"Literatura infantil", "Literatura juvenil", "Humor", "Viajes", "Filosofía", "Teatro", "Crónica",
-				"Epistolar", "Didáctico", "Enciclopedia");
+				"Fantasía", "Terror", "Policíaca", "Aventura", "Histórica", "Biografía", "Drama", "Cuento", "Fábula",
+				"Mitología", "Manga", "Cómic / Novela gráfica", "Literatura infantil", "Literatura juvenil", "Humor",
+				"Viajes", "Filosofía", "Teatro", "Autoayuda");
 
 		for (String nameGenre : namesGenres) {
 			Genre genre = new Genre();

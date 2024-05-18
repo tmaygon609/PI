@@ -14,7 +14,7 @@ public interface BookManagementI {
 
 	public List<Book> searchByTitle(String title);
 
-	public List<Book> searchByTitleAndUser(String title, Long userId);
+//	public List<Book> searchByTitleAndUser(String title, Long userId);
 
 	public List<Book> searchAllBooks();
 

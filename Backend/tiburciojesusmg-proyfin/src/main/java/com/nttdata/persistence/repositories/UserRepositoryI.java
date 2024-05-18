@@ -13,6 +13,6 @@ public interface UserRepositoryI extends JpaRepository<User, Long> {
 
 	public User findByUserAndPassword(String user, String password);
 
-	User findByUser(String user);
+	public User findByUser(String user);
 
 }

@@ -12,6 +12,8 @@
       src="https://kit.fontawesome.com/a05c1998d9.js"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 
     <title>Biblioteca Almudeyne</title>
     <!-- Favicon -->
@@ -42,15 +44,13 @@
         >
           Biblioteca Almudeyne
           <i class="zmdi zmdi-close btn-menu-dashboard visible-xs"></i>
-          <!-- <a class="navbar-brand" href="principal.html">
-            <img src="img/logo.jpg" alt="Biblioteca Almudeyne Logo" />
-          </a> -->
+
           <i class="zmdi zmdi-close btn-menu-dashboard visible-xs"></i>
         </div>
         <!-- SideBar User info -->
         <div class="full-box dashboard-sideBar-UserInfo">
           <figure class="full-box">
-            <img src="./assets/avatars/AdminMaleAvatar.png" alt="UserIcon" />
+            <img src="" alt="UserIcon" id="avatar" />
             <figcaption class="text-center text-titles">User Name</figcaption>
           </figure>
           <ul class="full-box list-unstyled text-center">
@@ -99,16 +99,6 @@
               ><i class="fa fa-plus-circle"></i>&nbsp; Nuevo libro
             </a>
           </li>
-          <!-- <li>
-            <a href="category.html"
-              ><i class="zmdi zmdi-labels zmdi-hc-fw"></i> Categorías</a
-            >
-          </li>
-          <li>
-            <a href="provider.html"
-              ><i class="zmdi zmdi-truck zmdi-hc-fw"></i> Proveedores</a
-            >
-          </li> -->
           <li>
             <a href="#" onclick="gestionFormularios('frmCatalogo')">
               <i class="fa fa-book"></i>&nbsp; Catalogo
@@ -228,35 +218,32 @@
               <i class="fas fa-chevron-left"></i>
             </a>
           </li>
+
+          <!-- Formulario buscar libro -->
+          <!-- Text input and Button -->
           <li>
-            <div
-              class="container-fluid d-flex justify-content-between align-items-center"
-            >
-              <!-- Formulario buscar libro -->
-              <!-- Text input and Button -->
-              <div class="navbar-form navbar-right" id="frmBusqueda">
-                <div class="form-group row">
-                  <div class="col-xs-8">
-                    <input
-                      id="txtTituloLibro"
-                      name="txtTituloLibro"
-                      placeholder="Buscar libro toda biblioteca"
-                      class="form-control"
-                      type="text"
-                      onkeypress="if (event.keyCode == 13) { document.getElementById('btnAceptarBuscarLibro').click(); return false; }"
-                    />
-                  </div>
-                  <div class="col-xs-4">
-                    <button
-                      type="button"
-                      id="btnAceptarBuscarLibro"
-                      name="btnAceptarBuscarLibro"
-                      class="btn btn-dark"
-                      onclick="aceptarBuscarLibro();"
-                    >
-                      <i class="fa fa-search"></i>
-                    </button>
-                  </div>
+            <div class="navbar-form navbar-right" id="frmBusqueda">
+              <div class="form-group row">
+                <div class="col-xs-8 col-md-8">
+                  <input
+                    id="txtTituloLibro"
+                    name="txtTituloLibro"
+                    placeholder="Buscar libro toda biblioteca"
+                    class="form-control"
+                    type="text"
+                    onkeypress="if (event.keyCode == 13) { document.getElementById('btnAceptarBuscarLibro').click(); return false; }"
+                  />
+                </div>
+                <div class="col-xs-4 col-md-4">
+                  <button
+                    type="button"
+                    id="btnAceptarBuscarLibro"
+                    name="btnAceptarBuscarLibro"
+                    class="btn btn-dark btn-block"
+                    onclick="aceptarBuscarLibro();"
+                  >
+                    <i class="fa fa-search"></i>
+                  </button>
                 </div>
               </div>
             </div>
@@ -279,8 +266,8 @@
           <hr class="my-4" />
           <img
             src="img/bienvenida.jpg"
-            alt="Descripción de la imagen"
-            class="img-fluid"
+            alt="Bibliotecaria mandando a callar"
+            class="img-responsive"
           />
           <hr class="my-4" />
 
@@ -415,26 +402,6 @@
                             </div>
                           </div>
                         </div>
-                        <!-- <div class="row">
-                            <div class="col-xs-12">
-                              <div class="form-group">
-                                <div class="col-xs-6">
-                                  <div class="wrap-input100 validate-input">
-                                    <input
-                                      pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
-                                      class="input100"
-                                      type="text"
-                                      id="txtTitulo"
-                                      name="txtTitulo"
-                                      required=""
-                                    />
-                                    <span class="focus-input100">Título</span>
-                                    <div class="loading-line"></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div> -->
                         <div class="row">
                           <div class="col-xs-12">
                             <div class="form-group">
@@ -713,8 +680,6 @@
                                 type="password"
                                 name="nuevaContrasena"
                                 id="nuevaContrasena"
-                                required=""
-                                maxlength="70"
                               />
                             </div>
                           </div>
@@ -732,8 +697,6 @@
                                 type="password"
                                 name="confirmarContrasena"
                                 id="confirmarContrasena"
-                                required=""
-                                maxlength="70"
                               />
                             </div>
                           </div>
@@ -748,13 +711,17 @@
 
           <!-- Botones -->
           <p class="text-center" style="margin-top: 20px">
-            <button type="submit" class="btn btn-success btn-raised">
+            <button
+              type="button"
+              class="btn btn-success btn-raised"
+              id="guardarCambiosBtn"
+            >
               <i class="fa fa-floppy-o"></i> Guardar cambios
             </button>
             <button
               type="button"
               class="btn btn-danger btn-raised"
-              onclick="eliminarCuenta()"
+              id="eliminarCuentaBtn"
             >
               <i class="fa-regular fa-trash-can"></i> Eliminar cuenta
             </button>
@@ -860,10 +827,10 @@
       </footer>
     </section>
 
-    <!-- Propios -->
     <script type="text/javascript" src="js/codigo.js"></script>
     <script type="text/javascript" src="js/classBook.js"></script>
     <script type="text/javascript" src="js/clasesUser.js"></script>
+    <script type="text/javascript" src="js/validation.js"></script>
 
     <script src="js/main.js"></script>
   </body>

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nttdata.persistence.model.Status;
-import com.nttdata.services.StatusService;
+import com.nttdata.services.impl.StatusService;
 
 @RestController
 @RequestMapping("/v1/status")
