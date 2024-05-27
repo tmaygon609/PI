@@ -16,6 +16,9 @@ import com.nttdata.services.JwtServiceI;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Implementación del servicio de autenticación.
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationServiceI {

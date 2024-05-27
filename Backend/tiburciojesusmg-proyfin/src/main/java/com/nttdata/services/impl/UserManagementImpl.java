@@ -1,5 +1,7 @@
 package com.nttdata.services.impl;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,11 @@ public class UserManagementImpl implements UserManagementI {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Override
+	public List<User> getAllUsers() {
+		return userRepo.findAll();
+	}
 
 	@Override
 	public User login(String user, String password) {
@@ -112,6 +119,28 @@ public class UserManagementImpl implements UserManagementI {
 		} else {
 			// Manejar el caso en el que el usuario no existe
 			// Puedes lanzar una excepción, devolver un código de error, etc.
+		}
+	}
+
+	@Override
+	public User updateUser(Long id, String name, String lastName) {
+		Optional<User> userOptional = userRepo.findById(id);
+
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+
+			if (name != null) {
+				user.setName(name);
+			}
+			if (lastName != null) {
+				user.setLastName(lastName);
+			}
+
+			return userRepo.save(user);
+		} else {
+			// Si no se encuentra el usuario con el ID proporcionado, puedes manejarlo de
+			// acuerdo a tu lógica de negocio.
+			throw new NoSuchElementException("No se encontró el usuario con ID: " + id);
 		}
 	}
 

@@ -28,9 +28,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Clase usuario.
+ * Clase que representa un usuario.
  * 
- * Representa tabla T_USER.
+ * Representa la tabla T_USER en la base de datos.
  */
 @Entity
 @Table(name = "T_USER")
@@ -50,28 +50,31 @@ public class User implements Serializable, UserDetails {
 	@Column(name = "C_USER_ID")
 	private Long id;
 
-	/** Nombre */
+	/** Nombre del usuario */
 	@Column(name = "C_NAME")
 	private String name;
 
-	/** Apellidos */
+	/** Apellidos del usuario */
 	@Column(name = "C_LAST_NAME")
 	private String lastName;
 
-	/** Usuario */
+	/** Nombre de usuario */
 	@Column(name = "C_USER")
 	private String user;
 
-	/** Password */
+	/** Contraseña */
 	@Column(name = "C_PASSWORD")
 	private String password;
 
+	/** Género del usuario */
 	@Column(name = "C_GENDER")
 	private String gender;
 
+	/** Rol del usuario */
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
+	/** Relación con UserBook */
 	@OneToMany(mappedBy = "user")
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private Set<UserBook> userBooks;

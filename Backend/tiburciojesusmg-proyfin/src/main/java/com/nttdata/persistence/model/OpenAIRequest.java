@@ -2,91 +2,37 @@ package com.nttdata.persistence.model;
 
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * Clase que representa una solicitud a OpenAI.
+ */
+@Getter
+@Setter
 public class OpenAIRequest {
 
-	/** Model ChatGPT */
+	/** Modelo de ChatGPT */
 	private String model;
 
-	/** Lista mensajes */
+	/** Lista de mensajes */
 	private List<Message> messages;
 
-	/** Aleatoriedad respuesta */
+	/** Aleatoriedad de la respuesta */
 	private double temperature;
 
 	/**
-	 * @return the model
+	 * Clase interna que representa un mensaje en la solicitud.
 	 */
-	public String getModel() {
-		return model;
-	}
-
-	/**
-	 * @param model the model to set
-	 */
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	/**
-	 * @return the messages
-	 */
-	public List<Message> getMessages() {
-		return messages;
-	}
-
-	/**
-	 * @param messages the messages to set
-	 */
-	public void setMessages(List<Message> messages) {
-		this.messages = messages;
-	}
-
-	/**
-	 * @return the temperature
-	 */
-	public double getTemperature() {
-		return temperature;
-	}
-
-	/**
-	 * @param temperature the temperature to set
-	 */
-	public void setTemperature(double temperature) {
-		this.temperature = temperature;
-	}
-
+	@Getter
+	@Setter
 	public static class Message {
 
+		/** Rol del mensaje */
 		private String role;
+
+		/** Contenido del mensaje */
 		private String content;
-
-		/**
-		 * @return the role
-		 */
-		public String getRole() {
-			return role;
-		}
-
-		/**
-		 * @param role the role to set
-		 */
-		public void setRole(String role) {
-			this.role = role;
-		}
-
-		/**
-		 * @return the content
-		 */
-		public String getContent() {
-			return content;
-		}
-
-		/**
-		 * @param content the content to set
-		 */
-		public void setContent(String content) {
-			this.content = content;
-		}
 
 	}
 

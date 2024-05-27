@@ -5,17 +5,21 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nttdata.persistence.dto.BookDTO;
 import com.nttdata.persistence.model.Book;
 import com.nttdata.persistence.model.OpenAIRequest;
 import com.nttdata.persistence.model.OpenAIResponse;
@@ -38,12 +42,29 @@ public class BookController {
 	 * 
 	 * @return ResponseEntity<List<Book>>
 	 */
+//	@GetMapping
+//	public ResponseEntity<List<Book>> showBooks() {
+//
+//		List<Book> books = bookService.searchAllBooks();
+//
+//		return ResponseEntity.ok().body(books);
+//	}
+
 	@GetMapping
-	public ResponseEntity<List<Book>> showBooks() {
-
-		List<Book> books = bookService.searchAllBooks();
-
+	public ResponseEntity<Page<Book>> showBooks(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size) {
+		Page<Book> books = bookService.searchAllBooks(PageRequest.of(page, size));
 		return ResponseEntity.ok().body(books);
+	}
+
+	@GetMapping("/all")
+	public ResponseEntity<List<Book>> getAllBooks() {
+		List<Book> books = bookService.getAllBooks();
+		if (!books.isEmpty()) {
+			return new ResponseEntity<>(books, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	/**
@@ -52,10 +73,17 @@ public class BookController {
 	 * @param genre
 	 * @return ResponseEntity<List<Book>>
 	 */
+//	@GetMapping("/searchByGenre")
+//	public ResponseEntity<List<Book>> searchBooksByGenre(@RequestParam String genre) {
+//		List<Book> books = bookService.searchByGenre(genre);
+//		return ResponseEntity.ok().body(books);
+//	}
+
 	@GetMapping("/searchByGenre")
-	public ResponseEntity<List<Book>> searchBooksByGenre(@RequestParam String genre) {
-		List<Book> books = bookService.searchByGenre(genre);
-		return ResponseEntity.ok().body(books);
+	public ResponseEntity<Page<Book>> searchBooksByGenre(@RequestParam String genre,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+		Page<Book> booksPage = bookService.searchByGenre(genre, PageRequest.of(page, size));
+		return ResponseEntity.ok().body(booksPage);
 	}
 
 	/**
@@ -119,7 +147,7 @@ public class BookController {
 	}
 
 	/**
-	 * Eliminar un libro por id.
+	 * Eliminar un libro de la relacion UserBook por id.
 	 * 
 	 * @param id
 	 * @return ResponseEntity<String>
@@ -134,6 +162,30 @@ public class BookController {
 			// libro
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al borrar el libro.");
 		}
+	}
+
+	/**
+	 * Eliminar un libro por id.
+	 * 
+	 * @param id
+	 * @return ResponseEntity<String>
+	 */
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<String> removeBook(@PathVariable Long id) {
+		try {
+			bookService.removeBook(id);
+			return ResponseEntity.ok().body("Libro borrado con éxito.");
+		} catch (Exception e) {
+			// Manejar cualquier excepción que pueda ocurrir durante la eliminación del
+			// libro
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al borrar el libro.");
+		}
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @RequestBody BookDTO bookDTO) {
+		Book updatedBook = bookService.updateBook(id, bookDTO.getTitle(), bookDTO.getAuthor());
+		return ResponseEntity.status(HttpStatus.OK).body(updatedBook);
 	}
 
 	@PostMapping(path = "/getOpenAIResponse")

@@ -40,14 +40,23 @@ public class SecurityConfig {
 						.requestMatchers("/v1/users/saveUser").permitAll()
 						.requestMatchers(HttpMethod.GET, "/v1/usersBooks/**").hasAuthority(Role.USER.toString())
 						.requestMatchers(HttpMethod.PUT, "/v1/usersBooks/**").hasAuthority(Role.USER.toString())
-						.requestMatchers(HttpMethod.GET, "/v1/genres").hasAuthority(Role.USER.toString())
-						.requestMatchers(HttpMethod.GET, "/v1/status").hasAuthority(Role.USER.toString())
-						.requestMatchers(HttpMethod.GET, "/v1/books/**").hasAuthority(Role.USER.toString())
-						.requestMatchers(HttpMethod.POST, "/v1/books/**").hasAuthority(Role.USER.toString())
-						.requestMatchers(HttpMethod.DELETE, "/v1/books").hasAuthority(Role.USER.toString())
+						.requestMatchers(HttpMethod.GET, "/v1/genres")
+						.hasAnyAuthority(Role.USER.toString(), Role.ADMIN.toString())
+						.requestMatchers(HttpMethod.GET, "/v1/status")
+						.hasAnyAuthority(Role.USER.toString(), Role.ADMIN.toString())
+						.requestMatchers(HttpMethod.GET, "/v1/books/**")
+						.hasAnyAuthority(Role.USER.toString(), Role.ADMIN.toString())
+						.requestMatchers(HttpMethod.POST, "/v1/books/**")
+						.hasAnyAuthority(Role.USER.toString(), Role.ADMIN.toString())
+						.requestMatchers(HttpMethod.DELETE, "/v1/books")
+						.hasAnyAuthority(Role.USER.toString(), Role.ADMIN.toString())
 						.requestMatchers(HttpMethod.PUT, "/v1/users/changePassword").hasAuthority(Role.USER.toString())
 						.requestMatchers(HttpMethod.DELETE, "/v1/users/delete").hasAuthority(Role.USER.toString())
-						.anyRequest().authenticated())
+						.requestMatchers(HttpMethod.GET, "/v1/users").hasAuthority(Role.ADMIN.toString())
+						.requestMatchers(HttpMethod.PUT, "/v1/users").hasAuthority(Role.ADMIN.toString())
+						.requestMatchers("/proyectofinal99/principal.html").hasAuthority(Role.USER.toString())
+						.requestMatchers("/proyectofinal99/admin.html").hasAuthority(Role.ADMIN.toString()).anyRequest()
+						.authenticated())
 				.sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
 				.authenticationProvider(authenticationProvider())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -68,13 +77,4 @@ public class SecurityConfig {
 		return config.getAuthenticationManager();
 	}
 
-//	 @Override
-//	    protected void configure(HttpSecurity http) throws Exception {
-//	        http
-//	            .authorizeRequests()
-//	            .antMatchers("/v1/users/login").permitAll() // Permitir acceso anónimo al login
-//	            .anyRequest().authenticated()
-//	            .and()
-//	            .httpBasic();
-//	    }
 }
