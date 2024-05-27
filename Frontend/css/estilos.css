@@ -108,9 +108,9 @@ body {
 }
 
 #usuario::placeholder {
-  color: black; /* Cambia esto al color que prefieras */
+  color: black;
 }
 
 #usuario:disabled {
-  color: black; /* Cambia esto al color que prefieras */
+  color: black;
 }

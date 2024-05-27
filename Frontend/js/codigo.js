@@ -64,6 +64,29 @@ function recuperarListadoUsuario() {
   }
 }
 
+// Filtro del listado de libros
+function actualizarListado(event) {
+  if (!event) {
+    console.error("El evento no está definido.");
+    return;
+  }
+
+  event.preventDefault();
+
+  let storedUser = localStorage.getItem("usuarioActual");
+
+  if (storedUser) {
+    const filterValue = document.getElementById("filterInput").value;
+    let usuarioActual = new User();
+    Object.assign(usuarioActual, JSON.parse(storedUser));
+
+    usuarioActual.listadoLibros(filterValue);
+    document.getElementById("filterInput").value = "";
+  } else {
+    console.error("no se contro la informacion del usuario.");
+  }
+}
+
 // Gestión de formularios
 function gestionFormularios(sFormularioVisible) {
   ocultarTodosLosFormularios();
@@ -336,18 +359,17 @@ function aceptarListadoLibros() {
 
 // Clic en la opción de recomendar un libro a través de la IA.
 async function recomendarLibro() {
-  document.getElementById("listado").innerHTML = "";
-  document.getElementById("listado").style.display = "none";
+  // document.getElementById("listado").innerHTML = "";
+  // document.getElementById("listado").style.display = "none";
 
   let oBook = new Book();
   oBook.listadoRecomendado();
 
   const tabla = await oBook.listadoRecomendado();
   if (tabla) {
-    // Add the table to the body of the modal
     document.getElementById("iaModalBody").innerHTML = tabla;
 
-    // Open the modal
+    // Abre el modal
     $("#iaModal").modal("show");
   }
 }
@@ -405,8 +427,8 @@ function guardarCambios() {
 
     usuarioActual.cambiarContrasena(nuevaContrasena);
 
-    nuevaContrasena.value = "";
-    confirmarContrasena.value = "";
+    document.getElementById("nuevaContrasena").value = "";
+    document.getElementById("confirmarContrasena").value = "";
   } else {
     console.error("no se contro la informacion del usuario.");
   }
@@ -509,11 +531,6 @@ function manejadorEvento(event) {
         oBook.guardarCambios(id, status, rate, comment);
         revertirCamposAInputs(id);
       }
-      //   } else if (String(btn).substring(0, 1) === "n"){
-
-      //     let id = String(btn).substring(1);
-
-      //
     }
   }
 

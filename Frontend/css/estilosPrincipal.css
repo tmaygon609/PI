@@ -73,3 +73,7 @@ footer {
 .book-info {
   flex: 1; /* Permite que el espacio restante se use para el contenido del texto */
 }
+
+#generarUsuarioAdmin {
+  color: black;
+}
