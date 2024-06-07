@@ -101,6 +101,7 @@ class Book {
     reader.readAsArrayBuffer(imagen);
   }
 
+  // Método para comprobar si un libro ya existe por título.
   async comprobarLibro(title) {
     const response = await fetch(
       `http://localhost:8080/v1/books/searchByTitle?title=${encodeURIComponent(
@@ -127,6 +128,7 @@ class Book {
     }
   }
 
+  // Método para crear un nuevo libro en la base de datos.
   async crearLibro(nuevoLibro) {
     try {
       const response = await fetch("http://localhost:8080/v1/books", {
@@ -151,6 +153,7 @@ class Book {
     }
   }
 
+  // Método para crear una relación entre usuario y libro.
   async crearRelacionUserBook(userId, libroId, status, rate, comment) {
     const userBook = {
       user: { id: userId },
@@ -180,14 +183,17 @@ class Book {
   // Metodo para eliminar un libro.
   async eliminar(id) {
     try {
-      const response = await fetch(`http://localhost:8080/v1/books/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:8080/v1/usersBooks/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+          },
+        }
+      );
 
       if (response.ok) {
         swal({
@@ -213,8 +219,6 @@ class Book {
 
   // Método que busca un libro por su titulo.
   async buscarLibro(title) {
-    // document.getElementById("listado").innerHTML = "";
-
     const usuarioActual = this.obtenerUsuarioActual();
     if (!usuarioActual) {
       console.error("No se ha encontrado la información del usuario.");
@@ -275,7 +279,6 @@ class Book {
           document.getElementById("txtTituloLibro").value = "";
         }
       } else {
-        // Manejar otros casos de respuesta HTTP no exitosa
         console.error("Error al buscar el libro:", response.statusText);
         // Opcionalmente, mostrar un mensaje de error al usuario
         swal({
@@ -291,8 +294,6 @@ class Book {
 
   // Método que muestra el libro recomendado por la IA
   async listadoRecomendado() {
-    // document.getElementById("listado").innerHTML = "";
-
     const usuarioActual = this.obtenerUsuarioActual();
     if (!usuarioActual) {
       console.error("No se ha encontrado la información del usuario.");
@@ -355,7 +356,6 @@ class Book {
           return tabla;
         } else {
           console.error("La respuesta no contiene un array 'choices':", data);
-          // Manejar este caso según sea necesario
         }
       } else {
         swal({
@@ -369,6 +369,7 @@ class Book {
     }
   }
 
+  // Método que carga el catálogo de libros.
   async catalogo() {
     try {
       // Realizar la petición para obtener los detalles de los libros
@@ -411,19 +412,20 @@ class Book {
     }
   }
 
+  // Método para mostrar los detalles de los libros.
   async mostrarLibros(booksPage) {
     try {
       const books = booksPage.content; // Obtener la lista de libros
 
-      // Seleccionar el contenedor donde se cargarán los detalles de los libros
+      // Selecciona el contenedor donde se cargarán los detalles de los libros
       const bookDetailsContainer = document.getElementById(
         "book-details-container"
       );
 
-      // Limpiar el contenedor antes de agregar nuevos libros
+      // Limpia el contenedor antes de agregar nuevos libros
       bookDetailsContainer.innerHTML = "";
 
-      // Iterar sobre los libros y crear los elementos HTML correspondientes
+      // Itera sobre los libros y crear los elementos HTML correspondientes
       books.forEach((book) => {
         const listItem = document.createElement("div");
         listItem.classList.add("list-group-item");
@@ -558,6 +560,7 @@ class Book {
     }
   }
 
+  // Método para cargar los libros de una página específica.
   async cargarLibros(pageNumber, genre = null) {
     try {
       let url;
@@ -586,6 +589,7 @@ class Book {
     }
   }
 
+  // Método para comprobar si un usuario ya tiene un libro en su lista.
   async comprobarLibroUsuario(bookId, userId) {
     try {
       // Realizar una petición para buscar el libro por título y usuario
@@ -622,6 +626,7 @@ class Book {
     }
   }
 
+  // Método para guardar cambios en la relación usuario-libro.
   async guardarCambios(id, status, rate, comment) {
     console.log("id", id);
     console.log("status", status);

@@ -28,7 +28,7 @@ window.onload = comprobarInicioSesion;
 // Selecciona el modal por su id
 let modalBook = document.getElementById("bookModal");
 
-// Función para comprobar el inicio de sesión
+// Metodo para comprobar el inicio de sesión
 function comprobarInicioSesion() {
   // Compruebas si el token JWT existe
   if (!localStorage.getItem("jwtToken")) {
@@ -45,7 +45,7 @@ function comprobarInicioSesion() {
   }
 }
 
-// Gestión de formularios
+// Metodo para gestionar formularios
 function gestionFormularios(sFormularioVisible) {
   ocultarTodosLosFormularios();
 
@@ -81,7 +81,7 @@ function gestionFormularios(sFormularioVisible) {
   document.getElementById("contenidoPrincipal").style.display = "none";
 }
 
-//Función que oculta todos los formularios.
+// Metodo para ocultar todos los formularios
 function ocultarTodosLosFormularios() {
   let oFormularios = document.querySelectorAll("form");
 
@@ -90,7 +90,7 @@ function ocultarTodosLosFormularios() {
   }
 }
 
-//Función que elimina y muestra el listado completo en catalogo
+// Metodo para mostrar el listado completo en el catálogo
 function mostrarListadoEnCatalogo() {
   document.getElementById("txtGenero2").selectedIndex = 0;
   let oBook = new Book();
@@ -102,7 +102,7 @@ document
   .getElementById("generarUsuarioAdmin")
   .addEventListener("click", generarUsuarioAdmin);
 
-//GENERADOR DE USUARIO.
+// Metodo para generar un usuario admin
 function generarUsuarioAdmin() {
   let name = document.getElementById("nombre").value;
   let lastName = document.getElementById("apellidos").value;
@@ -116,6 +116,7 @@ function generarUsuarioAdmin() {
   document.getElementById("usuario").value = u;
 }
 
+// Metodo para aceptar el registro de usuario
 function aceptarRegistroUsuario() {
   let name = document.getElementById("nombre").value;
   let lastName = document.getElementById("apellidos").value;
@@ -151,7 +152,7 @@ function aceptarRegistroUsuario() {
   radios.forEach((radio) => (radio.checked = false));
 }
 
-// Función para validar los requisitos de la contraseña en el formulario de admin
+// Metodo para validar los requisitos de la contraseña en el formulario de admin
 function validarContrasena() {
   const contrasenaAdmin = document.getElementById("contrasenaAdmin").value;
 
@@ -168,7 +169,7 @@ function validarContrasena() {
   return true;
 }
 
-// Función que muestra el contenido principal
+// Metodo para mostrar el contenido principal
 function mostrarContenidoPrincipal() {
   let storedUser = localStorage.getItem("usuarioActual");
 
@@ -204,6 +205,7 @@ function mostrarContenidoPrincipal() {
   }
 }
 
+// Metodo para actualizar el listado de usuarios
 function actualizarListadoUsuarios(event) {
   if (!event) {
     console.error("El evento no está definido.");
@@ -226,7 +228,7 @@ function actualizarListadoUsuarios(event) {
   }
 }
 
-// Clic en la opción de menú de listar todos los usuarios.
+// Metodo para aceptar el listado de usuarios
 function aceptarListadoUsuarios() {
   document.getElementById("listadoUsuarios").innerHTML = "";
   document.getElementById("listadoUsuarios").style.display = "none";
@@ -244,6 +246,7 @@ function aceptarListadoUsuarios() {
   }
 }
 
+// Metodo para aceptar el listado de libros para el administrador
 function aceptarListadoLibrosAdmin() {
   document.getElementById("listadoLibrosAdmin").innerHTML = "";
   document.getElementById("listadoLibrosAdmin").style.display = "none";
@@ -261,6 +264,7 @@ function aceptarListadoLibrosAdmin() {
   }
 }
 
+// Metodo para actualizar el listado de libros
 function actualizarListadoLibros(event) {
   if (!event) {
     console.error("El evento no está definido.");
@@ -284,7 +288,7 @@ function actualizarListadoLibros(event) {
   }
 }
 
-// aceptarAltaLibro. Clic en boton del formulario de registrar libro.
+// Metodo para aceptar el alta de libro
 function aceptarAltaLibro() {
   if (
     document.getElementById("txtTitulo").value == "" ||
@@ -379,7 +383,7 @@ function capitalizeFirstLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// Función para comprimir la imagen
+// Metodo para comprimir la imagen
 function compressImage(image, quality) {
   const maxWidth = 167;
   const maxHeight = 250;
@@ -418,7 +422,7 @@ function compressImage(image, quality) {
   });
 }
 
-// aceptarBuscarLibro. Clic en boton del formulario de buscar libro por titulo.
+// Metodo para aceptar la búsqueda de libro
 async function aceptarBuscarLibro() {
   if (document.getElementById("txtTituloLibro").value == "") {
     swal({
@@ -446,7 +450,7 @@ async function aceptarBuscarLibro() {
   }
 }
 
-// Volvemos a la página de login
+// Metodo para cerrar sesión y volver a la página de login
 function cerrarSesion() {
   swal({
     title: "Cerrar sesión",
@@ -462,7 +466,7 @@ function cerrarSesion() {
   });
 }
 
-// Función para guardar los cambios en la contraseña
+// Metodo para guardar cambios en la contraseña
 function guardarCambios() {
   // Recupera la información del usuario almacenada en el localStorage
   const storedUser = localStorage.getItem("usuarioActual");
@@ -506,6 +510,7 @@ function guardarCambios() {
   }
 }
 
+// Metodo para aceptar eliminar cuenta
 function aceptarEliminarCuenta() {
   // Recupera la información del usuario almacenada en el localStorage
   const storedUser = localStorage.getItem("usuarioActual");
@@ -543,7 +548,7 @@ function aceptarEliminarCuenta() {
   }
 }
 
-// Maneja el evento de los botones de la tabla de usuarios
+// Metodo para manejar eventos de botones de la tabla de usuarios
 function manejadorEventoAdmin(event) {
   if (event.target.tagName == "BUTTON") {
     let btn = event.target.value;
@@ -598,6 +603,7 @@ function manejadorEventoAdmin(event) {
   }
 }
 
+// Metodo para obtener valores de campos de usuario
 function obtenerValores(id) {
   const nombreInput = document.getElementById("nombreInput" + id);
   const nombre = nombreInput.value;
@@ -608,7 +614,7 @@ function obtenerValores(id) {
   return { nombre, apellido };
 }
 
-// Convierte los campos de nombre y apellidos en inputs editables
+// Metodo para convertir campos de usuario a inputs editables
 function convertirCamposAInputsAdmin(id) {
   let nombreElement = document.getElementById("nombre" + id);
   let apellidoElement = document.getElementById("apellido" + id);
@@ -650,7 +656,7 @@ function convertirCamposAInputsAdmin(id) {
   btn.classList.add("btn-success", "fa-save");
 }
 
-// Revierte los campos de nombre y apellidos a texto
+// Metodo para revertir campos de usuario a texto
 function revertirCamposAInputsAdmin(id) {
   // Recuperar los valores actuales de nombre y apellidos
   const nombreInput = document.getElementById("nombreInput" + id);
@@ -681,6 +687,7 @@ function revertirCamposAInputsAdmin(id) {
   }
 }
 
+// Metodo para manejar eventos de botones de la tabla de libros del administrador
 function manejadorEventoLibroAdmin(event) {
   if (event.target.tagName === "BUTTON") {
     let btn = event.target.value;
@@ -733,6 +740,7 @@ function manejadorEventoLibroAdmin(event) {
   }
 }
 
+// Metodo para obtener valores de campos de libro
 function obtenerValoresLibro(id) {
   const tituloInput = document.getElementById("tituloInput" + id);
   const titulo = tituloInput.value;
@@ -743,6 +751,7 @@ function obtenerValoresLibro(id) {
   return { titulo, autor };
 }
 
+// Metodo para convertir campos de libro a inputs editables
 function convertirCamposAInputsLibroAdmin(id) {
   let tituloElement = document.getElementById("titulo" + id);
   let autorElement = document.getElementById("autor" + id);
@@ -783,6 +792,7 @@ function convertirCamposAInputsLibroAdmin(id) {
   btn.classList.add("btn-success", "fa-save");
 }
 
+// Metodo para revertir campos de libro a texto
 function revertirCamposAInputsLibroAdmin(id) {
   // Recuperar los valores actuales de título, autor y género
   const tituloInput = document.getElementById("tituloInput" + id);

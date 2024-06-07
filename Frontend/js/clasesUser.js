@@ -37,14 +37,13 @@ class User {
       document.getElementById("usuario").value = usuarioActual.user;
 
       // Deshabilitar los campos del formulario si es necesario
-      // Puedes habilitar o deshabilitar según tus necesidades
       document.getElementById("nombre").disabled = true;
       document.getElementById("apellidos").disabled = true;
       document.getElementById("usuario").disabled = true;
     }
   }
 
-  // Método para actualizar el formulario con los datos del usuario
+  // Método para actualizar el formulario con los datos del administrador
   actualizarFormularioInformacionAdmin() {
     const usuarioActual = JSON.parse(localStorage.getItem("usuarioActual"));
 
@@ -61,6 +60,7 @@ class User {
     }
   }
 
+  // Método para listar los libros del usuario con un filtro opcional
   async listadoLibros(filter = "") {
     if (!this.userInfo || !this.userInfo.user) {
       console.log("No se ha establecido información del usuario.");
@@ -120,6 +120,7 @@ class User {
     }
   }
 
+  // Método para crear y mostrar la tabla de libros del usuario
   tablaLibros(posts, userBookDetails) {
     let tabla = `<div class="table-responsive">
         <table id="tabla" class="table table-striped table-hover">
@@ -165,6 +166,7 @@ class User {
     document.getElementById("listado").style.display = "block";
   }
 
+  // Método para convertir una calificación numérica en estrellas
   convertirCalificacionEnEstrellas(calificacion) {
     let estrellas = "";
     for (let i = 0; i < calificacion; i++) {
@@ -176,6 +178,7 @@ class User {
     return estrellas;
   }
 
+  // Método para listar los usuarios con un filtro opcional
   async listadoUsuarios(filter = "") {
     if (!this.userInfo || !this.userInfo.user) {
       console.log("No se ha establecido información del usuario.");
@@ -209,6 +212,7 @@ class User {
     }
   }
 
+  // Método para crear y mostrar la tabla de usuarios
   mostrarTablaUsuarios(users) {
     let tabla = `<div class="table-responsive">
         <table id="tablaUsuarios" class="table table-striped table-hover">
@@ -237,18 +241,18 @@ class User {
 
           tabla += `<td><button value="e${user.id}" type="button" class="btn btn-danger fa-regular fa-trash-can"></button></td>`;
           tabla += `<td><button value="a${user.id}" type="button" class="btn btn-info fa-solid fa-pencil"></button></button></td>`;
-          // Agrega más columnas según tus datos de usuario
           tabla += `</tr>`;
         }
       });
     }
     tabla += `</tbody></table></div>`;
 
-    // Limpiar el contenido existente antes de agregar el nuevo contenido
+    // Limpia el contenido existente antes de agregar el nuevo contenido
     document.getElementById("listadoUsuarios").innerHTML = tabla;
     document.getElementById("listadoUsuarios").style.display = "block";
   }
 
+  // Método para listar los libros desde la parte administrador con un filtro opcional
   async listadoLibrosAdmin(filter = "") {
     if (!this.userInfo || !this.userInfo.user) {
       console.log("No se ha establecido información del usuario.");
@@ -284,6 +288,7 @@ class User {
     }
   }
 
+  // Método para crear y mostrar la tabla de libros
   mostrarTablaLibrosAdmin(books) {
     let tabla = `<div class="table-responsive">
         <table id="tablaLibros" class="table table-striped table-hover">
@@ -315,11 +320,12 @@ class User {
     }
     tabla += `</tbody></table></div>`;
 
-    // Limpiar el contenido existente antes de agregar el nuevo contenido filtrado
+    // Limpia el contenido existente antes de agregar el nuevo contenido filtrado
     document.getElementById("listadoLibrosAdmin").innerHTML = tabla;
     document.getElementById("listadoLibrosAdmin").style.display = "block";
   }
 
+  // Método para resgistrar un usuario
   async registrar() {
     const userToRegister = {
       name: this.name,
@@ -409,6 +415,7 @@ class User {
     }
   }
 
+  // Método para eliminar la cuenta de un usuario
   async eliminarCuenta() {
     if (!this.userInfo || !this.userInfo.user) {
       console.log("No se ha establecido la información del usuario.");
@@ -486,6 +493,7 @@ class User {
     }
   }
 
+  // Método para guardar los cambios de un usuario
   async guardarCambiosUsuario(id, nombre, apellido) {
     console.log("id", id);
     console.log("nombre", nombre);
@@ -494,7 +502,7 @@ class User {
     // URL del endpoint
     const url = `http://localhost:8080/v1/users/${id}`;
 
-    // Datos que deseas enviar. Asegúrate de que estos coincidan con los parámetros esperados por tu endpoint.
+    // Datos para enviar.
     const data = {
       name: nombre,
       lastName: apellido,
@@ -522,6 +530,7 @@ class User {
     }
   }
 
+  // Método para eliminar un libro por su ID
   async eliminarLibro(id) {
     try {
       const response = await fetch(
@@ -554,10 +563,12 @@ class User {
         );
       }
     } catch (error) {
-      alert(error.message);
+      console.error(error.message);
+      swal({ title: "Error", text: error.message, icon: "error" });
     }
   }
 
+  // Método para guardar los cambios de un libro
   async guardarCambiosLibro(id, titulo, autor) {
     console.log("id", id);
     console.log("titulo", titulo);
@@ -566,7 +577,7 @@ class User {
     // URL del endpoint
     const url = `http://localhost:8080/v1/books/${id}`;
 
-    // Datos que deseas enviar. Asegúrate de que estos coincidan con los parámetros esperados por tu endpoint.
+    // Datos para enviar.
     const data = {
       title: titulo,
       author: autor,

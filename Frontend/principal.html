@@ -3,35 +3,51 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/estilosEstrella.css" />
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="bootstrap/js/jquery.min.js"></script>
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script
-      src="https://kit.fontawesome.com/a05c1998d9.js"
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <meta name="description" content="Página de usuario." />
+    <meta name="keywords" content="Usuario" />
+    <meta name="author" content="Tibu Mayo" />
 
     <title>Biblioteca Almudeyne</title>
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="img/favicon.png" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+
+    <!-- Font Awesome CSS -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-    <link rel="stylesheet" href="css/estilosPrincipal.css" />
-    <link rel="stylesheet" href="css/main.css" />
+
+    <!-- SweetAlert2 -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
     />
-    <!-- <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.rtl.min.css"
-    /> -->
+
+    <!-- Scripts -->
+    <!-- SweetAlert2 -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- jQuery -->
+    <script src="bootstrap/js/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <!-- Font Awesome JS -->
+    <script
+      src="https://kit.fontawesome.com/a05c1998d9.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Chart JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!-- Canvas HTML-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/estilosEstrella.css" />
+    <link rel="stylesheet" href="css/estilosPrincipal.css" />
+    <link rel="stylesheet" href="css/main.css" />
   </head>
 
   <body class="container-fluid">
@@ -54,11 +70,6 @@
             <figcaption class="text-center text-titles">User Name</figcaption>
           </figure>
           <ul class="full-box list-unstyled text-center">
-            <!-- <li>
-              <a href="my-data.html" title="Mis datos">
-                <i class="zmdi zmdi-settings"></i>
-              </a>
-            </li> -->
             <li>
               <a
                 id="botonMiCuenta"
@@ -104,24 +115,6 @@
               <i class="fa fa-book"></i>&nbsp; Catalogo
             </a>
           </li>
-          <!-- <li>
-            <a href="#!" class="btn-sideBar-SubMenu">
-              <i class="zmdi zmdi-account-add"></i>&nbsp; Usuarios
-              <i class="zmdi zmdi-caret-down pull-right"></i>
-            </a>
-            <ul class="list-unstyled full-box">
-              <li>
-                <a href="#" onclick="gestionFormularios('frmListadoAdmin')"
-                  ><i class="fa fa-user"></i>&nbsp; Administradores</a
-                >
-              </li>
-              <li>
-                <a href="#" onclick="gestionFormularios('frmListadoStudents')"
-                  ><i class="zmdi zmdi-male-female"></i>&nbsp; Estudiantes</a
-                >
-              </li>
-            </ul>
-          </li> -->
         </ul>
       </div>
     </section>
@@ -805,6 +798,7 @@
       </footer>
     </section>
 
+    <!-- Custom JS -->
     <script type="text/javascript" src="js/codigo.js"></script>
     <script type="text/javascript" src="js/classBook.js"></script>
     <script type="text/javascript" src="js/clasesUser.js"></script>

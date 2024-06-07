@@ -9,6 +9,7 @@ document
   .getElementById("generarUsuario")
   .addEventListener("click", generarUsuario);
 
+// Método para registrar un usuario
 function registraUsuario() {
   let name = document.getElementById("nombre").value;
   let lastName = document.getElementById("apellidos").value;
@@ -33,17 +34,20 @@ function registraUsuario() {
   }
 }
 
+// Método para ocultar el formulario de registro
 function ocultarFormulario() {
   document.getElementById("loginForm").style.display = "block";
   document.getElementById("registerForm").style.display = "none";
 }
 
+// Método para mostrar el formulario de registro
 function mostrarFormulario() {
   formulario.style.display = "block";
   listado.style.display = "none";
   listado.removeChild(listado.lastChild);
 }
 
+// Método para limpiar los campos del formulario
 function limpiarFormulario() {
   document.getElementById("usuario").value = "";
   document.getElementById("contrasena").value = "";
@@ -52,6 +56,7 @@ function limpiarFormulario() {
   document.getElementById("nombre").value = "";
 }
 
+// Método para limpiar las validaciones de los campos del formulario
 function limpiarValidaciones() {
   var inputs = document.querySelectorAll(".form-control");
   inputs.forEach(function (input) {
@@ -63,6 +68,7 @@ function limpiarValidaciones() {
   });
 }
 
+// Método para convertir una calificación en estrellas
 function convertirCalificacionEnEstrellas(calificacion) {
   let estrellas = "";
   for (let i = 0; i < calificacion; i++) {
@@ -74,7 +80,7 @@ function convertirCalificacionEnEstrellas(calificacion) {
   return estrellas;
 }
 
-//GENERADOR DE USUARIO.
+// Método para generar un usuario automáticamente
 function generarUsuario() {
   let name = document.getElementById("nombre").value;
   let lastName = document.getElementById("apellidos").value;
@@ -88,7 +94,7 @@ function generarUsuario() {
   document.getElementById("usuario").value = u;
 }
 
-// Validación de formulario en tiempo real
+// Método para validar el formulario en tiempo real
 function validarFormulario() {
   window.addEventListener("load", function () {
     var form = document.querySelector(".needs-validation");

@@ -26,7 +26,7 @@ document
     }
   });
 
-// Abre la página principal
+// Método para abrir la página principal
 function abrirPrincipal() {
   const user = document.getElementById("user").value;
   const password = document.getElementById("pwd").value;
@@ -41,12 +41,12 @@ function abrirPrincipal() {
   }
 }
 
-// Abre página de registro usuario
+// Método para abrir la página de registro de usuario
 function abrirRegistro() {
   window.open("html/registro.html", "_self");
 }
 
-// Consulta en base de datos si el usuario existe
+// Método para consultar en la base de datos si el usuario existe
 async function consultar(user, password) {
   const oHttp = new XMLHttpRequest();
 
@@ -123,7 +123,7 @@ async function consultar(user, password) {
   };
 }
 
-// Enlace para restablecer contraseña
+// Método para el enlace para restablecer contraseña
 function olvideContrasena() {
   swal({
     title:
