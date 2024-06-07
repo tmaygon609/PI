@@ -23,6 +23,9 @@ import com.nttdata.services.UserManagementI;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Clase de configuración para la seguridad de la aplicación.
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -33,6 +36,13 @@ public class SecurityConfig {
 	private final UserManagementI userService;
 	private final PasswordEncoder passwordEncoder;
 
+	/**
+	 * Configuración del filtro de seguridad HTTP.
+	 *
+	 * @param http HttpSecurity objeto HttpSecurity.
+	 * @return SecurityFilterChain filtro de seguridad.
+	 * @throws Exception Excepción en caso de error de configuración.
+	 */
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
@@ -52,6 +62,7 @@ public class SecurityConfig {
 						.hasAnyAuthority(Role.USER.toString(), Role.ADMIN.toString())
 						.requestMatchers(HttpMethod.PUT, "/v1/users/changePassword").hasAuthority(Role.USER.toString())
 						.requestMatchers(HttpMethod.DELETE, "/v1/users/delete").hasAuthority(Role.USER.toString())
+						.requestMatchers(HttpMethod.DELETE, "/v1/usersBooks").hasAuthority(Role.USER.toString())
 						.requestMatchers(HttpMethod.GET, "/v1/users").hasAuthority(Role.ADMIN.toString())
 						.requestMatchers(HttpMethod.PUT, "/v1/users").hasAuthority(Role.ADMIN.toString())
 						.requestMatchers("/proyectofinal99/principal.html").hasAuthority(Role.USER.toString())
@@ -64,6 +75,11 @@ public class SecurityConfig {
 		return http.build();
 	}
 
+	/**
+	 * Proveedor de autenticación.
+	 *
+	 * @return AuthenticationProvider objeto de proveedor de autenticación.
+	 */
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -72,6 +88,13 @@ public class SecurityConfig {
 		return authProvider;
 	}
 
+	/**
+	 * Administrador de autenticación.
+	 *
+	 * @param config Configuración de autenticación.
+	 * @return AuthenticationManager objeto de administrador de autenticación.
+	 * @throws Exception Excepción en caso de error.
+	 */
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();

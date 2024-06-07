@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nttdata.exceptions.BookNotFoundException;
+import com.nttdata.exceptions.UserNotFoundException;
 import com.nttdata.persistence.dto.BookDTO;
 import com.nttdata.persistence.model.Book;
 import com.nttdata.persistence.model.OpenAIRequest;
@@ -27,6 +30,9 @@ import com.nttdata.persistence.model.UserBook;
 import com.nttdata.services.BookManagementI;
 import com.nttdata.services.impl.OpenAIService;
 
+/**
+ * Controlador para manejar las solicitudes de libros.
+ */
 @RestController
 @RequestMapping("/v1/books")
 public class BookController {
@@ -38,18 +44,12 @@ public class BookController {
 	private OpenAIService openAIService;
 
 	/**
-	 * Obtener todos los libros.
-	 * 
-	 * @return ResponseEntity<List<Book>>
+	 * Obtiene una página de libros.
+	 *
+	 * @param page el número de página
+	 * @param size el tamaño de la página
+	 * @return ResponseEntity con la página de libros
 	 */
-//	@GetMapping
-//	public ResponseEntity<List<Book>> showBooks() {
-//
-//		List<Book> books = bookService.searchAllBooks();
-//
-//		return ResponseEntity.ok().body(books);
-//	}
-
 	@GetMapping
 	public ResponseEntity<Page<Book>> showBooks(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size) {
@@ -57,6 +57,11 @@ public class BookController {
 		return ResponseEntity.ok().body(books);
 	}
 
+	/**
+	 * Obtiene todos los libros.
+	 *
+	 * @return ResponseEntity con la lista de libros
+	 */
 	@GetMapping("/all")
 	public ResponseEntity<List<Book>> getAllBooks() {
 		List<Book> books = bookService.getAllBooks();
@@ -68,17 +73,13 @@ public class BookController {
 	}
 
 	/**
-	 * Buscar libros por género.
-	 * 
-	 * @param genre
-	 * @return ResponseEntity<List<Book>>
+	 * Busca libros por género.
+	 *
+	 * @param genre el género a buscar
+	 * @param page  el número de página
+	 * @param size  el tamaño de la página
+	 * @return ResponseEntity con la página de libros encontrados
 	 */
-//	@GetMapping("/searchByGenre")
-//	public ResponseEntity<List<Book>> searchBooksByGenre(@RequestParam String genre) {
-//		List<Book> books = bookService.searchByGenre(genre);
-//		return ResponseEntity.ok().body(books);
-//	}
-
 	@GetMapping("/searchByGenre")
 	public ResponseEntity<Page<Book>> searchBooksByGenre(@RequestParam String genre,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
@@ -87,10 +88,10 @@ public class BookController {
 	}
 
 	/**
-	 * Buscar libros por título.
-	 * 
-	 * @param title
-	 * @return ResponseEntity<List<Book>>
+	 * Busca libros por título.
+	 *
+	 * @param title el título a buscar
+	 * @return ResponseEntity con la lista de libros encontrados
 	 */
 	@GetMapping(path = "/searchByTitle")
 	public ResponseEntity<List<Book>> searchBooksByTitle(@RequestParam String title) {
@@ -100,9 +101,9 @@ public class BookController {
 
 	/**
 	 * Obtiene los libros de un usuario específico.
-	 * 
-	 * @param userId
-	 * @return ResponseEntity<Set<Book>>
+	 *
+	 * @param userId el ID del usuario
+	 * @return ResponseEntity con el conjunto de libros del usuario
 	 */
 	@GetMapping("/users/{userId}")
 	public ResponseEntity<Set<Book>> getBooksByUserId(@PathVariable Long userId) {
@@ -110,19 +111,12 @@ public class BookController {
 		return ResponseEntity.ok().body(userBooks);
 	}
 
-//	@GetMapping
-//	public Page<Book> showBooks(int page, int size, String sortBy) {
-//
-//		PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
-//		return bookService.searchAllBooks(pageRequest);
-//	}
-
 	/**
 	 * Registra/crea un libro.
-	 * 
-	 * @param book
-	 * @return ResponseEntity<Book>
-	 * @throws IOException
+	 *
+	 * @param book el libro a registrar
+	 * @return ResponseEntity con el libro registrado
+	 * @throws IOException si hay un error de E/S
 	 */
 	@PostMapping
 	public ResponseEntity<Book> uploadLibro(@RequestBody Book book) {
@@ -136,9 +130,9 @@ public class BookController {
 
 	/**
 	 * Crea un UserBook, relación entre un libro y un usuario.
-	 * 
-	 * @param userBook
-	 * @return ResponseEntity<String>
+	 *
+	 * @param userBook la relación entre el libro y el usuario
+	 * @return ResponseEntity con un mensaje de éxito
 	 */
 	@PostMapping(path = "/addBookToUser")
 	public ResponseEntity<String> addBookToUser(@RequestBody UserBook userBook) {
@@ -147,52 +141,50 @@ public class BookController {
 	}
 
 	/**
-	 * Eliminar un libro de la relacion UserBook por id.
-	 * 
-	 * @param id
-	 * @return ResponseEntity<String>
-	 */
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteBook(@PathVariable Long id) {
-		try {
-			bookService.deleteBook(id);
-			return ResponseEntity.ok().body("Libro borrado con éxito.");
-		} catch (Exception e) {
-			// Manejar cualquier excepción que pueda ocurrir durante la eliminación del
-			// libro
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al borrar el libro.");
-		}
-	}
-
-	/**
-	 * Eliminar un libro por id.
-	 * 
-	 * @param id
-	 * @return ResponseEntity<String>
+	 * Elimina un libro por ID.
+	 *
+	 * @param id el ID del libro a eliminar
+	 * @return ResponseEntity con un mensaje de éxito
 	 */
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> removeBook(@PathVariable Long id) {
-		try {
-			bookService.removeBook(id);
-			return ResponseEntity.ok().body("Libro borrado con éxito.");
-		} catch (Exception e) {
-			// Manejar cualquier excepción que pueda ocurrir durante la eliminación del
-			// libro
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al borrar el libro.");
-		}
+
+		bookService.removeBook(id);
+		return ResponseEntity.ok().body("Libro borrado con éxito.");
+
 	}
 
+	/**
+	 * Actualiza un libro por ID.
+	 *
+	 * @param id      el ID del libro a actualizar
+	 * @param bookDTO los datos actualizados del libro
+	 * @return ResponseEntity con el libro actualizado
+	 */
 	@PutMapping("/{id}")
 	public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @RequestBody BookDTO bookDTO) {
 		Book updatedBook = bookService.updateBook(id, bookDTO.getTitle(), bookDTO.getAuthor());
 		return ResponseEntity.status(HttpStatus.OK).body(updatedBook);
 	}
 
+	/**
+	 * Obtiene la respuesta de OpenAI para una solicitud dada.
+	 *
+	 * @param request la solicitud a enviar a OpenAI
+	 * @return la respuesta de OpenAI
+	 */
 	@PostMapping(path = "/getOpenAIResponse")
 	public OpenAIResponse getOpenAIResponse(@RequestBody OpenAIRequest request) {
 		return openAIService.getOpenAIResponse(request);
 	}
 
+	/**
+	 * Obtiene una recomendación de libro para un usuario dado.
+	 *
+	 * @param userId el ID del usuario para el que se desea obtener la recomendación
+	 *               de libro
+	 * @return ResponseEntity con la recomendación de libro
+	 */
 	@PostMapping(path = "/getBookRecommendation")
 	public ResponseEntity<OpenAIResponse> getBookRecommendation(@RequestParam Long userId) {
 		try {
@@ -202,6 +194,39 @@ public class BookController {
 
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	/**
+	 * Maneja la excepción cuando no se encuentra un libro.
+	 *
+	 * @param ex la excepción de libro no encontrado
+	 * @return ResponseEntity con un mensaje de error
+	 */
+	@ExceptionHandler(BookNotFoundException.class)
+	public ResponseEntity<String> handleBookNotFoundException(BookNotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+	}
+
+	/**
+	 * Maneja la excepción cuando no se encuentra un usuario.
+	 *
+	 * @param ex la excepción de usuario no encontrado
+	 * @return ResponseEntity con un mensaje de error
+	 */
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+	}
+
+	/**
+	 * Maneja excepciones generales.
+	 *
+	 * @param ex la excepción general
+	 * @return ResponseEntity con un mensaje de error interno
+	 */
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<String> handleGeneralException(Exception ex) {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error interno");
 	}
 
 }

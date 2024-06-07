@@ -1,7 +1,6 @@
 package com.nttdata.services.impl;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nttdata.exceptions.UserNotFoundException;
 import com.nttdata.persistence.dto.ChangePasswordDTO;
 import com.nttdata.persistence.model.Role;
 import com.nttdata.persistence.model.User;
@@ -23,10 +23,11 @@ import com.nttdata.services.UserManagementI;
 
 import jakarta.persistence.EntityNotFoundException;
 
+/**
+ * Implementación del servicio para la gestión de usuarios.
+ */
 @Service
 public class UserManagementImpl implements UserManagementI {
-
-	// Todas la validaciones van en la capa de servicio.
 
 	@Autowired
 	private UserRepositoryI userRepo;
@@ -117,8 +118,7 @@ public class UserManagementImpl implements UserManagementI {
 
 			userRepo.deleteById(userId);
 		} else {
-			// Manejar el caso en el que el usuario no existe
-			// Puedes lanzar una excepción, devolver un código de error, etc.
+			throw new UserNotFoundException(userId);
 		}
 	}
 
@@ -138,9 +138,7 @@ public class UserManagementImpl implements UserManagementI {
 
 			return userRepo.save(user);
 		} else {
-			// Si no se encuentra el usuario con el ID proporcionado, puedes manejarlo de
-			// acuerdo a tu lógica de negocio.
-			throw new NoSuchElementException("No se encontró el usuario con ID: " + id);
+			throw new UserNotFoundException(id);
 		}
 	}
 

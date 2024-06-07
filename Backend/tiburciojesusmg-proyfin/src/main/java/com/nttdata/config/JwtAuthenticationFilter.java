@@ -21,6 +21,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Filtro para autenticación JWT.
+ */
 @Component
 @RequiredArgsConstructor
 @ComponentScan
@@ -29,6 +32,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final JwtServiceI jwtService;
 	private final UserManagementI userService;
 
+	/**
+	 * Método para realizar la autenticación JWT.
+	 */
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
 			@NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -37,20 +43,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		final String jwt;
 		final String user;
 
+		// Verificar si el encabezado de autorización está presente y es válido
 		if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer ")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
 		jwt = authHeader.substring(7);
 		user = jwtService.extractUserName(jwt);
+		// Verificar si el usuario está presente en el token JWT y no está autenticado
 		if (StringUtils.isNotEmpty(user) && SecurityContextHolder.getContext().getAuthentication() == null) {
 			UserDetails userDetails = userService.userDetailsService().loadUserByUsername(user);
 			if (jwtService.isTokenValid(jwt, userDetails)) {
-//				SecurityContext context = SecurityContextHolder.createEmptyContext();
+				// Autenticar al usuario y establecer el contexto de seguridad
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
 						null, userDetails.getAuthorities());
 				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//				context.setAuthentication(authToken);
 				SecurityContextHolder.getContext().setAuthentication(authToken);
 			}
 		}

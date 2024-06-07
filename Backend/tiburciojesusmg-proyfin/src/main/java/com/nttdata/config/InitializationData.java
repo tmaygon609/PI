@@ -24,6 +24,9 @@ import com.nttdata.persistence.repositories.UserRepositoryI;
 
 import jakarta.transaction.Transactional;
 
+/**
+ * Clase para inicializar datos en la aplicación al arrancar.
+ */
 @Component
 @Transactional
 public class InitializationData implements CommandLineRunner {
@@ -46,6 +49,9 @@ public class InitializationData implements CommandLineRunner {
 	@Autowired
 	private StatusRepositoryI statusRepository;
 
+	/**
+	 * Método que se ejecuta al arrancar la aplicación para inicializar datos.
+	 */
 	@Override
 	public void run(String... args) throws Exception {
 

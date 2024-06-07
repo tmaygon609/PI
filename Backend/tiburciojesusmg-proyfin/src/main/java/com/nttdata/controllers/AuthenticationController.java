@@ -15,6 +15,9 @@ import com.nttdata.services.UserManagementI;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controlador para manejar las solicitudes de autenticación.
+ */
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -24,11 +27,23 @@ public class AuthenticationController {
 
 	private final UserManagementI userService;
 
+	/**
+	 * Método para registrar un nuevo usuario.
+	 *
+	 * @param request SignUpRequest objeto de solicitud de registro.
+	 * @return ResponseEntity que contiene la respuesta de autenticación JWT.
+	 */
 	@PostMapping("/signup")
 	public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {
 		return ResponseEntity.ok(authenticationService.signup(request));
 	}
 
+	/**
+	 * Método para iniciar sesión con un usuario existente.
+	 *
+	 * @param request SigninRequest objeto de solicitud de inicio de sesión.
+	 * @return ResponseEntity que contiene la respuesta de autenticación JWT.
+	 */
 	@PostMapping("/signin")
 	public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request) {
 		JwtAuthenticationResponse response = authenticationService.signin(request);

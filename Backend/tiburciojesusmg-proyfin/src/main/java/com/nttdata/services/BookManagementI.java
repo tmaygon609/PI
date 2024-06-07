@@ -96,12 +96,12 @@ public interface BookManagementI {
 	 */
 	Book updateBook(Long id, String title, String author);
 
-	/**
-	 * Elimina un libro de la relación UserBook por su ID.
-	 *
-	 * @param id El ID del libro a eliminar.
-	 */
-	void deleteBook(final Long id);
+//	/**
+//	 * Elimina un libro de la relación UserBook por su ID.
+//	 *
+//	 * @param id El ID del libro a eliminar.
+//	 */
+//	void deleteBook(final Long id);
 
 	/**
 	 * Elimina un libro de la bbdd.

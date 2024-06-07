@@ -1,5 +1,7 @@
 package com.nttdata.services;
 
+import java.util.List;
+
 import com.nttdata.persistence.model.UserBook;
 
 /**
@@ -26,5 +28,21 @@ public interface UserBookI {
 	 * @return La relación usuario-libro actualizada.
 	 */
 	UserBook updateUserBook(Long id, String status, String rate, String comment);
+
+	/**
+	 * Busca los libros de usuario por ID de libro y ID de usuario.
+	 *
+	 * @param bookId ID del libro.
+	 * @param userId ID del usuario.
+	 * @return La lista de libros de usuario encontrados.
+	 */
+	List<UserBook> searchBooksByBookIdAndUserId(Long bookId, Long userId);
+
+	/**
+	 * Elimina un libro de usuario por su ID.
+	 *
+	 * @param id ID del libro de usuario.
+	 */
+	void deleteBook(Long id);
 
 }
