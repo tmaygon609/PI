@@ -33,7 +33,7 @@ $(modalIA).on("hidden.bs.modal", function () {
   recuperarListadoUsuario();
 });
 
-// Función para comprobar el inicio de sesión
+// Método para comprobar el inicio de sesión
 function comprobarInicioSesion() {
   // Compruebas si el token JWT existe
   if (!localStorage.getItem("jwtToken")) {
@@ -51,6 +51,7 @@ function comprobarInicioSesion() {
   }
 }
 
+// Método para recuperar el listado del usuario
 function recuperarListadoUsuario() {
   let storedUser = localStorage.getItem("usuarioActual");
 
@@ -64,7 +65,30 @@ function recuperarListadoUsuario() {
   }
 }
 
-// Gestión de formularios
+// Método para actualizar el listado de libros
+function actualizarListado(event) {
+  if (!event) {
+    console.error("El evento no está definido.");
+    return;
+  }
+
+  event.preventDefault();
+
+  let storedUser = localStorage.getItem("usuarioActual");
+
+  if (storedUser) {
+    const filterValue = document.getElementById("filterInput").value;
+    let usuarioActual = new User();
+    Object.assign(usuarioActual, JSON.parse(storedUser));
+
+    usuarioActual.listadoLibros(filterValue);
+    document.getElementById("filterInput").value = "";
+  } else {
+    console.error("no se contro la informacion del usuario.");
+  }
+}
+
+// Método para gestionar la visualización de formularios
 function gestionFormularios(sFormularioVisible) {
   ocultarTodosLosFormularios();
 
@@ -101,7 +125,7 @@ function gestionFormularios(sFormularioVisible) {
   document.getElementById("listado").style.display = "none";
 }
 
-//Función que oculta todos los formularios.
+// Método que oculta todos los formularios.
 function ocultarTodosLosFormularios() {
   let oFormularios = document.querySelectorAll("form");
 
@@ -110,14 +134,14 @@ function ocultarTodosLosFormularios() {
   }
 }
 
-//Función que elimina y muestra el listado completo en catalogo
+// Método que elimina y muestra el listado completo en catalogo
 function mostrarListadoEnCatalogo() {
   document.getElementById("txtGenero2").selectedIndex = 0;
   let oBook = new Book();
   oBook.catalogo();
 }
 
-// Función que muestra el contenido principal
+// Método que muestra el contenido principal
 function mostrarContenidoPrincipal() {
   let storedUser = localStorage.getItem("usuarioActual");
 
@@ -155,7 +179,7 @@ function mostrarContenidoPrincipal() {
   }
 }
 
-// aceptarAltaLibro. Clic en boton del formulario de registrar libro.
+// Método aceptarAltaLibro. Clic en botón del formulario de registrar libro.
 function aceptarAltaLibro() {
   if (
     document.getElementById("txtTitulo").value == "" ||
@@ -245,12 +269,12 @@ function aceptarAltaLibro() {
   }
 }
 
-// Primeras letras en mayúscula para el campo género y estado del libro
+// Método para convertir la primera letra en mayúscula para el campo género y estado del libro
 function capitalizeFirstLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// Función para comprimir la imagen
+// Método para comprimir la imagen
 function compressImage(image, quality) {
   const maxWidth = 167;
   const maxHeight = 250;
@@ -289,7 +313,7 @@ function compressImage(image, quality) {
   });
 }
 
-// aceptarBuscarLibro. Clic en boton del formulario de buscar libro por titulo.
+// Método aceptarBuscarLibro. Clic en botón del formulario de buscar libro por título.
 async function aceptarBuscarLibro() {
   if (document.getElementById("txtTituloLibro").value == "") {
     swal({
@@ -316,7 +340,7 @@ async function aceptarBuscarLibro() {
   }
 }
 
-// Clic en la opción de menú de listar todos los libros.
+// Método aceptarListadoLibros. Clic en la opción de menú de listar todos los libros.
 function aceptarListadoLibros() {
   document.getElementById("listado").innerHTML = "";
   document.getElementById("listado").style.display = "none";
@@ -334,25 +358,24 @@ function aceptarListadoLibros() {
   }
 }
 
-// Clic en la opción de recomendar un libro a través de la IA.
+// Método recomendarLibro. Clic en la opción de recomendar un libro a través de la IA.
 async function recomendarLibro() {
-  document.getElementById("listado").innerHTML = "";
-  document.getElementById("listado").style.display = "none";
+  // document.getElementById("listado").innerHTML = "";
+  // document.getElementById("listado").style.display = "none";
 
   let oBook = new Book();
   oBook.listadoRecomendado();
 
   const tabla = await oBook.listadoRecomendado();
   if (tabla) {
-    // Add the table to the body of the modal
     document.getElementById("iaModalBody").innerHTML = tabla;
 
-    // Open the modal
+    // Abre el modal
     $("#iaModal").modal("show");
   }
 }
 
-// Volvemos a la página de login
+// Método para cerrar sesión y volver a la página de inicio
 function cerrarSesion() {
   swal({
     title: "Cerrar sesión",
@@ -368,7 +391,7 @@ function cerrarSesion() {
   });
 }
 
-// Función para guardar los cambios en la contraseña
+// Método para guardar los cambios en la contraseña
 function guardarCambios() {
   // Recupera la información del usuario almacenada en el localStorage
   const storedUser = localStorage.getItem("usuarioActual");
@@ -405,13 +428,14 @@ function guardarCambios() {
 
     usuarioActual.cambiarContrasena(nuevaContrasena);
 
-    nuevaContrasena.value = "";
-    confirmarContrasena.value = "";
+    document.getElementById("nuevaContrasena").value = "";
+    document.getElementById("confirmarContrasena").value = "";
   } else {
     console.error("no se contro la informacion del usuario.");
   }
 }
 
+// Método para ir a eliminar cuenta
 function aceptarEliminarCuenta() {
   // Recupera la información del usuario almacenada en el localStorage
   const storedUser = localStorage.getItem("usuarioActual");
@@ -509,14 +533,10 @@ function manejadorEvento(event) {
         oBook.guardarCambios(id, status, rate, comment);
         revertirCamposAInputs(id);
       }
-      //   } else if (String(btn).substring(0, 1) === "n"){
-
-      //     let id = String(btn).substring(1);
-
-      //
     }
   }
 
+  // Método para obterner valores de estado, calificación y comentario
   function obtenerValores(id) {
     const estadoSelect = document.getElementById("estadoSelect" + id);
     const status = estadoSelect.options[estadoSelect.selectedIndex].value;
@@ -537,7 +557,7 @@ function manejadorEvento(event) {
     return { status, rate, comment };
   }
 
-  // Convierte los campos de estado, calificación y comentario en inputs editables
+  // Método que convierte los campos de estado, calificación y comentario en inputs editables
   function convertirCamposAInputs(id) {
     let estadoElement = document.getElementById("estado" + id);
     let calificacionElement = document.getElementById("calificacion" + id);
@@ -644,7 +664,7 @@ function manejadorEvento(event) {
     btn.classList.add("btn-success", "fa-save");
   }
 
-  // Revierte los campos de estado, calificación y comentario a texto
+  // Método que revierte los campos de estado, calificación y comentario a texto
   function revertirCamposAInputs(id) {
     // Recuperar los valores actuales
     const estadoSelect = document.getElementById("estadoSelect" + id);

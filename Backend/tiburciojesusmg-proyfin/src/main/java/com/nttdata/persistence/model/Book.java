@@ -20,9 +20,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Clase libro.
+ * Clase que representa un libro.
  * 
- * Representa tabla T_BOOK.
+ * Representa tabla T_BOOK en la base de datos.
  */
 @Entity
 @Table(name = "T_BOOK")
@@ -40,25 +40,24 @@ public class Book implements Serializable {
 	@Column(name = "C_BOOK_ID")
 	private Long id;
 
-	/** Nombre */
+	/** Título del libro */
 	@Column(name = "C_TITLE")
 	private String title;
 
-	/** Autor */
+	/** Autor del libro */
 	@Column(name = "C_AUTHOR")
 	private String author;
 
-	/** Genero */
+	/** Género del libro */
 	@Column(name = "C_GENRE")
 	private String genre;
 
-//	@Column(name = "image_path")
-//	private String imagePath;
-
+	/** Imagen del libro en bytes */
 	@Lob
 	@Column(name = "imagen_bytes", columnDefinition = "BLOB", length = 6291456)
 	private byte[] imagenBytes;
 
+	/** Relación con UserBook */
 	@OneToMany(mappedBy = "book")
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private Set<UserBook> userBooks;

@@ -64,19 +64,6 @@ body {
   transition: 0.3s ease-in;
 }
 
-/* .olvide {
-  color: white;
-  text-decoration-style: none;
-  text-decoration-line: none;
-}
-
-.olvide:hover {
-  color: white;
-  text-decoration-style: none;
-  text-decoration-line: none;
-  cursor: pointer;
-} */
-
 .registrarse {
   color: white;
   text-decoration-style: none;
@@ -108,9 +95,9 @@ body {
 }
 
 #usuario::placeholder {
-  color: black; /* Cambia esto al color que prefieras */
+  color: black;
 }
 
 #usuario:disabled {
-  color: black; /* Cambia esto al color que prefieras */
+  color: black;
 }

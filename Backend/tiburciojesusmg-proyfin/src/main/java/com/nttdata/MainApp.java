@@ -4,8 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * 
  * Aplicación proyecto final
+ * 
+ * @author Tibu Mayo
  */
 @SpringBootApplication
 public class MainApp {

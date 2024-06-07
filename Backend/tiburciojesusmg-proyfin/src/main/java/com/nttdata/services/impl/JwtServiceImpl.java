@@ -18,9 +18,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+/**
+ * Implementación del servicio JWT para generar y verificar tokens JWT.
+ */
 @Service
 public class JwtServiceImpl implements JwtServiceI {
 
+	// Clave secreta para firmar los tokens JWT
 	@Value("${token.signing.key}")
 	private String jwtSigningKey;
 
@@ -41,6 +45,7 @@ public class JwtServiceImpl implements JwtServiceI {
 		return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
 	}
 
+	// Métodos privados
 	private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
 		final Claims claims = extractAllClaims(token);
 		return claimsResolvers.apply(claims);

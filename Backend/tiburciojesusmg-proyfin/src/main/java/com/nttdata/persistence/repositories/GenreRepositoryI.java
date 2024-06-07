@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.nttdata.persistence.model.Genre;
 
 /**
- * Repositorio de T_GENRE
+ * Repositorio para la entidad Genre.
  */
 @Repository
 public interface GenreRepositoryI extends JpaRepository<Genre, Long> {

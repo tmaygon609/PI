@@ -2,23 +2,17 @@ package com.nttdata.persistence.model;
 
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * Clase que representa una respuesta de OpenAI.
+ */
+@Getter
+@Setter
 public class OpenAIResponse {
 
-	/** Lista de opciones */
+	/** Lista de opciones de respuesta */
 	private List<Choice> choices;
-
-	/**
-	 * @return the choices
-	 */
-	public List<Choice> getChoices() {
-		return choices;
-	}
-
-	/**
-	 * @param choices the choices to set
-	 */
-	public void setChoices(List<Choice> choices) {
-		this.choices = choices;
-	}
 
 }

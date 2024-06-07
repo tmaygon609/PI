@@ -1,4 +1,4 @@
-// Comprueba que las dos contraseñas cumplen los requisitos establecidos.
+// Método para validar si la contraseña cumple con los requisitos establecidos
 function validarRequisitosContrasena(pwd) {
   let resultado = {
     esValida: false,
@@ -23,7 +23,7 @@ function validarRequisitosContrasena(pwd) {
   return resultado;
 }
 
-//FUNCIONES VALIDACION CONTRASEÑA
+// Método auxiliar para buscar si la contraseña contiene alguna letra del alfabeto
 function buscarAbc(pwd) {
   let abc = "abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
   let i = 0;
@@ -37,6 +37,7 @@ function buscarAbc(pwd) {
   return encontrado;
 }
 
+// Método auxiliar para buscar si la contraseña contiene algún símbolo especial
 function buscarSimbolo(pwd) {
   let simbolos = "!#$%&().:;";
   let i = 0;
@@ -50,6 +51,7 @@ function buscarSimbolo(pwd) {
   return encontrado;
 }
 
+// Método auxiliar para buscar si la contraseña contiene algún número
 function buscarNumero(pwd) {
   let numeros = "0123456789";
   let i = 0;

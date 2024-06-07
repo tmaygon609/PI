@@ -1,5 +1,6 @@
 package com.nttdata.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nttdata.exceptions.UserNotFoundException;
 import com.nttdata.persistence.dto.ChangePasswordDTO;
 import com.nttdata.persistence.model.Role;
 import com.nttdata.persistence.model.User;
@@ -21,10 +23,11 @@ import com.nttdata.services.UserManagementI;
 
 import jakarta.persistence.EntityNotFoundException;
 
+/**
+ * Implementación del servicio para la gestión de usuarios.
+ */
 @Service
 public class UserManagementImpl implements UserManagementI {
-
-	// Todas la validaciones van en la capa de servicio.
 
 	@Autowired
 	private UserRepositoryI userRepo;
@@ -34,6 +37,11 @@ public class UserManagementImpl implements UserManagementI {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Override
+	public List<User> getAllUsers() {
+		return userRepo.findAll();
+	}
 
 	@Override
 	public User login(String user, String password) {
@@ -110,8 +118,27 @@ public class UserManagementImpl implements UserManagementI {
 
 			userRepo.deleteById(userId);
 		} else {
-			// Manejar el caso en el que el usuario no existe
-			// Puedes lanzar una excepción, devolver un código de error, etc.
+			throw new UserNotFoundException(userId);
+		}
+	}
+
+	@Override
+	public User updateUser(Long id, String name, String lastName) {
+		Optional<User> userOptional = userRepo.findById(id);
+
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+
+			if (name != null) {
+				user.setName(name);
+			}
+			if (lastName != null) {
+				user.setLastName(lastName);
+			}
+
+			return userRepo.save(user);
+		} else {
+			throw new UserNotFoundException(id);
 		}
 	}
 

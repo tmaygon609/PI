@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.nttdata.persistence.model.Status;
 
 /**
- * Repositorio de T_STATUS
+ * Repositorio para la entidad Status.
  */
 @Repository
 public interface StatusRepositoryI extends JpaRepository<Status, Long> {

@@ -26,7 +26,7 @@ document
     }
   });
 
-// Abre la página principal
+// Método para abrir la página principal
 function abrirPrincipal() {
   const user = document.getElementById("user").value;
   const password = document.getElementById("pwd").value;
@@ -41,12 +41,12 @@ function abrirPrincipal() {
   }
 }
 
-// Abre página de registro usuario
+// Método para abrir la página de registro de usuario
 function abrirRegistro() {
   window.open("html/registro.html", "_self");
 }
 
-// Consulta en base de datos si el usuario existe
+// Método para consultar en la base de datos si el usuario existe
 async function consultar(user, password) {
   const oHttp = new XMLHttpRequest();
 
@@ -71,24 +71,49 @@ async function consultar(user, password) {
 
       localStorage.setItem("jwtToken", jwtToken);
 
-      // Crear una instancia de User con la información actualizada
-      const usuarioActual = new User(
-        userInfo.name,
-        userInfo.lastName,
-        userInfo.user,
-        userInfo.password,
-        userInfo.gender
-      );
+      // Verificar el rol del usuario
+      if (userInfo.role === "USER") {
+        // Crear una instancia de User con la información actualizada
+        const usuarioActual = new User(
+          userInfo.name,
+          userInfo.lastName,
+          userInfo.user,
+          userInfo.password,
+          userInfo.gender
+        );
 
-      usuarioActual.setUserInfo(userInfo);
+        usuarioActual.setUserInfo(userInfo);
 
-      // Almacena la información del usuario en el localStorage
-      localStorage.setItem("usuarioActual", JSON.stringify(usuarioActual));
+        // Almacena la información del usuario en el localStorage
+        localStorage.setItem("usuarioActual", JSON.stringify(usuarioActual));
 
-      window.location.href = "principal.html";
+        window.location.href = "principal.html";
+      } else if (userInfo.role === "ADMIN") {
+        // Crear una instancia de User con la información actualizada
+        const usuarioActual = new User(
+          userInfo.name,
+          userInfo.lastName,
+          userInfo.user,
+          userInfo.password,
+          userInfo.gender
+        );
+        usuarioActual.setUserInfo(userInfo);
+
+        // Almacena la información del usuario en el localStorage
+        localStorage.setItem("usuarioActual", JSON.stringify(usuarioActual));
+
+        window.location.href = "admin.html";
+      } else {
+        // Manejar otros roles o casos de error aquí
+        swal({
+          title: "Rol desconocido",
+          text: "No se pudo determinar el rol del usuario",
+          icon: "error",
+        });
+      }
     } else {
       swal({
-        title: "Usuario no registrado.",
+        title: "Usuario o contraseña no válidos.",
         icon: "error",
       });
       document.getElementById("user").value = "";
@@ -98,7 +123,7 @@ async function consultar(user, password) {
   };
 }
 
-// Enlace para restablecer contraseña
+// Método para el enlace para restablecer contraseña
 function olvideContrasena() {
   swal({
     title:

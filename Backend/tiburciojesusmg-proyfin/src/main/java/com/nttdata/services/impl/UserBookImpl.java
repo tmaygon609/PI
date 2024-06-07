@@ -1,16 +1,19 @@
 package com.nttdata.services.impl;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nttdata.exceptions.UserBookNotFoundException;
 import com.nttdata.persistence.model.UserBook;
 import com.nttdata.persistence.repositories.UserBookRepositoryI;
 import com.nttdata.services.UserBookI;
 
+/**
+ * Implementación del servicio para la gestión de libros de usuarios.
+ */
 @Service
 public class UserBookImpl implements UserBookI {
 
@@ -21,6 +24,10 @@ public class UserBookImpl implements UserBookI {
 	public UserBook getUserBookDetails(Long userId, Long bookId) {
 
 		UserBook userBook = userBookRepository.findByUserIdAndBookId(userId, bookId);
+
+		if (userBook == null) {
+			throw new UserBookNotFoundException(userId, bookId);
+		}
 
 		return userBook;
 	}
@@ -44,14 +51,26 @@ public class UserBookImpl implements UserBookI {
 
 			return userBookRepository.save(userBook);
 		} else {
-			// Si no se encuentra el UserBook con el ID proporcionado, puedes manejarlo de
-			// acuerdo a tu lógica de negocio.
-			throw new NoSuchElementException("No se encontró el UserBook con ID: " + id);
+
+			throw new UserBookNotFoundException(id);
 		}
 	}
 
+	@Override
 	public List<UserBook> searchBooksByBookIdAndUserId(Long bookId, Long userId) {
-		return userBookRepository.findByBookIdAndUserId(bookId, userId);
+		List<UserBook> userBooks = userBookRepository.findByBookIdAndUserId(bookId, userId);
+
+		return userBooks;
+	}
+
+	@Override
+	public void deleteBook(Long id) {
+
+		if (!userBookRepository.existsById(id)) {
+			throw new UserBookNotFoundException(id);
+		}
+		userBookRepository.deleteById(id);
+
 	}
 
 }

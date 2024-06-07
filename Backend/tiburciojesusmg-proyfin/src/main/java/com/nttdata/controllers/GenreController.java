@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nttdata.persistence.model.Genre;
 import com.nttdata.services.impl.GenreService;
 
+/**
+ * Controlador para manejar las solicitudes relacionadas con los géneros
+ * literarios.
+ */
 @RestController
 @RequestMapping("/v1/genres")
 @PreAuthorize("hasRole('USER')")
@@ -21,9 +25,19 @@ public class GenreController {
 	@Autowired
 	private GenreService genreService;
 
+	/**
+	 * Obtiene todos los nombres de géneros literarios.
+	 *
+	 * @return ResponseEntity con la lista de géneros literarios
+	 */
 	@GetMapping
 	public ResponseEntity<List<Genre>> getAllGenreNames() {
+
 		List<Genre> genres = genreService.getAllGenresNames();
+
+		if (genres.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 		return new ResponseEntity<>(genres, HttpStatus.OK);
 	}
 

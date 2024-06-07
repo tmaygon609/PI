@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Página de usuario." />
-    <meta name="keywords" content="Usuario" />
+    <meta name="description" content="Página de administador." />
+    <meta name="keywords" content="Administar, Administrar " />
     <meta name="author" content="Tibu Mayo" />
 
     <title>Biblioteca Almudeyne</title>
@@ -34,15 +34,15 @@
     <script src="bootstrap/js/jquery.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!-- Canvas HTML -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
     <!-- Font Awesome JS -->
     <script
       src="https://kit.fontawesome.com/a05c1998d9.js"
       crossorigin="anonymous"
     ></script>
-    <!-- Chart JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <!-- Canvas HTML-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/estilosEstrella.css" />
@@ -75,7 +75,7 @@
                 id="botonMiCuenta"
                 href="#!"
                 title="Mi cuenta"
-                onclick="gestionFormularios('frmInformacionUsuario');"
+                onclick="gestionFormularios('frmInformacionAdmin');"
               >
                 <i class="fa fa-user-circle-o"></i>
               </a>
@@ -93,16 +93,19 @@
             </li>
           </ul>
         </div>
-        <!-- SideBar Menu -->
+        <!-- SideBar Menu Botones -->
         <ul class="list-unstyled full-box dashboard-sideBar-Menu">
           <li>
-            <a href="principal.html">
-              <i class="fa fa-home"></i>&nbsp; Inicio
-            </a>
+            <a href="admin.html"> <i class="fa fa-home"></i>&nbsp; Inicio </a>
           </li>
           <li>
-            <a href="#" onclick="gestionFormularios('frmListadoLibros');"
-              ><i class="zmdi zmdi-library"></i>&nbsp; Mis libros</a
+            <a href="#" onclick="gestionFormularios('frmRegistroUsuario')"
+              ><i class="fa fa-user-plus"></i>&nbsp; Crear usuarios</a
+            >
+          </li>
+          <li>
+            <a href="#" onclick="gestionFormularios('frmListadoStudents')"
+              ><i class="zmdi zmdi-male-female"></i>&nbsp; Usuarios</a
             >
           </li>
           <li>
@@ -111,7 +114,7 @@
             </a>
           </li>
           <li>
-            <a href="#" onclick="gestionFormularios('frmCatalogo')">
+            <a href="#" onclick="gestionFormularios('frmListadoLibrosAdmin')">
               <i class="fa fa-book"></i>&nbsp; Catalogo
             </a>
           </li>
@@ -154,48 +157,6 @@
             >
               Cerrar
             </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal IA-->
-    <div
-      class="modal fade"
-      id="iaModal"
-      tabindex="-1"
-      aria-labelledby="iaModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header float-right">
-            <h3 class="modal-title" id="iaModalLabel">
-              Libro recomendado por IA
-            </h3>
-            <button
-              type="button"
-              class="close"
-              id="closeModalButton"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body" id="iaModalBody">
-            <!-- Aquí se insertará la tabla generada por JavaScript -->
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              id="closeModalFooterButton"
-              data-dismiss="modal"
-            >
-              Cerrar
-            </button>
-            <!-- Puedes añadir un botón de "Guardar cambios" si es necesario -->
           </div>
         </div>
       </div>
@@ -248,43 +209,220 @@
       <div class="main-content" id="formularios">
         <!-- Texto contenido principal -->
         <div id="contenidoPrincipal" class="container py-5">
-          <h1 class="display-4">
-            Bienvenido/a, <span id="nombreUsuario"></span>!
-          </h1>
-          <p class="lead">
-            En la Biblioteca Almudeyne, podrás registrar tus libros favoritos,
-            ver los libros que has registrado y recibir recomendaciones de
-            libros personalizadas.
-          </p>
-          <hr class="my-4" />
-          <img
-            src="img/bienvenida.jpg"
-            alt="Bibliotecaria mandando a callar"
-            class="img-responsive"
-          />
-          <hr class="my-4" />
+          <h1 class="display-4">Bienvenido, Administrador!</h1>
 
-          <p>Comienza a explorar nuestra biblioteca ahora.</p>
-          <a
-            class="btn btn-info btn-lg"
-            href="#"
-            role="button"
-            onclick="gestionFormularios('frmCatalogo')"
-            >Explorar libros</a
-          >
+          <hr class="my-4" />
+          <img src="img/admin.jpg" alt="Administrador" class="img-responsive" />
+          <hr class="my-4" />
         </div>
 
-        <!-- Formulario Libros-->
-        <!-- Listado libros -->
+        <!-- Formularios creacion usuarios -->
         <form
           class="form-horizontal"
-          name="frmListadoLibros"
-          id="frmListadoLibros"
+          name="frmRegistroUsuario"
+          id="frmRegistroUsuario"
+        >
+          <!-- Form Name -->
+          <div class="page-header">
+            <h2 class="text-titles">
+              <i class="fa fa-user-plus"></i>&nbsp; Registrar nuevo usuario
+            </h2>
+          </div>
+          <!-- Panel nuevo usuario -->
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                <!-- Panel nuevo usuario -->
+                <div class="panel panel-success">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">
+                      <i class="fa fa-plus"></i> &nbsp; NUEVO USUARIO
+                    </h3>
+                  </div>
+                  <div class="panel-body">
+                    <fieldset>
+                      <div class="container-fluid">
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <label class="control-label col-xs-3"
+                                >Nombre</label
+                              >
+                              <div class="col-xs-6">
+                                <input
+                                  class="form-control"
+                                  type="text"
+                                  id="nombre"
+                                  name="nombre"
+                                  required=""
+                                  maxlength="30"
+                                  placeholder="Nombre"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <label class="control-label col-xs-3"
+                                >Apellidos</label
+                              >
+                              <div class="col-xs-6">
+                                <input
+                                  class="form-control"
+                                  type="text"
+                                  id="apellidos"
+                                  name="apellidos"
+                                  required=""
+                                  maxlength="30"
+                                  placeholder="Apellidos"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <label class="control-label col-xs-3"
+                                >Usuario</label
+                              >
+                              <div class="col-xs-6">
+                                <div class="input-group">
+                                  <input
+                                    class="form-control"
+                                    type="text"
+                                    id="usuario"
+                                    name="usuario"
+                                    disabled
+                                    placeholder="Usuario"
+                                  />
+                                  <span class="input-group-btn">
+                                    <button
+                                      id="generarUsuarioAdmin"
+                                      type="button"
+                                      class="btn btn-secondary"
+                                    >
+                                      <i
+                                        class="fa-solid fa-user-plus"
+                                        style="color: black"
+                                      ></i>
+                                    </button>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <label class="control-label col-xs-3"
+                                >Género</label
+                              >
+                              <div class="col-xs-6">
+                                <div class="form-check form-check-inline">
+                                  <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="genero"
+                                    id="masculino"
+                                    value="masculino"
+                                  />
+                                  <label
+                                    class="form-check-label"
+                                    for="masculino"
+                                    >Masculino</label
+                                  >
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="genero"
+                                    id="femenino"
+                                    value="femenino"
+                                  />
+                                  <label class="form-check-label" for="femenino"
+                                    >Femenino</label
+                                  >
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="genero"
+                                    id="noDefinido"
+                                    value="noDefinido"
+                                  />
+                                  <label
+                                    class="form-check-label"
+                                    for="noDefinido"
+                                    >Prefiero no decirlo</label
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <label class="control-label col-xs-3"
+                                >Contraseña</label
+                              >
+                              <div class="col-xs-6">
+                                <input
+                                  class="form-control"
+                                  type="password"
+                                  id="contrasenaAdmin"
+                                  name="contrasenaAdmin"
+                                  required=""
+                                  placeholder="Contraseña"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group">
+                              <div class="col-xs-offset-3 col-xs-9">
+                                <button
+                                  type="button"
+                                  id="btnRegistrarUsuario"
+                                  name="btnRegistrarUsuario"
+                                  class="btn btn-success"
+                                  onclick="aceptarRegistroUsuario()"
+                                >
+                                  Registrar
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- Formulario Usuarios-->
+        <!-- Listado usuarios -->
+        <form
+          class="form-horizontal"
+          name="frmListadoStudents"
+          id="frmListadoStudents"
         >
           <fieldset>
             <div class="page-header">
               <h2 class="text-titles">
-                <i class="zmdi zmdi-library"></i>&nbsp; Mis libros
+                <i class="fa fa-users"></i>&nbsp; Usuarios registrados
               </h2>
             </div>
             <!-- MAS IMPORTANTE -->
@@ -292,7 +430,7 @@
               <div class="panel panel-info">
                 <div class="panel-heading">
                   <h3 class="panel-title">
-                    <i class="fa fa-list-alt"></i> &nbsp; LISTA LIBROS
+                    <i class="fa fa-list-alt"></i> &nbsp; LISTA DE USUARIOS
                   </h3>
                 </div>
                 <div class="panel-body">
@@ -300,36 +438,15 @@
                     <div>
                       <input
                         type="text"
-                        id="filterInput"
-                        placeholder="Buscar..."
-                        onkeypress="if (event.keyCode === 13) actualizarListado(event)"
+                        id="filterInputUsuarios"
+                        placeholder="Buscar por nombre o apellidos..."
+                        onkeypress="if (event.keyCode === 13) actualizarListadoUsuarios(event)"
                       />
                     </div>
-                    <div id="listado" style="display: none"></div>
+                    <div id="listadoUsuarios" style="display: none"></div>
                     <!-- Aquí se mostrará la lista de libros -->
                   </div>
                 </div>
-              </div>
-            </div>
-          </fieldset>
-
-          <!-- Formulario recomendacion libro -->
-          <fieldset>
-            <div class="page-header">
-              <h2 class="text-titles">
-                <i class="fa fa-desktop"></i>&nbsp; Libro recomendado por IA
-              </h2>
-            </div>
-            <div class="form-group">
-              <div class="col-xs-4">
-                <input
-                  type="button"
-                  id="btnRecomendar"
-                  name="btnRecomendar"
-                  class="btn btn-primary"
-                  value="Recomendar IA"
-                  onclick="recomendarLibro();"
-                />
               </div>
             </div>
           </fieldset>
@@ -540,8 +657,8 @@
         <!-- Formulario Mi cuenta -->
         <form
           class="form-horizontal"
-          name="frmInformacionUsuario"
-          id="frmInformacionUsuario"
+          name="frmInformacionAdmin"
+          id="frmInformacionAdmin"
         >
           <!-- Form Name -->
           <div class="page-header">
@@ -572,8 +689,8 @@
                                 pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
                                 class="form-control"
                                 type="text"
-                                name="nombre"
-                                id="nombre"
+                                name="nombreAdmin"
+                                id="nombreAdmin"
                                 required=""
                                 maxlength="30"
                                 value="Nombre del usuario"
@@ -593,8 +710,8 @@
                                 pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}"
                                 class="form-control"
                                 type="text"
-                                name="apellidos"
-                                id="apellidos"
+                                name="apellidosAdmin"
+                                id="apellidosAdmin"
                                 required=""
                                 maxlength="30"
                                 value="Apellidos del usuario"
@@ -615,7 +732,7 @@
                                 class="form-control"
                                 type="text"
                                 name="usuario"
-                                id="usuario"
+                                id="usuarioAdmin"
                                 required=""
                                 maxlength="15"
                                 value="Nombre de usuario"
@@ -704,47 +821,43 @@
           </p>
         </form>
 
-        <!-- CATALOGO TODOS LOS LIBROS -->
-        <form class="form-horizontal" name="frmCatalogo" id="frmCatalogo">
-          <div class="container-fluid">
+        <!-- Formulario Libros-->
+        <form
+          class="form-horizontal"
+          name="frmListadoLibrosAdmin"
+          id="frmListadoLibrosAdmin"
+        >
+          <fieldset>
             <div class="page-header">
               <h2 class="text-titles">
-                <i class="fa fa-book"></i>&nbsp; CATALOGO
+                <i class="fa fa-book"></i>&nbsp; Libros registrados
               </h2>
             </div>
-            <p class="lead">
-              Aquí se muestra el listado de libros de nuestra biblioteca y se
-              puede filtrar por géneros.
-            </p>
-          </div>
-          <div class="row">
-            <div class="col-xs-12">
-              <div class="form-group">
-                <label class="control-label col-xs-3">Género</label>
-                <div class="col-xs-6">
-                  <select id="txtGenero2" name="txtGenero" class="form-control">
-                    <option selected value="">Selecciona un género</option>
-                  </select>
+            <!-- MAS IMPORTANTE -->
+            <div class="container-fluid">
+              <div class="panel panel-info">
+                <div class="panel-heading">
+                  <h3 class="panel-title">
+                    <i class="fa fa-list-alt"></i> &nbsp; LISTA DE LIBROS
+                  </h3>
+                </div>
+                <div class="panel-body">
+                  <div class="table-responsive">
+                    <div>
+                      <input
+                        type="text"
+                        id="filterInputLibros"
+                        placeholder="Buscar por título, autor o género..."
+                        onkeypress="if (event.keyCode === 13) actualizarListadoLibros(event)"
+                      />
+                    </div>
+                    <div id="listadoLibrosAdmin" style="display: none"></div>
+                    <!-- Aquí se mostrará la lista de libros -->
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="container-fluid">
-            <h2 class="text-titles text-center">Categoría seleccionada</h2>
-            <div class="row">
-              <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-                <div id="book-details-container" class="list-group">
-                  <!-- Aquí se mostrará la lista de libros -->
-                </div>
-
-                <nav class="text-center">
-                  <ul id="pagination" class="pagination pagination-sm">
-                    <!-- Contenido dinámico creado desde JavaScript -->
-                  </ul>
-                </nav>
-              </div>
-            </div>
-          </div>
+          </fieldset>
         </form>
       </div>
 
@@ -799,7 +912,7 @@
     </section>
 
     <!-- Custom JS -->
-    <script type="text/javascript" src="js/codigo.js"></script>
+    <script type="text/javascript" src="js/codigoAdmin.js"></script>
     <script type="text/javascript" src="js/classBook.js"></script>
     <script type="text/javascript" src="js/clasesUser.js"></script>
     <script type="text/javascript" src="js/validation.js"></script>

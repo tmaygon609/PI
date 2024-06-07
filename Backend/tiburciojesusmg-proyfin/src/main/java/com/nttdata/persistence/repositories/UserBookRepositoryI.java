@@ -12,23 +12,53 @@ import com.nttdata.persistence.model.User;
 import com.nttdata.persistence.model.UserBook;
 
 /**
- * Repositorio de T_USERBOOK
+ * Repositorio para la entidad UserBook.
  */
 @Repository
 public interface UserBookRepositoryI extends JpaRepository<UserBook, Long> {
 
-	public UserBook findByUserAndBook(User user, Book book);
+	/**
+	 * Encuentra la relación UserBook por usuario y libro.
+	 * 
+	 * @param user Usuario.
+	 * @param book Libro.
+	 * @return Relación UserBook.
+	 */
+	UserBook findByUserAndBook(User user, Book book);
 
-//	@Query("SELECT ub.book FROM UserBook ub WHERE ub.book.title = :title AND ub.user.id = :userId")
-//	List<Book> findByBookTitleAndUserId(String title, Long userId);
-
+	/**
+	 * Encuentra libros por el ID de usuario.
+	 * 
+	 * @param userId ID del usuario.
+	 * @return Lista de libros asociados al usuario.
+	 */
 	@Query("SELECT ub.book FROM UserBook ub WHERE ub.user.id = :userId")
 	List<Book> findBooksByUserId(@Param("userId") Long userId);
 
+	/**
+	 * Encuentra la relación UserBook por ID de usuario y ID de libro.
+	 * 
+	 * @param userId ID del usuario.
+	 * @param bookId ID del libro.
+	 * @return Relación UserBook.
+	 */
 	UserBook findByUserIdAndBookId(Long userId, Long bookId);
 
+	/**
+	 * Encuentra la relación UserBook por ID de libro.
+	 * 
+	 * @param bookId ID del libro.
+	 * @return Relación UserBook.
+	 */
 	UserBook findByBookId(Long bookId);
 
+	/**
+	 * Encuentra la relación UserBook por ID de libro y ID de usuario.
+	 * 
+	 * @param bookId ID del libro.
+	 * @param userId ID del usuario.
+	 * @return Lista de relaciones UserBook.
+	 */
 	List<UserBook> findByBookIdAndUserId(Long bookId, Long userId);
 
 }
