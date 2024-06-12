@@ -190,7 +190,6 @@ function mostrarContenidoPrincipal() {
     // Selecciona la imagen por su ID
     let userIcon = document.getElementById("avatar");
 
-    console.log("genero", usuarioActual.gender);
     // Verifica el género del usuario y asigna el src de la imagen correspondiente
     if (usuarioActual.gender === "masculino") {
       userIcon.src = "./assets/avatars/StudetMaleAvatar.png";
@@ -321,10 +320,6 @@ function aceptarAltaLibro() {
     // Comprimir la imagen antes de enviarla
     compressImage(imagen, 0.6) // Llama a la función con los parámetros adecuados
       .then((imagenComprimida) => {
-        console.log("Imagen comprimida:", imagenComprimida);
-
-        console.log("Imagen original:", imagen);
-
         let status;
 
         if (document.getElementById("rbtSinempezar").checked) {
@@ -581,8 +576,6 @@ function manejadorEventoAdmin(event) {
       let id = String(btn).substring(1);
 
       const { nombre, apellido } = obtenerValores(id);
-
-      console.log("Valores obtenidos:", nombre, apellido);
 
       // Verificar si el nombre o apellido están vacíos
       if (!nombre || !apellido) {

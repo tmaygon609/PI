@@ -17,13 +17,6 @@ class User {
 
   setUserInfo(userInfo) {
     this.userInfo = userInfo;
-
-    console.log(
-      "Usuario creado: " + this.name,
-      this.lastName,
-      this.user,
-      this.password
-    );
   }
 
   // Método para actualizar el formulario con los datos del usuario
@@ -142,7 +135,6 @@ class User {
         </tr>`;
     } else {
       posts.forEach((fila, index) => {
-        console.log("Objeto fila: ", fila);
         tabla += `<tr>`;
         tabla += `<td>${fila.title}</td>`;
         tabla += `<td>${fila.author}</td>`;
@@ -335,8 +327,6 @@ class User {
       gender: this.gender,
     };
 
-    console.log("gender", this.gender);
-
     try {
       const response = await fetch("http://localhost:8080/v1/users/saveUser", {
         method: "POST",
@@ -374,8 +364,6 @@ class User {
     const changePasswordDTO = {
       newPassword: nuevaContrasena,
     };
-
-    console.log(localStorage.getItem("jwtToken"));
 
     try {
       // Realizar la solicitud PUT al backend para cambiar la contraseña
@@ -495,10 +483,6 @@ class User {
 
   // Método para guardar los cambios de un usuario
   async guardarCambiosUsuario(id, nombre, apellido) {
-    console.log("id", id);
-    console.log("nombre", nombre);
-    console.log("apellido", apellido);
-
     // URL del endpoint
     const url = `http://localhost:8080/v1/users/${id}`;
 
@@ -524,7 +508,6 @@ class User {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const responseData = await response.json(); // Cambiamos el nombre de la variable para evitar conflicto con la variable 'data' anterior
-      console.log(responseData);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -570,10 +553,6 @@ class User {
 
   // Método para guardar los cambios de un libro
   async guardarCambiosLibro(id, titulo, autor) {
-    console.log("id", id);
-    console.log("titulo", titulo);
-    console.log("autor", autor);
-
     // URL del endpoint
     const url = `http://localhost:8080/v1/books/${id}`;
 
@@ -599,7 +578,6 @@ class User {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const responseData = await response.json();
-      console.log(responseData);
     } catch (error) {
       console.error("Error:", error);
     }

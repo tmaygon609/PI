@@ -30,7 +30,6 @@ class Book {
   // Metodo que da de alta a un libro.
   async altaLibro(imagen) {
     const usuarioActual = this.obtenerUsuarioActual();
-    console.log("usuarioActual", usuarioActual);
 
     if (!usuarioActual) {
       console.error("No se ha encontrado la información del usuario.");
@@ -38,7 +37,6 @@ class Book {
     }
 
     let userId = usuarioActual.userInfo.id;
-    console.log("userid ", usuarioActual.userInfo.id);
 
     const reader = new FileReader();
     reader.onload = async (event) => {
@@ -56,8 +54,6 @@ class Book {
         const resultado = await this.comprobarLibro(this.title);
 
         if (resultado.existe) {
-          console.log("El libro ya existe. Solo se crea la relación.");
-
           const confirmacion = await swal({
             title: "El libro ya existe",
             text: `¿Quieres añadirlo a tu lista de libros?
@@ -78,7 +74,6 @@ class Book {
             );
           }
         } else {
-          console.log("El libro no existe. Creando nuevo libro y relación.");
           const libroId = await this.crearLibro(nuevoLibro);
           await this.crearRelacionUserBook(
             userId,
@@ -477,7 +472,6 @@ class Book {
         addButton.addEventListener("click", async () => {
           // Obtener el ID del libro
           const libroId = book.id;
-          console.log("libroId", libroId);
 
           const usuarioActual = this.obtenerUsuarioActual();
           if (!usuarioActual) {
@@ -486,8 +480,6 @@ class Book {
           }
 
           let userId = usuarioActual.userInfo.id;
-          console.log("usuarioActual", userId);
-          console.log("book.title", book.title);
 
           try {
             const libroExistente = await this.comprobarLibroUsuario(
@@ -628,11 +620,6 @@ class Book {
 
   // Método para guardar cambios en la relación usuario-libro.
   async guardarCambios(id, status, rate, comment) {
-    console.log("id", id);
-    console.log("status", status);
-    console.log("rate", rate);
-    console.log("comment", comment);
-
     // URL del endpoint
     const url = `http://localhost:8080/v1/usersBooks/${id}`;
 
@@ -659,7 +646,6 @@ class Book {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const responseData = await response.json(); // Cambiamos el nombre de la variable para evitar conflicto con la variable 'data' anterior
-      console.log(responseData);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -667,7 +653,6 @@ class Book {
 
   // Método que carga los generos de los libros.
   async cargarGeneros() {
-    console.log("jwtToken", localStorage.getItem("jwtToken"));
     try {
       const response = await fetch("http://localhost:8080/v1/genres", {
         method: "GET",

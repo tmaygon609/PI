@@ -164,7 +164,6 @@ function mostrarContenidoPrincipal() {
     // Selecciona la imagen por su ID
     let userIcon = document.getElementById("avatar");
 
-    console.log("genero", usuarioActual.gender);
     // Verifica el género del usuario y asigna el src de la imagen correspondiente
     if (usuarioActual.gender === "masculino") {
       userIcon.src = "./assets/avatars/StudetMaleAvatar.png";
@@ -212,10 +211,6 @@ function aceptarAltaLibro() {
     // Comprimir la imagen antes de enviarla
     compressImage(imagen, 0.6) // Llama a la función con los parámetros adecuados
       .then((imagenComprimida) => {
-        console.log("Imagen comprimida:", imagenComprimida);
-
-        console.log("Imagen original:", imagen);
-
         let status;
 
         if (document.getElementById("rbtSinempezar").checked) {
@@ -478,9 +473,6 @@ function manejadorEvento(event) {
   if (event.target.tagName == "BUTTON") {
     let btn = event.target.value;
 
-    console.log("Botón presionado:", event.target);
-    console.log(btn);
-
     if (String(btn).substring(0, 1) == "e") {
       swal({
         title: "¿Quieres eliminar este libro?",
@@ -509,8 +501,6 @@ function manejadorEvento(event) {
       let id = String(btn).substring(1);
 
       const { status, rate, comment } = obtenerValores(id);
-
-      console.log("Valores obtenidos:", status, rate, comment);
 
       // Verificar si el rate es 0 y mostrar un swal diferente
       if (rate === 0) {

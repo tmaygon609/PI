@@ -66,9 +66,6 @@ async function consultar(user, password) {
       const jwtToken = response.accessToken;
       const userInfo = response.user;
 
-      console.log("token:", jwtToken);
-      console.log("Usuario obtenido:", userInfo);
-
       localStorage.setItem("jwtToken", jwtToken);
 
       // Verificar el rol del usuario
